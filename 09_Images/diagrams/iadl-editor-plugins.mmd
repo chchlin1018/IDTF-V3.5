@@ -1,0 +1,32 @@
+graph TD
+    subgraph Upstream Systems - Import
+        direction LR
+        A[CAD/BIM<br/>Autodesk, AVEVA]
+        B[SCADA/DCS<br/>Wonderware, Ignition, DeltaV]
+        C[PLM<br/>PTC Windchill]
+    end
+
+    subgraph Downstream Systems - Export
+        direction LR
+        D["NDH Configuration<br/>(JSON/YAML)"]
+        E[3D Visualization<br/>NVIDIA Omniverse]
+        F[Electrical Analysis<br/>ETAP]
+    end
+
+    subgraph Core
+        Editor["**IADL Editor**<br/>(Qt/C++ Desktop App)"]
+        PluginMgr["Plugin Manager"]
+    end
+
+    A -- Import Plugin --> PluginMgr
+    B -- Import Plugin --> PluginMgr
+    C -- Import Plugin --> PluginMgr
+
+    PluginMgr -- Manages --> Editor
+
+    Editor -- Export Plugin --> D
+    Editor -- Export Plugin --> E
+    Editor -- Export Plugin --> F
+
+    style Editor fill:#f9f,color:#000,stroke:#333,stroke-width:2px
+    style PluginMgr fill:#ccf,color:#000,stroke:#333,stroke-width:1px

@@ -1,0 +1,72 @@
+name: V-101
+type: Valve
+description: Flow control valve for reactor feed
+version: 1.0
+
+properties:
+  id: v_101
+  manufacturer: ValveTech
+  model: VT-500
+  size: 4 # inches
+  type: Globe
+  material: Stainless Steel 316
+  cv: 120
+  pressure_rating: 150 # psi
+  temperature_rating: 200 # °C
+  installation_date: 2023-01-20
+
+signals:
+  - name: position
+    type: analog_input
+    unit: %
+    range: [0, 100]
+    description: Valve position feedback
+    
+  - name: position_setpoint
+    type: analog_output
+    unit: %
+    range: [0, 100]
+    description: Valve position setpoint
+    
+  - name: upstream_pressure
+    type: analog_input
+    unit: bar
+    range: [0, 10]
+    description: Pressure upstream of the valve
+    
+  - name: downstream_pressure
+    type: analog_input
+    unit: bar
+    range: [0, 10]
+    description: Pressure downstream of the valve
+    
+  - name: temperature
+    type: analog_input
+    unit: °C
+    range: [0, 250]
+    description: Temperature at the valve
+    
+  - name: fault_status
+    type: digital_input
+    description: Fault status of the valve
+    
+  - name: open_command
+    type: digital_output
+    description: Command to fully open the valve
+    
+  - name: close_command
+    type: digital_output
+    description: Command to fully close the valve
+
+relationships:
+  - type: connects_to
+    target: P-101
+    description: Valve is connected to pump P-101
+    
+  - type: connects_to
+    target: R-101
+    description: Valve feeds into reactor R-101
+    
+  - type: part_of
+    target: Reactor Unit
+    description: Valve is part of the Reactor Unit

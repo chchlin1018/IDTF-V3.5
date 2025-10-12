@@ -1,0 +1,46 @@
+graph TB
+    subgraph "Design Time - Offline"
+        A1["IADL Files<br/>(Asset Blueprints)"]
+        A2["IADL Editor"]
+        A3["Factory Designer"]
+        A4["FDL Files<br/>(Factory Layout)"]
+    end
+
+    subgraph "Runtime - Online"
+        B1["NDH API"]
+        B2["IADL Connector"]
+        B3["FDL Parser"]
+        B4["Instantiation Engine"]
+        B5["Asset Servants<br/>(Live Instances)"]
+        B6["Naming Service"]
+        B7["Asset Adapter"]
+    end
+
+    subgraph "Physical World"
+        C1["Physical Factory<br/>(Sensors, Actuators, Equipment)"]
+    end
+
+    A1 -- "Import" --> A2
+    A2 -- "Export IADL" --> A1
+    A1 -- "Load" --> A3
+    A3 -- "Generate" --> A4
+    A4 -- "Deploy via HTTP POST" --> B1
+
+    B1 -- "Receive FDL" --> B3
+    B3 -- "Parse & Validate" --> B4
+    
+    A1 -- "Load Asset Definitions" --> B2
+    B2 -- "Provide Asset Schema" --> B4
+
+    B4 -- "Create Instances" --> B5
+    B4 -- "Register" --> B6
+    B5 -- "Manage Lifecycle" --> B7
+
+    B5 -- "Real-time Control & Monitoring" --> C1
+    C1 -- "Feedback Data" --> B5
+
+    style A1 fill:#f9f,stroke:#333,stroke-width:2px
+    style A4 fill:#9ff,stroke:#333,stroke-width:2px
+    style B4 fill:#ff9,stroke:#333,stroke-width:2px
+    style B5 fill:#9f9,stroke:#333,stroke-width:2px
+    style C1 fill:#f99,stroke:#333,stroke-width:2px

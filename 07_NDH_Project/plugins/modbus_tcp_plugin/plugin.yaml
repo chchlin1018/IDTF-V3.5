@@ -1,0 +1,106 @@
+# Modbus TCP Connector Plugin Metadata
+
+# 基本資訊
+plugin:
+  id: modbus_tcp_connector
+  name: Modbus TCP Connector
+  version: 1.0.0
+  type: connector
+  author: Your Name
+  email: your.email@example.com
+  license: MIT
+  homepage: https://github.com/yourname/modbus-tcp-plugin
+
+# 描述
+description:
+  short: Modbus TCP connector for NDH
+  long: |
+    This plugin provides connectivity to Modbus TCP devices.
+    Supports reading/writing holding registers, coils, input registers, and discrete inputs.
+    
+    Features:
+    - Read/write holding registers
+    - Read coils and discrete inputs
+    - Batch read operations
+    - Connection pooling
+    - Automatic reconnection
+
+# 依賴
+dependencies:
+  python: ">=3.11"
+  ndh: ">=0.4.0"
+  packages:
+    - pymodbus>=3.5.0
+
+# 配置
+configuration:
+  host:
+    type: string
+    required: true
+    description: Modbus TCP server host (IP address or hostname)
+    example: "192.168.1.100"
+  
+  port:
+    type: integer
+    required: false
+    default: 502
+    description: Modbus TCP server port
+  
+  unit_id:
+    type: integer
+    required: false
+    default: 1
+    description: Modbus unit ID (slave ID)
+    min: 0
+    max: 255
+  
+  timeout:
+    type: integer
+    required: false
+    default: 10
+    description: Connection timeout in seconds
+    min: 1
+    max: 60
+  
+  retry_on_empty:
+    type: boolean
+    required: false
+    default: false
+    description: Retry on empty response
+  
+  retries:
+    type: integer
+    required: false
+    default: 3
+    description: Number of retries on connection failure
+    min: 0
+    max: 10
+
+# 能力
+capabilities:
+  - read
+  - write
+  - batch_read
+  - batch_write
+
+# 標籤
+tags:
+  - modbus
+  - tcp
+  - industrial
+  - plc
+  - scada
+
+# 支援的資料類型
+data_types:
+  - holding_register
+  - coil
+  - input_register
+  - discrete_input
+
+# 效能指標
+performance:
+  max_connections: 10
+  max_requests_per_second: 100
+  average_latency_ms: 50
+

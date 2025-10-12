@@ -1,0 +1,11 @@
+graph TD
+    A["1. IADL 定義檔 (yml/json)"] --> B["2. IADL Connector 載入"]
+    B --> C["3. 剖析與建立資產定義"]
+    C --> D["4. 實例化 AssetServant"]
+    D --> E["5. 啟動物件"]
+    E --> F["6. 註冊至命名服務"]
+    F --> G["7. 物件就緒，可供存取"]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style G fill:#9f9,stroke:#333,stroke-width:2px
+

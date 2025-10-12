@@ -1,0 +1,79 @@
+graph TB
+    subgraph "應用層 (Applications)"
+        A1[Dashboard]
+        A2[Analytics]
+        A3[Control]
+    end
+    
+    subgraph "視覺化層 (Visualization)"
+        V1[Omniverse]
+        V2[Web3D]
+        V3[AR/VR]
+    end
+    
+    subgraph "服務層 (Services)"
+        S1[API Gateway]
+        S2[Auth]
+        S3[Notification]
+    end
+    
+    subgraph "數據處理層 (Data Processing)"
+        P1[Stream Processing]
+        P2[Analytics]
+        P3[ML/AI]
+    end
+    
+    subgraph "數據中樞層 (Data Hub - NDH)"
+        D1[Kafka]
+        D2[InfluxDB]
+        D3[PostgreSQL]
+    end
+    
+    subgraph "數據採集層 (Data Collection)"
+        C1[OPC UA]
+        C2[MQTT]
+        C3[Modbus]
+        C4[BACnet]
+    end
+    
+    subgraph "資產層 (Assets)"
+        AS1[Physical Assets]
+        AS2[Sensors]
+        AS3[Actuators]
+    end
+    
+    A1 --> V1
+    A2 --> V1
+    A3 --> V1
+    
+    V1 --> S1
+    V2 --> S1
+    V3 --> S1
+    
+    S1 --> P1
+    S2 --> P1
+    S3 --> P1
+    
+    P1 --> D1
+    P2 --> D2
+    P3 --> D3
+    
+    D1 --> C1
+    D2 --> C2
+    D3 --> C3
+    
+    C1 --> AS1
+    C2 --> AS2
+    C3 --> AS3
+    C4 --> AS3
+    
+    style A1 fill:#0066CC,color:#fff
+    style A2 fill:#0066CC,color:#fff
+    style A3 fill:#0066CC,color:#fff
+    style V1 fill:#00CC66,color:#fff
+    style V2 fill:#00CC66,color:#fff
+    style V3 fill:#00CC66,color:#fff
+    style D1 fill:#FF6600,color:#fff
+    style D2 fill:#FF6600,color:#fff
+    style D3 fill:#FF6600,color:#fff
+

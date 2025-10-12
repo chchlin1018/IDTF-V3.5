@@ -1,0 +1,11 @@
+graph TD
+    A["FDL 檔案 (yml)"] --> B["1. FDL 處理器"]
+    C["2. IADL 類型註冊表"] --> D["3. 實例化迴圈"]
+    B --> D
+    D --> E["4. AssetAdapter 啟動物件"]
+    E --> F["5. NamingService 註冊物件"]
+    F --> G["活躍的資產物件實體"]
+
+    style A fill:#ccf,stroke:#333,stroke-width:2px
+    style G fill:#9f9,stroke:#333,stroke-width:2px
+

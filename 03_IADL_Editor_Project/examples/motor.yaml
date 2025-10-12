@@ -1,0 +1,83 @@
+name: M-101
+type: Motor
+description: Electric motor for pump P-101
+version: 1.0
+
+properties:
+  id: m_101
+  manufacturer: ElectroTech
+  model: ET-2000
+  power: 15 # kW
+  voltage: 400 # V
+  current: 30 # A
+  frequency: 50 # Hz
+  rpm: 1450
+  efficiency: 0.92
+  power_factor: 0.85
+  insulation_class: F
+  protection_class: IP55
+  cooling_method: TEFC
+  bearing_type: Ball
+  installation_date: 2023-01-15
+
+signals:
+  - name: current
+    type: analog_input
+    unit: A
+    range: [0, 50]
+    description: Motor current
+    
+  - name: voltage
+    type: analog_input
+    unit: V
+    range: [0, 500]
+    description: Motor voltage
+    
+  - name: power
+    type: analog_input
+    unit: kW
+    range: [0, 20]
+    description: Motor power consumption
+    
+  - name: temperature
+    type: analog_input
+    unit: °C
+    range: [0, 150]
+    description: Motor winding temperature
+    
+  - name: bearing_temperature
+    type: analog_input
+    unit: °C
+    range: [0, 120]
+    description: Motor bearing temperature
+    
+  - name: vibration
+    type: analog_input
+    unit: mm/s
+    range: [0, 20]
+    description: Motor vibration level
+    
+  - name: run_status
+    type: digital_input
+    description: Running status of the motor (on/off)
+    
+  - name: fault_status
+    type: digital_input
+    description: Fault status of the motor
+    
+  - name: start_command
+    type: digital_output
+    description: Command to start the motor
+    
+  - name: stop_command
+    type: digital_output
+    description: Command to stop the motor
+
+relationships:
+  - type: drives
+    target: P-101
+    description: Motor drives pump P-101
+    
+  - type: part_of
+    target: P-101
+    description: Motor is part of pump P-101

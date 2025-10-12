@@ -1,0 +1,48 @@
+graph TD
+    subgraph Design & Supply Chain
+        direction LR
+        A[PLM - PTC Windchill]
+        B[CAD - Autodesk Inventor]
+        C[BIM - Autodesk Revit]
+        D[Plant - AVEVA E3D]
+    end
+
+    subgraph Operations
+        direction LR
+        F[SCADA - Wonderware]
+        G[HMI]
+        H[PLC / DCS]
+        I[IoT Platforms]
+    end
+
+    subgraph Community & Marketplace
+        direction LR
+        J[Asset Template Library]
+        K[Factory Template Library]
+    end
+
+    subgraph Core Framework
+        direction TB
+        IADL["**IADL**<br/>Industrial Asset<br/>Description Language"]
+        NDH["**NDH**<br/>(Instance Generation)"]
+    end
+
+    A -- Bidirectional --> IADL
+    B -- Bidirectional --> IADL
+    C -- Bidirectional --> IADL
+    D -- Bidirectional --> IADL
+
+    IADL -- Declaration --> NDH
+
+    IADL -- Defines --> J
+    IADL -- Defines --> K
+    J -- Contributes to --> IADL
+    K -- Contributes to --> IADL
+
+    NDH -- Bidirectional Control --> F
+    NDH -- Bidirectional Control --> G
+    NDH -- Bidirectional Control --> H
+    NDH -- Bidirectional Control --> I
+
+    style IADL fill:#007bff,color:#fff,stroke:#333,stroke-width:2px
+    style NDH fill:#28a745,color:#fff,stroke:#333,stroke-width:2px

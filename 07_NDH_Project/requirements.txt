@@ -1,0 +1,57 @@
+# NDH Test Framework Dependencies
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+websockets==12.0
+python-multipart==0.0.6
+
+# Data Processing
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dateutil==2.8.2
+
+# Redis Support
+redis==5.0.1
+hiredis==2.3.2
+
+# Database
+sqlalchemy==2.0.25
+aiosqlite==0.19.0
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+httpx==0.26.0
+
+# Utilities
+pyyaml==6.0.1
+python-dotenv==1.0.0
+aiofiles==23.2.1
+orjson==3.9.12
+
+# Logging and Monitoring
+loguru==0.7.2
+prometheus-client==0.19.0
+
+# Industrial Protocols
+asyncua==1.0.6  # OPC UA support
+
+# Message Queue
+aiokafka==0.10.0  # Kafka support
+
+# MQTT and Sparkplug
+paho-mqtt==1.6.1  # MQTT client
+# pysparkplug>=1.0.0  # Sparkplug B support (optional, for full Protobuf parsing)
+
+# NVIDIA Omniverse and OpenUSD
+usd-core>=23.11  # OpenUSD (Universal Scene Description)
+# omni-client-library  # Omniverse Client Library (需要從 NVIDIA 下載)
+
+# Development Tools
+black==23.12.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+

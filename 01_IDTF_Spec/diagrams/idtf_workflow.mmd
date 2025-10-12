@@ -1,0 +1,43 @@
+graph TD
+    Start[開始] --> Step1[步驟 1: 資產建模<br/>IADL Editor]
+    Step1 --> Step1a[選擇資產類型]
+    Step1a --> Step1b[配置 3D 模型]
+    Step1b --> Step1c[定義數據標籤]
+    Step1c --> Step1d[編寫行為模型]
+    Step1d --> Step1e[匯出 IADL 檔案]
+    
+    Step1e --> Step2[步驟 2: 工廠佈局設計<br/>Factory Designer]
+    Step2 --> Step2a[匯入 IADL 資產]
+    Step2a --> Step2b[2D/3D 佈局設計]
+    Step2b --> Step2c[定義區域結構]
+    Step2c --> Step2d[繪製連接關係]
+    Step2d --> Step2e[生成 FDL 配置]
+    
+    Step2e --> Step3[步驟 3: 部署到 NDH]
+    Step3 --> Step3a[驗證 FDL]
+    Step3a --> Step3b[推送到 NDH API]
+    Step3b --> Step3c[實例化資產物件]
+    Step3c --> Step3d[建立數據連接]
+    Step3d --> Step3e[啟動數據採集]
+    
+    Step3e --> Step4[步驟 4: 視覺化<br/>Omniverse]
+    Step4 --> Step4a[生成 USD 場景]
+    Step4a --> Step4b[綁定即時數據]
+    Step4b --> Step4c[渲染 3D 視覺化]
+    Step4c --> Step4d[多人協作]
+    
+    Step4d --> Step5[步驟 5: 監控與優化]
+    Step5 --> Step5a[查看即時數據]
+    Step5a --> Step5b[分析歷史趨勢]
+    Step5b --> Step5c{需要調整?}
+    Step5c -->|是| Step2
+    Step5c -->|否| End[完成]
+    
+    style Start fill:#00CC66,color:#fff
+    style Step1 fill:#0066CC,color:#fff
+    style Step2 fill:#00CC66,color:#fff
+    style Step3 fill:#FF6600,color:#fff
+    style Step4 fill:#0088DD,color:#fff
+    style Step5 fill:#666666,color:#fff
+    style End fill:#00CC66,color:#fff
+

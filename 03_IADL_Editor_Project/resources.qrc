@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/new.png</file>
+        <file>icons/open.png</file>
+        <file>icons/save.png</file>
+        <file>icons/validate.png</file>
+        <file>icons/asset.png</file>
+        <file>icons/relationship.png</file>
+        <file>icons/visualize.png</file>
+        <file>examples/pump.yaml</file>
+        <file>examples/valve.yaml</file>
+        <file>examples/motor.yaml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,22 @@
+graph TD
+    subgraph "Design Time (Offline)"
+        A["IADL Editor"]
+        B["Factory Designer"]
+    end
+
+    subgraph "Run Time (Online)"
+        C["NDH - Neutral Data Hub"]
+        D["Physical Factory"]
+    end
+
+    A -- "1. Asset Blueprints (IADL)" --> B
+    B -- "2. Factory Layout (FDL)" --> C
+    C -- "3. Instance Generation" --> C
+    C -- "4. Real-time Control & Monitoring" --> D
+    D -- "5. Feedback Data" --> C
+
+    style A fill:#f9f,color:#000,stroke:#333,stroke-width:2px
+    style B fill:#9ff,color:#000,stroke:#333,stroke-width:2px
+    style C fill:#9f9,color:#000,stroke:#333,stroke-width:2px
+    style D fill:#f99,color:#000,stroke:#333,stroke-width:2px
+

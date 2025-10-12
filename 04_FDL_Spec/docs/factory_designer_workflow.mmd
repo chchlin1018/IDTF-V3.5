@@ -1,0 +1,22 @@
+graph TD
+    Start[開始] --> Import[匯入 IADL 資產<br/>到資產庫]
+    Import --> Design[2D/3D 佈局設計<br/>拖放資產]
+    Design --> Connect[定義連接關係<br/>和區域結構]
+    Connect --> Generate[自動生成<br/>FDL 配置]
+    Generate --> Review{檢視和<br/>微調 FDL?}
+    Review -->|需要修改| Edit[手動編輯 FDL]
+    Edit --> Sync[雙向同步<br/>視覺化佈局]
+    Sync --> Validate
+    Review -->|確認無誤| Validate[驗證 FDL<br/>正確性]
+    Validate --> Deploy[一鍵部署<br/>到 NDH]
+    Deploy --> Monitor[即時監控<br/>部署進度]
+    Monitor --> Success{部署<br/>成功?}
+    Success -->|是| Complete[完成]
+    Success -->|否| Error[顯示錯誤<br/>和建議]
+    Error --> Review
+    
+    style Start fill:#00CC66,color:#fff
+    style Deploy fill:#0066CC,color:#fff
+    style Complete fill:#00CC66,color:#fff
+    style Error fill:#FF6600,color:#fff
+

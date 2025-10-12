@@ -1,0 +1,55 @@
+# Build directories
+**/build/
+**/dist/
+**/bin/
+**/obj/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.pyc
+__pycache__/
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Qt specific
+*.pro.user
+*.pro.user.*
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# Python
+*.egg-info/
+.pytest_cache/
+venv/
+env/
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# Database
+*.db
+*.sqlite
+
+# Large binary files (if any)
+*.zip
+*.tar.gz
+*.rar
+

@@ -1,0 +1,26 @@
+graph TD
+    A["FDL Document"] --> B["areas"];
+    A --> C["relationships"];
+
+    B --> D["Area"];
+    D --> E["instances"];
+    E --> F["Instance"];
+
+    C --> G["Relationship"];
+
+    subgraph "FDL Document"
+        A
+    end
+
+    subgraph "Area"
+        D
+    end
+
+    subgraph "Instance"
+        F
+    end
+
+    subgraph "Relationship"
+        G
+    end
+

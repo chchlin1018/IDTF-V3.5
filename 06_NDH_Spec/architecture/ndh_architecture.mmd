@@ -1,0 +1,69 @@
+graph TB
+    subgraph "Data Sources"
+        OPC[OPC UA<br/>設備數據]
+        MQTT[MQTT<br/>IoT 數據]
+        MOD[Modbus<br/>PLC 數據]
+        BAC[BACnet<br/>HVAC 數據]
+        ERP[ERP<br/>業務數據]
+        MES[MES<br/>生產數據]
+    end
+    
+    subgraph "NDH Core"
+        subgraph "Data Ingestion"
+            CONN[Connectors]
+        end
+        
+        subgraph "Message Broker"
+            KAFKA[Kafka Cluster]
+        end
+        
+        subgraph "Stream Processing"
+            STREAM[Kafka Streams]
+        end
+        
+        subgraph "Data Storage"
+            INFLUX[InfluxDB<br/>時序數據]
+            POSTGRES[PostgreSQL<br/>關聯數據]
+        end
+        
+        subgraph "API Layer"
+            REST[REST API]
+            WS[WebSocket]
+            GRAPHQL[GraphQL]
+        end
+    end
+    
+    subgraph "Applications"
+        DASH[Dashboard]
+        OMNI[Omniverse]
+        MOBILE[Mobile App]
+        FD[Factory Designer]
+    end
+    
+    OPC --> CONN
+    MQTT --> CONN
+    MOD --> CONN
+    BAC --> CONN
+    ERP --> CONN
+    MES --> CONN
+    
+    CONN --> KAFKA
+    KAFKA --> STREAM
+    STREAM --> INFLUX
+    STREAM --> POSTGRES
+    
+    INFLUX --> REST
+    POSTGRES --> REST
+    REST --> WS
+    REST --> GRAPHQL
+    
+    REST --> DASH
+    WS --> OMNI
+    GRAPHQL --> MOBILE
+    REST --> FD
+    
+    style KAFKA fill:#FF6600,color:#fff
+    style INFLUX fill:#0066CC,color:#fff
+    style POSTGRES fill:#0066CC,color:#fff
+    style REST fill:#00CC66,color:#fff
+

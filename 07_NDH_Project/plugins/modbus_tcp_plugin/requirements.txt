@@ -1,0 +1,4 @@
+# Modbus TCP Plugin Dependencies
+
+pymodbus>=3.5.0
+

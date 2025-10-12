@@ -1,0 +1,28 @@
+graph LR
+    subgraph "Design Time (離線設計)"
+        IE[IADL Editor<br/>資產建模]
+        FD[Factory Designer<br/>工廠佈局]
+    end
+    
+    subgraph "Runtime (線上執行)"
+        NDH[NDH<br/>數據中樞]
+        OV[Omniverse<br/>3D 視覺化]
+    end
+    
+    subgraph "Physical World"
+        PA[Physical Assets<br/>實體資產]
+    end
+    
+    IE -->|IADL 檔案| FD
+    FD -->|FDL 檔案<br/>+ 部署指令| NDH
+    FD -->|USD 場景| OV
+    PA -->|OT 數據<br/>OPC UA/MQTT| NDH
+    NDH -->|即時數據| OV
+    NDH -->|控制指令| PA
+    
+    style IE fill:#0066CC,color:#fff
+    style FD fill:#00CC66,color:#fff
+    style NDH fill:#FF6600,color:#fff
+    style OV fill:#0088DD,color:#fff
+    style PA fill:#666666,color:#fff
+

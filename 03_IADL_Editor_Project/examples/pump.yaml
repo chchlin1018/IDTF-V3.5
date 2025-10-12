@@ -1,0 +1,82 @@
+name: P-101
+type: Pump
+description: Feed pump for reactor R-101
+version: 1.0
+
+properties:
+  id: p_101
+  manufacturer: FlowTech
+  model: FT-3000
+  capacity: 100 # m³/h
+  head: 30 # m
+  power: 15 # kW
+  rpm: 1450
+  efficiency: 0.85
+  material: Stainless Steel 316
+  installation_date: 2023-01-15
+
+signals:
+  - name: discharge_pressure
+    type: analog_input
+    unit: bar
+    range: [0, 10]
+    description: Discharge pressure of the pump
+  
+  - name: suction_pressure
+    type: analog_input
+    unit: bar
+    range: [0, 5]
+    description: Suction pressure of the pump
+    
+  - name: flow_rate
+    type: analog_input
+    unit: m³/h
+    range: [0, 120]
+    description: Flow rate through the pump
+    
+  - name: motor_current
+    type: analog_input
+    unit: A
+    range: [0, 50]
+    description: Current drawn by the pump motor
+    
+  - name: motor_temperature
+    type: analog_input
+    unit: °C
+    range: [0, 150]
+    description: Temperature of the pump motor
+    
+  - name: vibration
+    type: analog_input
+    unit: mm/s
+    range: [0, 20]
+    description: Vibration level of the pump
+    
+  - name: run_status
+    type: digital_input
+    description: Running status of the pump (on/off)
+    
+  - name: fault_status
+    type: digital_input
+    description: Fault status of the pump
+    
+  - name: start_command
+    type: digital_output
+    description: Command to start the pump
+    
+  - name: stop_command
+    type: digital_output
+    description: Command to stop the pump
+
+relationships:
+  - type: drives
+    target: M-101
+    description: Pump is driven by motor M-101
+    
+  - type: connects_to
+    target: V-101
+    description: Pump discharge connects to valve V-101
+    
+  - type: part_of
+    target: Reactor Unit
+    description: Pump is part of the Reactor Unit
