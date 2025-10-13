@@ -129,7 +129,7 @@ IDTF V3.5 採用七層架構設計，如圖 1 所示：
 
 **數據採集層**：透過多種工業協議（OPC UA、MQTT、Modbus、BACnet、SECS/GEM、SNMP）從物理設備採集即時數據。
 
-**數據中樞層（NDH）**：作為數據整合樞紐，使用 Kafka 進行串流處理，InfluxDB/TDengine 儲存時序數據，PostgreSQL 管理關聯數據，Redis 提供快取服務。
+**數據中樞層（NDH）**：作為數據整合樞紐，使用 Kafka 進行串流處理，InfluxDB/TDengine 儲存時序數據，PostgreSQL 管理關聯數據，Redis 提供快取服務。NDH 不僅整合 OT 層的設備數據，同時也整合 IT 層的企業應用系統，包括 MES（製造執行系統）、ERP（企業資源規劃）、PLM（產品生命週期管理）、WMS（倉儲管理系統）、QMS（品質管理系統）等，實現 OT/IT 融合。
 
 **數據處理層**：對採集的數據進行串流處理（如異常檢測）、批次處理（如歷史分析）以及 AI/ML 模型推論（如預測性維護）。
 
@@ -579,7 +579,7 @@ NDH（Neutral Data Hub）是 IDTF V3.5 的執行時數據整合平台，採用�
 │  │ Cluster  │ │/TDengine │ │ Cluster  │ │ Cluster  │      │
 │  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
 ├─────────────────────────────────────────────────────────────┤
-│                  Protocol Adapters                           │
+│              Protocol Adapters (OT Layer)                    │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
 │  │ OPC UA   │ │   MQTT   │ │  Modbus  │ │  BACnet  │      │
 │  │ Adapter  │ │ Adapter  │ │ Adapter  │ │ Adapter  │      │
@@ -588,12 +588,83 @@ NDH（Neutral Data Hub）是 IDTF V3.5 的執行時數據整合平台，採用�
 │  │SECS/GEM  │ │   SNMP   │                                 │
 │  │ Adapter  │ │ Adapter  │                                 │
 │  └──────────┘ └──────────┘                                 │
+├─────────────────────────────────────────────────────────────┤
+│         Enterprise Application Connectors (IT Layer)         │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐      │
+│  │   MES    │ │   ERP    │ │   PLM    │ │   WMS    │      │
+│  │Connector │ │Connector │ │Connector │ │Connector │      │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘      │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐                   │
+│  │   QMS    │ │   CMMS   │ │   SCADA  │                   │
+│  │Connector │ │Connector │ │Connector │                   │
+│  └──────────┘ └──────────┘ └──────────┘                   │
 └─────────────────────────────────────────────────────────────┘
 
-圖 3：NDH 微服務架構
+圖 3：NDH 微服務架構（含 OT/IT 整合）
 ```
 
-### 5.2 可抽換時序數據庫架構
+### 5.2 企業應用整合（OT/IT 融合）
+
+NDH 的一大關鍵能力是實現 OT（Operational Technology）與 IT（Information Technology）的深度融合，透過企業應用連接器（Enterprise Application Connectors）整合各種企業系統：
+
+**MES（Manufacturing Execution System）連接器**：
+- 從 MES 獲取生產訂單、工單狀態、生產進度
+- 向 MES 回報設備狀態、生產數量、品質數據
+- 支援主流 MES 系統（Siemens Opcenter、Rockwell FactoryTalk、SAP MES）
+- 雙向數據同步，延遲 < 5 秒
+
+**ERP（Enterprise Resource Planning）連接器**：
+- 從 ERP 獲取物料資訊、庫存狀態、採購訂單
+- 向 ERP 回報生產完工、物料消耗、設備維護記錄
+- 支援 SAP ERP、Oracle ERP、Microsoft Dynamics
+- 批次同步機制，每 15 分鐘更新一次
+
+**PLM（Product Lifecycle Management）連接器**：
+- 從 PLM 獲取產品 BOM、工藝路線、設計變更
+- 向 PLM 回報實際生產參數、品質問題、改善建議
+- 支援 Siemens Teamcenter、PTC Windchill、Dassault ENOVIA
+
+**WMS（Warehouse Management System）連接器**：
+- 從 WMS 獲取原物料庫存、成品庫存、儲位資訊
+- 向 WMS 回報物料需求、入庫通知、出庫記錄
+- 支援 SAP EWM、Manhattan WMS、Oracle WMS
+
+**QMS（Quality Management System）連接器**：
+- 從 QMS 獲取品質標準、檢驗規範、不良品定義
+- 向 QMS 回報檢驗結果、不良品數據、SPC 分析
+- 支援 SAP QM、Minitab、InfinityQS
+
+**CMMS（Computerized Maintenance Management System）連接器**：
+- 從 CMMS 獲取維護計劃、備品庫存、維修工單
+- 向 CMMS 回報設備故障、預測性維護警報、維修完成記錄
+- 支援 SAP PM、IBM Maximo、Infor EAM
+
+**數據流範例**：
+
+```
+[生產流程]
+ERP 訂單 → MES 工單 → NDH 資產調度 → 設備執行 → 
+即時數據採集 → 品質檢驗 → QMS 記錄 → MES 完工回報 → 
+ERP 庫存更新
+
+[維護流程]
+設備感測器 → NDH 異常檢測 → AI 預測故障 → 
+CMMS 產生工單 → 維修人員執行 → NDH 記錄完工 → 
+ERP 成本記錄
+
+[物料流程]
+ERP 採購訂單 → WMS 入庫 → MES 領料 → 
+生產消耗 → NDH 追蹤 → WMS 庫存扣減 → 
+ERP 成本核算
+```
+
+**整合效益**：
+- **消除數據孤島**：打通 OT 和 IT 系統，實現數據統一視圖
+- **即時決策**：結合設備即時數據和企業業務數據，支援快速決策
+- **流程自動化**：減少人工數據輸入和系統間的手動轉換
+- **數據一致性**：確保各系統間的數據同步和一致性
+
+### 5.3 可抽換時序數據庫架構
 
 NDH 的一大創新是支援可抽換的時序數據庫，透過適配器模式實現對多種數據庫的統一支援：
 
@@ -653,7 +724,7 @@ ndh_config:
       bucket: factory_backup
 ```
 
-### 5.3 Asset Servants 與實例化引擎
+### 5.4 Asset Servants 與實例化引擎
 
 當 NDH 接收到 FDL 部署請求後，Instantiation Engine 會批次創建 Asset Servants（資產僕人）：
 
@@ -1173,7 +1244,7 @@ IDTF V3.5 的開源特性（MIT License）和供應商中立立場，使其成�
 
 **作者簡介**
 
-林志錚（Chih Cheng Lin, Michael Lin）是 IDTF 聯盟的創始人和首席架構師，擁有超過 20 年的工業自動化和數位分身系統開發經驗。他曾在多家國際企業擔任技術顧問，參與過數十個大型工業數位化轉型專案。
+林志錚（Chih Cheng Lin, Michael Lin）是 IDTF 聯盟的創始人和首席架構師，擁有超過 20 年的工業自動化和數位分身系統開發經驗。他曾在多家跨國大型企業工作，涵蓋軟體技術（Software Technology）、資訊技術（IT）、操作技術（OT）以及數位分身（Digital Twins）等領域，積累了豐富的跨領域整合經驗。在職業生涯中，他參與過數十個大型工業數位化轉型專案，涵蓋半導體製造、LED 封裝、能源發電、數據中心以及智慧城市等多個產業。林志錚致力於推動工業數位分身技術的標準化和開源化，並透過 IDTF 框架為全球工業 4.0 轉型提供實用的解決方案。
 
 ---
 
