@@ -1325,6 +1325,971 @@ class OPCUAConnector(BaseConnector):
 
 ---
 
+
+
+# NDH 即時系統整合與協同管理
+
+## 6.3 即時雙向連接與同步引擎
+
+### 6.3.1 設計理念
+
+NDH 作為執行時數據中樞，必須提供**即時、雙向、可靠**的系統連接能力。與傳統的單向數據採集不同，NDH 強調：
+
+1. **雙向互動**：不僅接收數據，還能發送指令和回饋
+2. **即時同步**：毫秒級延遲，支援即時控制和監控
+3. **變更偵測**：自動偵測系統狀態變更並觸發事件
+4. **多系統協調**：協調 MES、ERP、SCADA、Omniverse 等多個系統的數據流
+
+### 6.3.2 即時連接架構
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    外部系統（Real-time Systems）                 │
+├──────────┬──────────┬──────────┬──────────┬──────────┬─────────┤
+│   MES    │   ERP    │  SCADA   │   PLC    │Omniverse │  其他   │
+│(Siemens) │  (SAP)   │ (AVEVA)  │(Rockwell)│ (NVIDIA) │         │
+└────┬─────┴────┬─────┴────┬─────┴────┬─────┴────┬─────┴─────────┘
+     │          │          │          │          │
+     ▼          ▼          ▼          ▼          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              NDH 即時連接層 (Real-time Connection Layer)        │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  連接管理器 (Connection Manager)                          │  │
+│  │  - 連接池管理 (Connection Pooling)                       │  │
+│  │  - 心跳檢測 (Heartbeat Detection)                        │  │
+│  │  - 自動重連 (Auto-reconnection)                          │  │
+│  │  - 負載均衡 (Load Balancing)                             │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  雙向同步引擎 (Bidirectional Sync Engine)                │  │
+│  │  - 訂閱/發布 (Subscribe/Publish)                         │  │
+│  │  - 請求/響應 (Request/Response)                          │  │
+│  │  - 命令/確認 (Command/Acknowledgement)                   │  │
+│  │  - 批量操作 (Batch Operations)                           │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  變更偵測引擎 (Change Detection Engine)                  │  │
+│  │  - CDC (Change Data Capture)                             │  │
+│  │  - 事件流 (Event Streaming)                              │  │
+│  │  - 差異計算 (Diff Calculation)                           │  │
+│  │  - 變更通知 (Change Notification)                        │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  協議適配層 (Protocol Adapter Layer)                     │  │
+│  │  - REST/HTTP  - OPC UA    - Modbus TCP                   │  │
+│  │  - GraphQL    - MQTT      - Profinet                     │  │
+│  │  - WebSocket  - gRPC      - BACnet                       │  │
+│  │  - SAP RFC    - ODBC/JDBC - USD (Omniverse)              │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+     │
+     ▼
+┌─────────────────────────────────────────────────────────────────┐
+│              NDH 核心數據中樞 (Core Data Hub)                   │
+│  - Asset Servants (執行時模型)                                 │
+│  - 時序數據庫 (Time-series Database)                           │
+│  - 事件總線 (Event Bus)                                        │
+│  - 狀態管理 (State Management)                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 6.3.3 MES 雙向同步
+
+**數據流向**：
+
+**從 MES → NDH**：
+- 生產訂單（Work Orders）
+- 工藝路線（Routing）
+- 工藝參數（Process Parameters）
+- 品質標準（Quality Standards）
+- 物料清單（BOM）
+
+**從 NDH → MES**：
+- 生產進度（Production Progress）
+- 設備狀態（Equipment Status）
+- 品質數據（Quality Data）
+- 異常事件（Exceptions）
+- 實際產量（Actual Output）
+
+**實現範例**：
+
+```python
+class MESConnector:
+    """MES 雙向同步連接器"""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.client = None
+        self.subscriptions = []
+        self.event_handlers = {}
+    
+    async def connect(self):
+        """建立與 MES 的連接"""
+        self.client = await self._create_client()
+        await self._setup_subscriptions()
+    
+    async def _setup_subscriptions(self):
+        """設置訂閱（從 MES 接收數據）"""
+        # 訂閱生產訂單變更
+        await self.subscribe(
+            topic="production.orders",
+            handler=self._on_order_changed
+        )
+        
+        # 訂閱工藝參數變更
+        await self.subscribe(
+            topic="process.parameters",
+            handler=self._on_parameter_changed
+        )
+    
+    async def _on_order_changed(self, order: Dict):
+        """處理生產訂單變更事件"""
+        # 1. 驗證訂單數據
+        validated_order = self._validate_order(order)
+        
+        # 2. 更新 NDH 內部狀態
+        await self.ndh.update_production_order(validated_order)
+        
+        # 3. 觸發下游事件
+        await self.ndh.emit_event("order.updated", validated_order)
+        
+        # 4. 通知相關 Asset Servants
+        affected_assets = await self.ndh.get_assets_by_order(order['id'])
+        for asset in affected_assets:
+            await asset.on_order_changed(validated_order)
+    
+    async def report_progress(self, order_id: str, progress: Dict):
+        """回報生產進度到 MES"""
+        payload = {
+            "order_id": order_id,
+            "progress": progress,
+            "timestamp": datetime.utcnow().isoformat(),
+            "source": "NDH"
+        }
+        
+        # 發送到 MES
+        response = await self.client.post(
+            f"/api/orders/{order_id}/progress",
+            json=payload
+        )
+        
+        # 記錄審計日誌
+        await self.ndh.audit_log.record(
+            action="report_progress",
+            target=f"MES.Order.{order_id}",
+            payload=payload,
+            response=response
+        )
+        
+        return response
+    
+    async def report_quality_data(self, order_id: str, quality_data: Dict):
+        """回報品質數據到 MES"""
+        payload = {
+            "order_id": order_id,
+            "quality_data": quality_data,
+            "timestamp": datetime.utcnow().isoformat(),
+            "inspector": quality_data.get("inspector"),
+            "result": quality_data.get("result")  # PASS/FAIL
+        }
+        
+        response = await self.client.post(
+            f"/api/orders/{order_id}/quality",
+            json=payload
+        )
+        
+        return response
+```
+
+### 6.3.4 ERP 雙向同步
+
+**數據流向**：
+
+**從 ERP → NDH**：
+- 物料需求計劃（MRP）
+- 採購訂單（Purchase Orders）
+- 成本中心（Cost Centers）
+- 維護計劃（Maintenance Plans）
+- 預算與資源分配
+
+**從 NDH → ERP**：
+- 實際庫存消耗
+- 實際成本數據
+- 設備健康狀態
+- 維護記錄
+- 能源消耗數據
+
+**SAP RFC 連接範例**：
+
+```python
+class ERPConnector:
+    """ERP (SAP) 雙向同步連接器"""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.rfc_connection = None
+    
+    async def connect(self):
+        """建立 SAP RFC 連接"""
+        from pyrfc import Connection
+        
+        self.rfc_connection = Connection(
+            user=self.config['user'],
+            passwd=self.config['password'],
+            ashost=self.config['host'],
+            sysnr=self.config['system_number'],
+            client=self.config['client']
+        )
+    
+    async def get_material_requirements(self, plant: str, date: str):
+        """從 SAP 獲取物料需求"""
+        result = self.rfc_connection.call(
+            'BAPI_MATERIAL_AVAILABILITY',
+            PLANT=plant,
+            MATERIAL='*',
+            CHECK_DATE=date
+        )
+        
+        return result['MATERIAL_AVAILABILITY']
+    
+    async def post_goods_movement(self, movement: Dict):
+        """回報物料移動到 SAP"""
+        result = self.rfc_connection.call(
+            'BAPI_GOODSMVT_CREATE',
+            GOODSMVT_HEADER={
+                'PSTNG_DATE': movement['posting_date'],
+                'DOC_DATE': movement['document_date'],
+                'REF_DOC_NO': movement['reference']
+            },
+            GOODSMVT_CODE={
+                'GM_CODE': movement['movement_type']
+            },
+            GOODSMVT_ITEM=[{
+                'MATERIAL': movement['material'],
+                'PLANT': movement['plant'],
+                'STGE_LOC': movement['storage_location'],
+                'MOVE_TYPE': movement['movement_type'],
+                'ENTRY_QNT': movement['quantity'],
+                'ENTRY_UOM': movement['unit']
+            }]
+        )
+        
+        # 提交事務
+        self.rfc_connection.call('BAPI_TRANSACTION_COMMIT')
+        
+        return result
+```
+
+### 6.3.5 SCADA/PLC 即時互動
+
+**特性**：
+- **毫秒級延遲**：支援即時控制迴路
+- **高頻數據採集**：每秒數千個數據點
+- **雙向控制**：不僅讀取，還能寫入控制指令
+
+**OPC UA 訂閱範例**：
+
+```python
+class SCADAConnector:
+    """SCADA/PLC 即時連接器（OPC UA）"""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.client = None
+        self.subscription = None
+    
+    async def connect(self):
+        """建立 OPC UA 連接"""
+        from asyncua import Client
+        
+        self.client = Client(self.config['endpoint'])
+        await self.client.connect()
+        
+        # 設置訂閱
+        self.subscription = await self.client.create_subscription(
+            period=100  # 100ms 更新週期
+        )
+    
+    async def subscribe_tag(self, node_id: str, handler: Callable):
+        """訂閱 OPC UA 標籤"""
+        node = self.client.get_node(node_id)
+        
+        # 創建監控項
+        handle = await self.subscription.subscribe_data_change(
+            node,
+            handler
+        )
+        
+        return handle
+    
+    async def write_tag(self, node_id: str, value: Any):
+        """寫入 OPC UA 標籤（發送控制指令）"""
+        node = self.client.get_node(node_id)
+        
+        # 寫入前驗證權限
+        if not await self._check_write_permission(node_id):
+            raise PermissionError(f"No write permission for {node_id}")
+        
+        # 寫入值
+        await node.write_value(value)
+        
+        # 記錄審計日誌
+        await self.ndh.audit_log.record(
+            action="write_tag",
+            target=node_id,
+            value=value,
+            user=self.current_user
+        )
+    
+    async def _on_tag_changed(self, node, value, data):
+        """標籤值變更處理器"""
+        # 1. 解析變更
+        tag_id = str(node.nodeid)
+        timestamp = data.monitored_item.Value.SourceTimestamp
+        
+        # 2. 寫入時序數據庫
+        await self.ndh.tsdb.write(
+            measurement="scada_tags",
+            tags={"tag_id": tag_id},
+            fields={"value": value},
+            timestamp=timestamp
+        )
+        
+        # 3. 檢查異常
+        if await self._is_abnormal(tag_id, value):
+            await self.ndh.emit_event("tag.abnormal", {
+                "tag_id": tag_id,
+                "value": value,
+                "timestamp": timestamp
+            })
+        
+        # 4. 更新 Asset Servant 狀態
+        asset = await self.ndh.get_asset_by_tag(tag_id)
+        if asset:
+            await asset.update_property(tag_id, value)
+```
+
+### 6.3.6 Omniverse 即時協同
+
+**USD 雙向同步**：
+
+```python
+class OmniverseConnector:
+    """Omniverse 即時協同連接器"""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.nucleus_client = None
+        self.usd_stage = None
+        self.subscriptions = []
+    
+    async def connect(self):
+        """連接到 Omniverse Nucleus"""
+        from omni.client import OmniClient
+        
+        self.nucleus_client = OmniClient()
+        await self.nucleus_client.connect(
+            server=self.config['nucleus_server'],
+            user=self.config['user'],
+            password=self.config['password']
+        )
+        
+        # 開啟 USD Stage
+        self.usd_stage = await self._open_stage(
+            self.config['stage_url']
+        )
+    
+    async def subscribe_prim_changes(self, prim_path: str, handler: Callable):
+        """訂閱 USD Prim 變更"""
+        # 監聽 Prim 的屬性變更
+        listener = self.usd_stage.GetObjectAtPath(prim_path).GetPrimAtPath()
+        
+        # 註冊變更回調
+        self.subscriptions.append({
+            "prim_path": prim_path,
+            "handler": handler,
+            "listener": listener
+        })
+    
+    async def update_asset_transform(self, asset_id: str, transform: Dict):
+        """更新資產的 Transform（從 NDH → Omniverse）"""
+        # 1. 查找對應的 USD Prim
+        prim_path = await self._get_prim_path_by_asset_id(asset_id)
+        prim = self.usd_stage.GetPrimAtPath(prim_path)
+        
+        # 2. 更新 Transform
+        from pxr import UsdGeom, Gf
+        
+        xformable = UsdGeom.Xformable(prim)
+        xformable.ClearXformOpOrder()
+        
+        translate_op = xformable.AddTranslateOp()
+        translate_op.Set(Gf.Vec3d(
+            transform['position']['x'],
+            transform['position']['y'],
+            transform['position']['z']
+        ))
+        
+        rotate_op = xformable.AddRotateXYZOp()
+        rotate_op.Set(Gf.Vec3d(
+            transform['rotation']['x'],
+            transform['rotation']['y'],
+            transform['rotation']['z']
+        ))
+        
+        # 3. 保存變更
+        self.usd_stage.Save()
+        
+        # 4. 通知其他協同用戶
+        await self._broadcast_change(prim_path, transform)
+    
+    async def _on_prim_changed(self, prim_path: str, change_type: str):
+        """Prim 變更事件處理器（從 Omniverse → NDH）"""
+        # 1. 獲取變更後的數據
+        prim = self.usd_stage.GetPrimAtPath(prim_path)
+        
+        # 2. 解析為 IADL 格式
+        iadl_data = await self._usd_to_iadl(prim)
+        
+        # 3. 更新 NDH 內部狀態
+        asset_id = await self._get_asset_id_by_prim_path(prim_path)
+        await self.ndh.update_asset(asset_id, iadl_data)
+        
+        # 4. 觸發事件
+        await self.ndh.emit_event("asset.updated.from_omniverse", {
+            "asset_id": asset_id,
+            "prim_path": prim_path,
+            "change_type": change_type
+        })
+```
+
+---
+
+## 6.4 變更偵測與事件驅動架構
+
+### 6.4.1 變更數據捕獲（CDC）
+
+**目的**：自動偵測外部系統的數據變更，無需輪詢。
+
+**實現方式**：
+
+1. **數據庫 CDC**（針對 MES/ERP 數據庫）：
+   - PostgreSQL：Logical Replication
+   - SQL Server：Change Data Capture (CDC)
+   - Oracle：GoldenGate
+
+2. **消息隊列**（針對事件驅動系統）：
+   - Kafka
+   - RabbitMQ
+   - Azure Service Bus
+
+3. **Webhook**（針對 SaaS 系統）：
+   - 註冊 Webhook 端點
+   - 接收變更通知
+
+**CDC 引擎實現**：
+
+```python
+class CDCEngine:
+    """變更數據捕獲引擎"""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.listeners = {}
+        self.event_bus = EventBus()
+    
+    async def start_postgresql_cdc(self, db_config: Dict, tables: List[str]):
+        """啟動 PostgreSQL CDC"""
+        from psycopg2.extras import LogicalReplicationConnection
+        
+        conn = psycopg2.connect(
+            connection_factory=LogicalReplicationConnection,
+            **db_config
+        )
+        
+        cur = conn.cursor()
+        
+        # 創建複製槽
+        try:
+            cur.create_replication_slot(
+                'ndh_cdc_slot',
+                output_plugin='wal2json'
+            )
+        except psycopg2.errors.DuplicateObject:
+            pass  # 槽已存在
+        
+        # 開始消費變更
+        cur.start_replication(
+            slot_name='ndh_cdc_slot',
+            decode=True
+        )
+        
+        # 處理變更流
+        async for msg in cur:
+            change = json.loads(msg.payload)
+            await self._process_change(change)
+            msg.cursor.send_feedback(flush_lsn=msg.data_start)
+    
+    async def _process_change(self, change: Dict):
+        """處理變更事件"""
+        table = change['table']
+        action = change['action']  # INSERT/UPDATE/DELETE
+        data = change['data']
+        
+        # 發布事件
+        await self.event_bus.publish(
+            topic=f"cdc.{table}.{action}",
+            payload={
+                "table": table,
+                "action": action,
+                "data": data,
+                "timestamp": change['timestamp']
+            }
+        )
+```
+
+### 6.4.2 事件總線
+
+**職責**：
+- 解耦系統組件
+- 支援發布/訂閱模式
+- 保證事件順序和可靠性
+
+**實現**：
+
+```python
+class EventBus:
+    """事件總線"""
+    
+    def __init__(self):
+        self.subscribers = defaultdict(list)
+        self.event_store = EventStore()
+    
+    async def publish(self, topic: str, payload: Dict):
+        """發布事件"""
+        event = Event(
+            id=str(uuid.uuid4()),
+            topic=topic,
+            payload=payload,
+            timestamp=datetime.utcnow()
+        )
+        
+        # 1. 持久化事件
+        await self.event_store.save(event)
+        
+        # 2. 通知訂閱者
+        for subscriber in self.subscribers[topic]:
+            try:
+                await subscriber(event)
+            except Exception as e:
+                logger.error(f"Subscriber error: {e}")
+                # 重試邏輯
+                await self._retry_delivery(subscriber, event)
+    
+    def subscribe(self, topic: str, handler: Callable):
+        """訂閱事件"""
+        self.subscribers[topic].append(handler)
+    
+    async def _retry_delivery(self, subscriber: Callable, event: Event, max_retries: int = 3):
+        """重試事件投遞"""
+        for attempt in range(max_retries):
+            try:
+                await asyncio.sleep(2 ** attempt)  # 指數退避
+                await subscriber(event)
+                return
+            except Exception as e:
+                logger.warning(f"Retry {attempt + 1} failed: {e}")
+        
+        # 所有重試失敗，記錄到死信隊列
+        await self.event_store.move_to_dlq(event)
+```
+
+---
+
+## 6.5 多用戶協同管理
+
+### 6.5.1 即時登入管理
+
+**Session 管理**：
+
+```python
+class SessionManager:
+    """會話管理器"""
+    
+    def __init__(self):
+        self.active_sessions = {}
+        self.redis_client = redis.Redis()
+    
+    async def create_session(self, user: User, metadata: Dict) -> Session:
+        """創建用戶會話"""
+        session = Session(
+            id=str(uuid.uuid4()),
+            user_id=user.id,
+            user_name=user.name,
+            roles=user.roles,
+            created_at=datetime.utcnow(),
+            last_active=datetime.utcnow(),
+            metadata=metadata
+        )
+        
+        # 存儲到 Redis（支援分佈式部署）
+        await self.redis_client.setex(
+            f"session:{session.id}",
+            3600,  # 1小時過期
+            json.dumps(session.to_dict())
+        )
+        
+        self.active_sessions[session.id] = session
+        
+        # 發布事件
+        await event_bus.publish("user.logged_in", {
+            "session_id": session.id,
+            "user_id": user.id,
+            "user_name": user.name
+        })
+        
+        return session
+    
+    async def get_active_users(self) -> List[Dict]:
+        """獲取當前活躍用戶列表"""
+        return [
+            {
+                "user_id": session.user_id,
+                "user_name": session.user_name,
+                "last_active": session.last_active,
+                "location": session.metadata.get("location")
+            }
+            for session in self.active_sessions.values()
+        ]
+    
+    async def heartbeat(self, session_id: str):
+        """心跳更新"""
+        if session_id in self.active_sessions:
+            self.active_sessions[session_id].last_active = datetime.utcnow()
+            
+            # 更新 Redis TTL
+            await self.redis_client.expire(f"session:{session_id}", 3600)
+```
+
+### 6.5.2 權限控制（RBAC）
+
+**角色定義**：
+
+```yaml
+# roles.yaml
+roles:
+  - name: admin
+    permissions:
+      - "*"  # 所有權限
+  
+  - name: engineer
+    permissions:
+      - "asset:read"
+      - "asset:write"
+      - "asset:command"
+      - "data:read"
+      - "data:write"
+  
+  - name: operator
+    permissions:
+      - "asset:read"
+      - "data:read"
+      - "dashboard:view"
+  
+  - name: viewer
+    permissions:
+      - "asset:read"
+      - "data:read"
+```
+
+**權限檢查**：
+
+```python
+class PermissionManager:
+    """權限管理器"""
+    
+    def __init__(self):
+        self.roles = self._load_roles()
+    
+    async def check_permission(self, user: User, resource: str, action: str) -> bool:
+        """檢查用戶權限"""
+        required_permission = f"{resource}:{action}"
+        
+        for role_name in user.roles:
+            role = self.roles.get(role_name)
+            if not role:
+                continue
+            
+            # 檢查通配符權限
+            if "*" in role.permissions:
+                return True
+            
+            # 檢查精確權限
+            if required_permission in role.permissions:
+                return True
+            
+            # 檢查資源通配符（如 "asset:*"）
+            resource_wildcard = f"{resource}:*"
+            if resource_wildcard in role.permissions:
+                return True
+        
+        return False
+    
+    def require_permission(self, resource: str, action: str):
+        """權限裝飾器"""
+        def decorator(func):
+            @wraps(func)
+            async def wrapper(*args, **kwargs):
+                user = kwargs.get('user') or args[0].current_user
+                
+                if not await self.check_permission(user, resource, action):
+                    raise PermissionError(
+                        f"User {user.name} lacks permission: {resource}:{action}"
+                    )
+                
+                return await func(*args, **kwargs)
+            return wrapper
+        return decorator
+```
+
+**使用範例**：
+
+```python
+class AssetAPI:
+    """資產 API"""
+    
+    @permission_manager.require_permission("asset", "write")
+    async def update_asset(self, asset_id: str, data: Dict, user: User):
+        """更新資產（需要 asset:write 權限）"""
+        asset = await self.ndh.get_asset(asset_id)
+        await asset.update(data)
+        
+        # 記錄審計日誌
+        await audit_log.record(
+            action="update_asset",
+            user=user.name,
+            target=asset_id,
+            changes=data
+        )
+```
+
+### 6.5.3 並發控制
+
+**樂觀鎖（Optimistic Locking）**：
+
+```python
+class OptimisticLockManager:
+    """樂觀鎖管理器"""
+    
+    async def update_with_version(self, asset_id: str, data: Dict, expected_version: int):
+        """基於版本號的更新"""
+        async with self.db.transaction():
+            # 1. 讀取當前版本
+            current = await self.db.fetchrow(
+                "SELECT * FROM assets WHERE id = $1 FOR UPDATE",
+                asset_id
+            )
+            
+            # 2. 檢查版本號
+            if current['version'] != expected_version:
+                raise ConcurrentModificationError(
+                    f"Asset {asset_id} was modified by another user. "
+                    f"Expected version {expected_version}, got {current['version']}"
+                )
+            
+            # 3. 更新並遞增版本號
+            await self.db.execute(
+                """
+                UPDATE assets 
+                SET data = $1, version = version + 1, updated_at = NOW()
+                WHERE id = $2
+                """,
+                json.dumps(data),
+                asset_id
+            )
+```
+
+**悲觀鎖（Pessimistic Locking）**：
+
+```python
+class PessimisticLockManager:
+    """悲觀鎖管理器"""
+    
+    async def acquire_lock(self, resource_id: str, user_id: str, timeout: int = 300):
+        """獲取資源鎖"""
+        lock_key = f"lock:{resource_id}"
+        
+        # 嘗試獲取鎖（使用 Redis SETNX）
+        acquired = await self.redis.set(
+            lock_key,
+            user_id,
+            nx=True,  # 只在不存在時設置
+            ex=timeout  # 過期時間
+        )
+        
+        if not acquired:
+            # 鎖已被佔用
+            current_owner = await self.redis.get(lock_key)
+            raise ResourceLockedError(
+                f"Resource {resource_id} is locked by user {current_owner}"
+            )
+        
+        return Lock(resource_id, user_id, timeout)
+    
+    async def release_lock(self, resource_id: str, user_id: str):
+        """釋放資源鎖"""
+        lock_key = f"lock:{resource_id}"
+        
+        # 只有鎖的擁有者才能釋放
+        current_owner = await self.redis.get(lock_key)
+        if current_owner != user_id:
+            raise PermissionError(
+                f"User {user_id} does not own the lock on {resource_id}"
+            )
+        
+        await self.redis.delete(lock_key)
+```
+
+### 6.5.4 衝突解決
+
+**Last-Write-Wins (LWW)**：
+
+```python
+async def resolve_conflict_lww(local_version: Dict, remote_version: Dict) -> Dict:
+    """最後寫入獲勝策略"""
+    if local_version['timestamp'] > remote_version['timestamp']:
+        return local_version
+    else:
+        return remote_version
+```
+
+**Three-Way Merge**：
+
+```python
+async def resolve_conflict_merge(base: Dict, local: Dict, remote: Dict) -> Dict:
+    """三路合併策略"""
+    result = base.copy()
+    
+    # 合併本地變更
+    for key, value in local.items():
+        if key not in base or base[key] != value:
+            result[key] = value
+    
+    # 合併遠端變更（如果沒有衝突）
+    for key, value in remote.items():
+        if key not in local or local[key] == base.get(key):
+            result[key] = value
+        elif local[key] != value:
+            # 衝突：需要人工解決
+            result[key] = {
+                "_conflict": True,
+                "local": local[key],
+                "remote": value
+            }
+    
+    return result
+```
+
+---
+
+## 6.6 審計日誌與追溯
+
+### 6.6.1 審計日誌設計
+
+**記錄內容**：
+- 誰（Who）：用戶 ID、用戶名、IP 地址
+- 何時（When）：時間戳（精確到毫秒）
+- 做了什麼（What）：操作類型、目標資源
+- 結果（Result）：成功/失敗、錯誤訊息
+- 變更前後（Before/After）：數據快照
+
+**實現**：
+
+```python
+class AuditLog:
+    """審計日誌"""
+    
+    async def record(self, 
+                    action: str,
+                    user: str,
+                    target: str,
+                    changes: Dict = None,
+                    result: str = "success",
+                    error: str = None):
+        """記錄審計日誌"""
+        log_entry = {
+            "id": str(uuid.uuid4()),
+            "timestamp": datetime.utcnow().isoformat(),
+            "action": action,
+            "user": user,
+            "user_ip": self._get_client_ip(),
+            "target": target,
+            "changes": changes,
+            "result": result,
+            "error": error
+        }
+        
+        # 寫入時序數據庫（長期保存）
+        await self.tsdb.write(
+            measurement="audit_logs",
+            tags={
+                "action": action,
+                "user": user,
+                "result": result
+            },
+            fields=log_entry,
+            timestamp=datetime.utcnow()
+        )
+        
+        # 寫入 Elasticsearch（支援全文搜索）
+        await self.es.index(
+            index="audit_logs",
+            document=log_entry
+        )
+```
+
+### 6.6.2 數據追溯
+
+**時間旅行查詢**：
+
+```python
+async def get_asset_at_time(asset_id: str, timestamp: datetime) -> Dict:
+    """獲取資產在特定時間點的狀態"""
+    # 1. 查詢審計日誌，找到該時間點之前的所有變更
+    changes = await audit_log.query(
+        target=asset_id,
+        end_time=timestamp,
+        order="asc"
+    )
+    
+    # 2. 從初始狀態開始，逐步應用變更
+    state = await get_initial_state(asset_id)
+    
+    for change in changes:
+        state = apply_change(state, change)
+    
+    return state
+```
+
+---
+
+## 總結
+
+NDH 的即時系統整合與協同管理能力是其作為執行時數據中樞的核心價值：
+
+1. **即時雙向連接**：與 MES、ERP、SCADA、Omniverse 等系統的毫秒級同步
+2. **變更偵測**：自動捕獲外部系統的數據變更，無需輪詢
+3. **事件驅動**：基於事件總線的解耦架構，支援複雜的業務邏輯
+4. **多用戶協同**：完整的會話管理、權限控制和並發控制
+5. **審計追溯**：完整的操作日誌和數據追溯能力
+
+這些能力使 NDH 能夠成為工業數位分身的神經中樞，協調多個系統的即時互動，支援多用戶協同作業，並確保數據的安全性和一致性。
+
+
+
 ## 7. API 設計與介面規範
 
 ### 7.1 RESTful API
