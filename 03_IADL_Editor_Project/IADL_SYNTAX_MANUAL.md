@@ -290,7 +290,25 @@ Equipment Boiler1 {
 }
 ```
 
-#### 維護屬性
+#### 生產屬性 (Production Properties)
+
+- **current_work_order**: 當前工單號
+- **current_product_id**: 當前產品 ID
+- **wip_status**: 在製品狀態 (Processing, Idle, Blocked)
+- **throughput**: 產能 (units/hour)
+
+```iadl
+Equipment Die_Bonder-01 {
+    production: {
+        current_work_order: "WO-12345",
+        current_product_id: "PROD-XYZ",
+        wip_status: "Processing",
+        throughput: 1000
+    }
+}
+```
+
+### 維護屬性
 
 - **installDate**: 安裝日期
 - **commissionDate**: 啟用日期
