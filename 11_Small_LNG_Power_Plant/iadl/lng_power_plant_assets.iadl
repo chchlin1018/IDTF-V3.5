@@ -1,0 +1,794 @@
+// ============================================================================
+// 小型 LNG 發電廠 IADL 資產定義
+// ============================================================================
+// 版本: 1.0.0
+// 日期: 2025-10-14
+// 作者: IDTF Technical Team
+// 描述: 定義小型 LNG 複循環發電廠（CCPP）所需的所有設備類型
+// 發電容量: 100 MW (2 × 50 MW 燃氣渦輪機 + 1 × 50 MW 蒸汽渦輪機)
+// ============================================================================
+
+module SmallLNGPowerPlantAssets {
+
+    // ========================================================================
+    // 基礎數據結構
+    // ========================================================================
+    
+    struct Location {
+        double x;
+        double y;
+        double z;
+    }
+    
+    struct Dimensions {
+        double length;   // 米
+        double width;    // 米
+        double height;   // 米
+    }
+    
+    struct PowerRequirements {
+        double voltage;      // 伏特
+        int phase;           // 相數
+        double current;      // 安培
+        double power;        // 千瓦
+    }
+    
+    struct MaintenanceInfo {
+        string schedule;           // 維護週期
+        string lastMaintenance;    // 上次維護日期
+        string nextMaintenance;    // 下次維護日期
+        int mtbf;                  // 平均故障間隔時間 (小時)
+    }
+    
+    struct EmissionData {
+        double co2;      // CO2 排放 (kg/hr)
+        double nox;      // NOx 排放 (kg/hr)
+        double co;       // CO 排放 (kg/hr)
+        double sox;      // SOx 排放 (kg/hr)
+    }
+
+    // ========================================================================
+    // 1. LNG 儲存槽 (LNG Storage Tank)
+    // ========================================================================
+    
+    entity LNGStorageTank {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 20.0,
+            width: 20.0,
+            height: 25.0
+        };
+        
+        // 技術規格
+        property double capacity;          // 容量 (m³)
+        property double designPressure;    // 設計壓力 (bar)
+        property string insulationType;    // 絕熱類型
+        property double boilOffRate;       // 蒸發率 (%/day)
+        
+        // 運行狀態
+        property string status;            // Idle, Filling, Discharging, Maintenance
+        property double currentLevel;      // 當前液位 (%)
+        property double temperature;       // 溫度 (°C)
+        property double pressure;          // 壓力 (bar)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double flowRateIn;        // 入口流量 (m³/hr)
+        property double flowRateOut;       // 出口流量 (m³/hr)
+        property double vaporPressure;     // 蒸氣壓 (bar)
+        
+        // 行為定義
+        behavior Fill(double amount) returns bool;
+        behavior Discharge(double amount) returns bool;
+        behavior MonitorLevel() returns double;
+        behavior EmergencyShutdown() returns bool;
+    }
+
+    // ========================================================================
+    // 2. LNG 氣化器 (LNG Vaporizer)
+    // ========================================================================
+    
+    entity LNGVaporizer {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 15.0,
+            width: 8.0,
+            height: 12.0
+        };
+        
+        // 技術規格
+        property double capacity;          // 氣化能力 (kg/hr)
+        property string vaporizerType;     // ORV, SCV, AAV, IFV
+        property double efficiency;        // 效率 (%)
+        property double outletTemperature; // 出口溫度 (°C)
+        
+        // 運行狀態
+        property string status;
+        property double currentLoad;       // 當前負載 (%)
+        property double gasFlowRate;       // 氣體流量 (Nm³/hr)
+        property double gasTemperature;    // 氣體溫度 (°C)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 100,
+            power: 65.8
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double inletPressure;     // 入口壓力 (bar)
+        property double outletPressure;    // 出口壓力 (bar)
+        property double heatInput;         // 熱輸入 (kW)
+        
+        // 行為定義
+        behavior StartVaporization() returns bool;
+        behavior StopVaporization() returns bool;
+        behavior SetFlowRate(double flowRate) returns bool;
+        behavior AdjustTemperature(double temp) returns bool;
+    }
+
+    // ========================================================================
+    // 3. 燃氣渦輪機 (Gas Turbine)
+    // ========================================================================
+    
+    entity GasTurbine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 12.0,
+            width: 5.0,
+            height: 4.0
+        };
+        
+        // 技術規格
+        property double ratedPower;        // 額定功率 (MW)
+        property double efficiency;        // 效率 (%)
+        property int rpmRated;             // 額定轉速 (RPM)
+        property double fuelConsumption;   // 燃料消耗 (kg/hr @ full load)
+        property double exhaustTemp;       // 排氣溫度 (°C)
+        property double exhaustFlow;       // 排氣流量 (kg/s)
+        
+        // 運行狀態
+        property string status;            // Stopped, Starting, Running, Stopping, Fault
+        property double currentPower;      // 當前功率 (MW)
+        property double currentLoad;       // 當前負載 (%)
+        property int currentRPM;           // 當前轉速 (RPM)
+        property double runningHours;      // 運行小時數
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double inletAirTemp;      // 進氣溫度 (°C)
+        property double inletAirPressure;  // 進氣壓力 (bar)
+        property double fuelPressure;      // 燃料壓力 (bar)
+        property double fuelTemp;          // 燃料溫度 (°C)
+        property double vibration;         // 振動值 (mm/s)
+        property double bearingTemp;       // 軸承溫度 (°C)
+        
+        // 排放數據
+        property EmissionData emissions;
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior LoadControl(double targetLoad) returns bool;
+        behavior EmergencyShutdown() returns bool;
+        behavior GetPerformanceData() returns string;
+    }
+
+    // ========================================================================
+    // 4. 發電機 (Generator)
+    // ========================================================================
+    
+    entity Generator {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 8.0,
+            width: 4.0,
+            height: 3.5
+        };
+        
+        // 技術規格
+        property double ratedPower;        // 額定功率 (MVA)
+        property double ratedVoltage;      // 額定電壓 (kV)
+        property double ratedCurrent;      // 額定電流 (A)
+        property double powerFactor;       // 功率因數
+        property double efficiency;        // 效率 (%)
+        property int frequency;            // 頻率 (Hz)
+        
+        // 運行狀態
+        property string status;
+        property double activePower;       // 有功功率 (MW)
+        property double reactivePower;     // 無功功率 (MVAr)
+        property double voltage;           // 電壓 (kV)
+        property double current;           // 電流 (A)
+        property double frequency;         // 頻率 (Hz)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double statorTemp;        // 定子溫度 (°C)
+        property double rotorTemp;         // 轉子溫度 (°C)
+        property double bearingTemp;       // 軸承溫度 (°C)
+        property double vibration;         // 振動值 (mm/s)
+        property double insulationResistance; // 絕緣電阻 (MΩ)
+        
+        // 行為定義
+        behavior Synchronize() returns bool;
+        behavior Connect() returns bool;
+        behavior Disconnect() returns bool;
+        behavior SetVoltage(double voltage) returns bool;
+        behavior SetPowerFactor(double pf) returns bool;
+    }
+
+    // ========================================================================
+    // 5. 餘熱回收鍋爐 (Heat Recovery Steam Generator, HRSG)
+    // ========================================================================
+    
+    entity HRSG {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 25.0,
+            width: 10.0,
+            height: 20.0
+        };
+        
+        // 技術規格
+        property double steamCapacity;     // 蒸汽產能 (kg/hr)
+        property double steamPressure;     // 蒸汽壓力 (bar)
+        property double steamTemp;         // 蒸汽溫度 (°C)
+        property int pressureLevels;       // 壓力級數 (1, 2, or 3)
+        property double efficiency;        // 效率 (%)
+        
+        // 運行狀態
+        property string status;
+        property double currentSteamFlow;  // 當前蒸汽流量 (kg/hr)
+        property double drumLevel;         // 汽包液位 (%)
+        property double exhaustGasInletTemp; // 排氣入口溫度 (°C)
+        property double exhaustGasOutletTemp; // 排氣出口溫度 (°C)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double hpSteamPressure;   // 高壓蒸汽壓力 (bar)
+        property double hpSteamTemp;       // 高壓蒸汽溫度 (°C)
+        property double ipSteamPressure;   // 中壓蒸汽壓力 (bar)
+        property double ipSteamTemp;       // 中壓蒸汽溫度 (°C)
+        property double lpSteamPressure;   // 低壓蒸汽壓力 (bar)
+        property double lpSteamTemp;       // 低壓蒸汽溫度 (°C)
+        property double feedwaterFlow;     // 給水流量 (kg/hr)
+        property double feedwaterTemp;     // 給水溫度 (°C)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior ControlDrumLevel(double targetLevel) returns bool;
+        behavior AdjustSteamProduction(double target) returns bool;
+    }
+
+    // ========================================================================
+    // 6. 蒸汽渦輪機 (Steam Turbine)
+    // ========================================================================
+    
+    entity SteamTurbine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 15.0,
+            width: 6.0,
+            height: 5.0
+        };
+        
+        // 技術規格
+        property double ratedPower;        // 額定功率 (MW)
+        property double efficiency;        // 效率 (%)
+        property int rpmRated;             // 額定轉速 (RPM)
+        property double inletPressure;     // 入口壓力 (bar)
+        property double inletTemp;         // 入口溫度 (°C)
+        property double exhaustPressure;   // 排氣壓力 (bar)
+        
+        // 運行狀態
+        property string status;
+        property double currentPower;      // 當前功率 (MW)
+        property double currentLoad;       // 當前負載 (%)
+        property int currentRPM;           // 當前轉速 (RPM)
+        property double steamFlow;         // 蒸汽流量 (kg/hr)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double hpInletPressure;   // 高壓入口壓力 (bar)
+        property double hpInletTemp;       // 高壓入口溫度 (°C)
+        property double ipInletPressure;   // 中壓入口壓力 (bar)
+        property double lpInletPressure;   // 低壓入口壓力 (bar)
+        property double condenserPressure; // 冷凝器壓力 (bar)
+        property double vibration;         // 振動值 (mm/s)
+        property double bearingTemp;       // 軸承溫度 (°C)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior LoadControl(double targetLoad) returns bool;
+        behavior EmergencyShutdown() returns bool;
+    }
+
+    // ========================================================================
+    // 7. 冷凝器 (Condenser)
+    // ========================================================================
+    
+    entity Condenser {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 12.0,
+            width: 8.0,
+            height: 6.0
+        };
+        
+        // 技術規格
+        property double coolingCapacity;   // 冷卻能力 (MW)
+        property string condenserType;     // Surface, Direct Contact
+        property double designPressure;    // 設計壓力 (bar)
+        property double coolingWaterFlow;  // 冷卻水流量 (m³/hr)
+        
+        // 運行狀態
+        property string status;
+        property double vacuumPressure;    // 真空壓力 (bar)
+        property double condensateFlow;    // 凝結水流量 (kg/hr)
+        property double coolingWaterInletTemp;  // 冷卻水入口溫度 (°C)
+        property double coolingWaterOutletTemp; // 冷卻水出口溫度 (°C)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double hotWellLevel;      // 熱井液位 (%)
+        property double condensateTemp;    // 凝結水溫度 (°C)
+        property double tubeLeakage;       // 管束洩漏 (ppm)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior ControlVacuum(double targetPressure) returns bool;
+        behavior MonitorLeakage() returns double;
+    }
+
+    // ========================================================================
+    // 8. 冷卻塔 (Cooling Tower)
+    // ========================================================================
+    
+    entity CoolingTower {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 30.0,
+            width: 30.0,
+            height: 50.0
+        };
+        
+        // 技術規格
+        property double coolingCapacity;   // 冷卻能力 (MW)
+        property string towerType;         // Natural Draft, Mechanical Draft
+        property double waterFlow;         // 水流量 (m³/hr)
+        property double approachTemp;      // 接近溫度 (°C)
+        
+        // 運行狀態
+        property string status;
+        property double inletWaterTemp;    // 入口水溫 (°C)
+        property double outletWaterTemp;   // 出口水溫 (°C)
+        property double wetBulbTemp;       // 濕球溫度 (°C)
+        property double makeupWaterFlow;   // 補充水流量 (m³/hr)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 200,
+            power: 131.6
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double fanSpeed;          // 風扇轉速 (RPM)
+        property double blowdownFlow;      // 排污流量 (m³/hr)
+        property double efficiency;        // 效率 (%)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior ControlFanSpeed(double speed) returns bool;
+        behavior AdjustWaterFlow(double flow) returns bool;
+    }
+
+    // ========================================================================
+    // 9. 變壓器 (Transformer)
+    // ========================================================================
+    
+    entity Transformer {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 8.0,
+            width: 6.0,
+            height: 6.0
+        };
+        
+        // 技術規格
+        property double ratedCapacity;     // 額定容量 (MVA)
+        property double primaryVoltage;    // 一次側電壓 (kV)
+        property double secondaryVoltage;  // 二次側電壓 (kV)
+        property string coolingType;       // ONAN, ONAF, OFAF
+        property double impedance;         // 阻抗 (%)
+        
+        // 運行狀態
+        property string status;
+        property double load;              // 負載 (%)
+        property double primaryCurrent;    // 一次側電流 (A)
+        property double secondaryCurrent;  // 二次側電流 (A)
+        property double oilTemp;           // 油溫 (°C)
+        property double windingTemp;       // 繞組溫度 (°C)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double tapPosition;       // 分接頭位置
+        property double insulationResistance; // 絕緣電阻 (MΩ)
+        property double partialDischarge;  // 局部放電 (pC)
+        
+        // 行為定義
+        behavior Energize() returns bool;
+        behavior DeEnergize() returns bool;
+        behavior ChangeTap(int position) returns bool;
+        behavior MonitorOilQuality() returns string;
+    }
+
+    // ========================================================================
+    // 10. 斷路器 (Circuit Breaker)
+    // ========================================================================
+    
+    entity CircuitBreaker {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        
+        // 技術規格
+        property double ratedVoltage;      // 額定電壓 (kV)
+        property double ratedCurrent;      // 額定電流 (A)
+        property double breakingCapacity;  // 遮斷容量 (MVA)
+        property string breakerType;       // SF6, Vacuum, Air Blast
+        property int operatingTime;        // 動作時間 (ms)
+        
+        // 運行狀態
+        property string status;            // Open, Closed, Tripped, Fault
+        property double current;           // 電流 (A)
+        property int operationCount;       // 操作次數
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double contactResistance; // 接觸電阻 (μΩ)
+        property double sf6Pressure;       // SF6 壓力 (bar)
+        property double operatingEnergy;   // 操作能量 (J)
+        
+        // 行為定義
+        behavior Close() returns bool;
+        behavior Open() returns bool;
+        behavior Trip() returns bool;
+        behavior Reset() returns bool;
+    }
+
+    // ========================================================================
+    // 11. 控制系統 (Distributed Control System, DCS)
+    // ========================================================================
+    
+    entity DCS {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        
+        // 技術規格
+        property string softwareVersion;
+        property int ioPoints;             // I/O 點數
+        property int controlLoops;         // 控制迴路數
+        property double scanTime;          // 掃描時間 (ms)
+        
+        // 運行狀態
+        property string status;
+        property double cpuUsage;          // CPU 使用率 (%)
+        property double memoryUsage;       // 記憶體使用率 (%)
+        property int activeAlarms;         // 活動警報數
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 20,
+            power: 4.4
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property int communicationErrors;  // 通訊錯誤數
+        property double uptime;            // 運行時間 (%)
+        
+        // 行為定義
+        behavior StartPlant() returns bool;
+        behavior StopPlant() returns bool;
+        behavior LoadControl(double targetLoad) returns bool;
+        behavior EmergencyShutdown() returns bool;
+        behavior GetPlantStatus() returns string;
+    }
+
+    // ========================================================================
+    // 12. 水處理系統 (Water Treatment System)
+    // ========================================================================
+    
+    entity WaterTreatmentSystem {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 20.0,
+            width: 15.0,
+            height: 8.0
+        };
+        
+        // 技術規格
+        property double capacity;          // 處理能力 (m³/hr)
+        property string treatmentType;     // RO, Ion Exchange, Demineralization
+        property double outputQuality;     // 產水品質 (μS/cm)
+        
+        // 運行狀態
+        property string status;
+        property double flowRate;          // 流量 (m³/hr)
+        property double conductivity;      // 電導率 (μS/cm)
+        property double pH;                // pH 值
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 150,
+            power: 98.7
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double membraneLife;      // 膜壽命 (%)
+        property double chemicalLevel;     // 化學品液位 (%)
+        property double backwashFrequency; // 反洗頻率 (times/day)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior Backwash() returns bool;
+        behavior MonitorQuality() returns string;
+    }
+
+    // ========================================================================
+    // 13. 燃料氣壓縮機 (Fuel Gas Compressor)
+    // ========================================================================
+    
+    entity FuelGasCompressor {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 6.0,
+            width: 3.0,
+            height: 3.0
+        };
+        
+        // 技術規格
+        property double capacity;          // 壓縮能力 (Nm³/hr)
+        property double inletPressure;     // 入口壓力 (bar)
+        property double outletPressure;    // 出口壓力 (bar)
+        property string compressorType;    // Centrifugal, Reciprocating
+        property double efficiency;        // 效率 (%)
+        
+        // 運行狀態
+        property string status;
+        property double flowRate;          // 流量 (Nm³/hr)
+        property double currentPressure;   // 當前壓力 (bar)
+        property int rpm;                  // 轉速 (RPM)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 300,
+            power: 197.4
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double dischargeTemp;     // 排氣溫度 (°C)
+        property double vibration;         // 振動值 (mm/s)
+        property double bearingTemp;       // 軸承溫度 (°C)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior SetPressure(double pressure) returns bool;
+        behavior AdjustFlow(double flow) returns bool;
+    }
+
+    // ========================================================================
+    // 14. 排氣煙囪 (Stack)
+    // ========================================================================
+    
+    entity Stack {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 5.0,
+            width: 5.0,
+            height: 80.0
+        };
+        
+        // 技術規格
+        property double diameter;          // 直徑 (m)
+        property double height;            // 高度 (m)
+        property string material;          // Stainless Steel, Concrete
+        property double maxTemp;           // 最高溫度 (°C)
+        
+        // 運行狀態
+        property string status;
+        property double gasFlowRate;       // 氣體流量 (kg/s)
+        property double gasTemp;           // 氣體溫度 (°C)
+        property double draft;             // 抽力 (Pa)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double opacity;           // 不透明度 (%)
+        property EmissionData emissions;   // 排放數據
+        
+        // 行為定義
+        behavior MonitorEmissions() returns EmissionData;
+        behavior CheckStructuralIntegrity() returns bool;
+    }
+
+    // ========================================================================
+    // 15. 連續排放監測系統 (Continuous Emission Monitoring System, CEMS)
+    // ========================================================================
+    
+    entity CEMS {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        
+        // 技術規格
+        property string measuredParameters; // CO2, NOx, CO, SOx, O2
+        property double accuracy;          // 精度 (%)
+        property double responseTime;      // 響應時間 (s)
+        
+        // 運行狀態
+        property string status;
+        property EmissionData currentEmissions;
+        property bool complianceStatus;    // 是否符合排放標準
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 10,
+            power: 2.2
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double calibrationStatus; // 校準狀態 (%)
+        property int dataPoints;           // 數據點數
+        
+        // 行為定義
+        behavior StartMonitoring() returns bool;
+        behavior StopMonitoring() returns bool;
+        behavior Calibrate() returns bool;
+        behavior GetEmissionReport() returns string;
+    }
+
+    // ========================================================================
+    // 16. 消防系統 (Fire Protection System)
+    // ========================================================================
+    
+    entity FireProtectionSystem {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        
+        // 技術規格
+        property string systemType;        // Water Spray, CO2, Foam, Dry Chemical
+        property double capacity;          // 容量 (L or kg)
+        property int nozzleCount;          // 噴嘴數量
+        property double activationTime;    // 啟動時間 (s)
+        
+        // 運行狀態
+        property string status;            // Standby, Activated, Maintenance
+        property double pressure;          // 壓力 (bar)
+        property double agentLevel;        // 藥劑液位 (%)
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property bool fireDetected;        // 火災檢測
+        property int zoneStatus[];         // 各區域狀態
+        
+        // 行為定義
+        behavior Activate(string zone) returns bool;
+        behavior Deactivate() returns bool;
+        behavior Test() returns bool;
+        behavior GetSystemStatus() returns string;
+    }
+
+    // ========================================================================
+    // 關係定義
+    // ========================================================================
+    
+    relation FuelSupply(LNGStorageTank tank, LNGVaporizer vaporizer);
+    relation GasSupply(LNGVaporizer vaporizer, GasTurbine turbine);
+    relation PowerGeneration(GasTurbine turbine, Generator generator);
+    relation ExhaustHeat(GasTurbine turbine, HRSG hrsg);
+    relation SteamSupply(HRSG hrsg, SteamTurbine turbine);
+    relation SteamCondensation(SteamTurbine turbine, Condenser condenser);
+    relation CoolingWater(Condenser condenser, CoolingTower tower);
+    relation ElectricalConnection(Generator generator, Transformer transformer);
+    relation Protection(Transformer transformer, CircuitBreaker breaker);
+    relation Control(DCS dcs, entity equipment);
+    relation Monitoring(CEMS cems, Stack stack);
+}
+

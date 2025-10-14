@@ -1,0 +1,1331 @@
+# ============================================================================
+# 小型 LNG 發電廠 FDL 工廠佈局
+# ============================================================================
+# 版本: 1.0.0
+# 日期: 2025-10-14
+# 作者: IDTF Technical Team
+# 描述: 定義小型 LNG 複循環發電廠（CCPP）的完整佈局
+# 發電容量: 150 MW (2 × 50 MW 燃氣渦輪機 + 1 × 50 MW 蒸汽渦輪機)
+# 效率: 58% (複循環)
+# ============================================================================
+
+metadata:
+  name: "Small LNG Combined Cycle Power Plant"
+  version: "1.0.0"
+  author: "IDTF Technical Team"
+  date: "2025-10-14"
+  description: "小型 LNG 複循環發電廠，總裝置容量 150 MW"
+  location:
+    country: "Taiwan"
+    city: "Taichung"
+    coordinates:
+      latitude: 24.1477
+      longitude: 120.6736
+  tags:
+    - "LNG"
+    - "Combined Cycle"
+    - "Power Generation"
+    - "Natural Gas"
+    - "CCPP"
+
+# ============================================================================
+# IADL 資產定義引用
+# ============================================================================
+
+iadl_imports:
+  - path: "../iadl/lng_power_plant_assets.iadl"
+    module: "SmallLNGPowerPlantAssets"
+
+# ============================================================================
+# 建築物定義
+# ============================================================================
+
+buildings:
+  - id: "power_plant_main"
+    name: "主發電廠房"
+    type: "PowerPlant"
+    location:
+      x: 0
+      y: 0
+      z: 0
+    dimensions:
+      length: 200  # 米
+      width: 150   # 米
+      height: 40   # 米
+    
+    # 樓層定義
+    floors:
+      # ======================================================================
+      # 地面層 - 主要發電設備
+      # ======================================================================
+      - id: "ground_floor"
+        name: "地面層"
+        level: 0
+        height: 15  # 米
+        areas:
+          # ================================================================
+          # 區域 A: LNG 儲存與氣化
+          # ================================================================
+          - id: "lng_storage_area"
+            name: "LNG 儲存與氣化區"
+            type: "Storage"
+            location:
+              x: 0
+              y: 0
+              z: 0
+            dimensions:
+              length: 60
+              width: 60
+              height: 25
+            environmental_conditions:
+              temperature: 25
+              humidity: 60
+              cleanliness: "Industrial"
+            
+          # ================================================================
+          # 區域 B: 燃氣渦輪機區
+          # ================================================================
+          - id: "gas_turbine_area"
+            name: "燃氣渦輪機區"
+            type: "Production"
+            location:
+              x: 70
+              y: 0
+              z: 0
+            dimensions:
+              length: 60
+              width: 50
+              height: 15
+            environmental_conditions:
+              temperature: 30
+              humidity: 50
+              cleanliness: "Industrial"
+              noise_level: 85  # dB
+          
+          # ================================================================
+          # 區域 C: 蒸汽渦輪機區
+          # ================================================================
+          - id: "steam_turbine_area"
+            name: "蒸汽渦輪機區"
+            type: "Production"
+            location:
+              x: 140
+              y: 0
+              z: 0
+            dimensions:
+              length: 60
+              width: 50
+              height: 15
+            environmental_conditions:
+              temperature: 35
+              humidity: 60
+              cleanliness: "Industrial"
+              noise_level: 80  # dB
+          
+          # ================================================================
+          # 區域 D: 冷卻系統區
+          # ================================================================
+          - id: "cooling_system_area"
+            name: "冷卻系統區"
+            type: "Utility"
+            location:
+              x: 70
+              y: 60
+              z: 0
+            dimensions:
+              length: 60
+              width: 40
+              height: 15
+            environmental_conditions:
+              temperature: 30
+              humidity: 70
+              cleanliness: "Industrial"
+          
+          # ================================================================
+          # 區域 E: 水處理區
+          # ================================================================
+          - id: "water_treatment_area"
+            name: "水處理區"
+            type: "Utility"
+            location:
+              x: 140
+              y: 60
+              z: 0
+            dimensions:
+              length: 40
+              width: 40
+              height: 15
+            environmental_conditions:
+              temperature: 25
+              humidity: 60
+              cleanliness: "Industrial"
+      
+      # ======================================================================
+      # 夾層 - 控制室與輔助設備
+      # ======================================================================
+      - id: "mezzanine_floor"
+        name: "夾層"
+        level: 1
+        height: 8  # 米
+        areas:
+          # ================================================================
+          # 區域 F: 控制室
+          # ================================================================
+          - id: "control_room"
+            name: "中央控制室"
+            type: "Control"
+            location:
+              x: 70
+              y: 0
+              z: 15
+            dimensions:
+              length: 30
+              width: 20
+              height: 8
+            environmental_conditions:
+              temperature: 22
+              humidity: 50
+              cleanliness: "Office"
+              noise_level: 50  # dB
+          
+          # ================================================================
+          # 區域 G: 電氣室
+          # ================================================================
+          - id: "electrical_room"
+            name: "電氣室"
+            type: "Electrical"
+            location:
+              x: 110
+              y: 0
+              z: 15
+            dimensions:
+              length: 40
+              width: 30
+              height: 8
+            environmental_conditions:
+              temperature: 25
+              humidity: 50
+              cleanliness: "Industrial"
+          
+          # ================================================================
+          # 區域 H: 維護工作室
+          # ================================================================
+          - id: "maintenance_workshop"
+            name: "維護工作室"
+            type: "Maintenance"
+            location:
+              x: 160
+              y: 0
+              z: 15
+            dimensions:
+              length: 30
+              width: 20
+              height: 8
+            environmental_conditions:
+              temperature: 25
+              humidity: 55
+              cleanliness: "Industrial"
+      
+      # ======================================================================
+      # 頂層 - 辦公與管理
+      # ======================================================================
+      - id: "top_floor"
+        name: "頂層"
+        level: 2
+        height: 4  # 米
+        areas:
+          # ================================================================
+          # 區域 I: 辦公室
+          # ================================================================
+          - id: "office_area"
+            name: "辦公區"
+            type: "Office"
+            location:
+              x: 70
+              y: 0
+              z: 23
+            dimensions:
+              length: 60
+              width: 40
+              height: 4
+            environmental_conditions:
+              temperature: 22
+              humidity: 50
+              cleanliness: "Office"
+              noise_level: 45  # dB
+
+  # ==========================================================================
+  # 戶外設施
+  # ==========================================================================
+  - id: "outdoor_facilities"
+    name: "戶外設施"
+    type: "Outdoor"
+    location:
+      x: 220
+      y: 0
+      z: 0
+    dimensions:
+      length: 100
+      width: 150
+      height: 80
+    
+    floors:
+      - id: "outdoor_ground"
+        name: "戶外地面"
+        level: 0
+        height: 80
+        areas:
+          # ================================================================
+          # 區域 J: 冷卻塔
+          # ================================================================
+          - id: "cooling_tower_area"
+            name: "冷卻塔區"
+            type: "Cooling"
+            location:
+              x: 220
+              y: 0
+              z: 0
+            dimensions:
+              length: 40
+              width: 40
+              height: 50
+          
+          # ================================================================
+          # 區域 K: 變電站
+          # ================================================================
+          - id: "substation_area"
+            name: "變電站區"
+            type: "Electrical"
+            location:
+              x: 220
+              y: 50
+              z: 0
+            dimensions:
+              length: 50
+              width: 40
+              height: 15
+          
+          # ================================================================
+          # 區域 L: 排氣煙囪
+          # ================================================================
+          - id: "stack_area"
+            name: "排氣煙囪區"
+            type: "Emission"
+            location:
+              x: 220
+              y: 100
+              z: 0
+            dimensions:
+              length: 10
+              width: 10
+              height: 80
+
+# ============================================================================
+# 佈局定義 - 設備配置
+# ============================================================================
+
+layouts:
+  # ==========================================================================
+  # LNG 儲存與氣化區設備
+  # ==========================================================================
+  - area_id: "lng_storage_area"
+    assets:
+      # LNG 儲存槽
+      - id: "lng_tank_001"
+        asset_type: "SmallLNGPowerPlantAssets::LNGStorageTank"
+        position: {x: 20, y: 20, z: 0}
+        instance_params:
+          capacity: 3000  # m³
+          designPressure: 1.5  # bar
+          insulationType: "高真空多層絕熱"
+          boilOffRate: 0.05  # %/day
+          status: "Idle"
+          currentLevel: 80  # %
+          temperature: -162  # °C
+          pressure: 1.2  # bar
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-01-15"
+            nextMaintenance: "2026-01-15"
+            mtbf: 87600  # 10 years
+      
+      # LNG 氣化器 (2 台)
+      - id: "lng_vaporizer_001"
+        asset_type: "SmallLNGPowerPlantAssets::LNGVaporizer"
+        position: {x: 40, y: 20, z: 0}
+        instance_params:
+          capacity: 15000  # kg/hr
+          vaporizerType: "AAV"  # Ambient Air Vaporizer
+          efficiency: 98  # %
+          outletTemperature: 15  # °C
+          status: "Running"
+          currentLoad: 75  # %
+          gasFlowRate: 11250  # Nm³/hr
+          gasTemperature: 15  # °C
+          maintenance:
+            schedule: "每季一次"
+            lastMaintenance: "2025-07-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 17520  # 2 years
+      
+      - id: "lng_vaporizer_002"
+        asset_type: "SmallLNGPowerPlantAssets::LNGVaporizer"
+        position: {x: 40, y: 35, z: 0}
+        instance_params:
+          capacity: 15000  # kg/hr
+          vaporizerType: "AAV"
+          efficiency: 98  # %
+          outletTemperature: 15  # °C
+          status: "Standby"
+          currentLoad: 0  # %
+          gasFlowRate: 0  # Nm³/hr
+          gasTemperature: 15  # °C
+          maintenance:
+            schedule: "每季一次"
+            lastMaintenance: "2025-07-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 17520
+      
+      # 燃料氣壓縮機 (2 台)
+      - id: "fuel_gas_compressor_001"
+        asset_type: "SmallLNGPowerPlantAssets::FuelGasCompressor"
+        position: {x: 50, y: 20, z: 0}
+        instance_params:
+          capacity: 12000  # Nm³/hr
+          inletPressure: 5  # bar
+          outletPressure: 30  # bar
+          compressorType: "Centrifugal"
+          efficiency: 85  # %
+          status: "Running"
+          flowRate: 9000  # Nm³/hr
+          currentPressure: 30  # bar
+          rpm: 15000  # RPM
+          maintenance:
+            schedule: "每半年一次"
+            lastMaintenance: "2025-04-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 26280  # 3 years
+      
+      - id: "fuel_gas_compressor_002"
+        asset_type: "SmallLNGPowerPlantAssets::FuelGasCompressor"
+        position: {x: 50, y: 35, z: 0}
+        instance_params:
+          capacity: 12000  # Nm³/hr
+          inletPressure: 5  # bar
+          outletPressure: 30  # bar
+          compressorType: "Centrifugal"
+          efficiency: 85  # %
+          status: "Standby"
+          flowRate: 0  # Nm³/hr
+          currentPressure: 5  # bar
+          rpm: 0  # RPM
+          maintenance:
+            schedule: "每半年一次"
+            lastMaintenance: "2025-04-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 26280
+
+  # ==========================================================================
+  # 燃氣渦輪機區設備
+  # ==========================================================================
+  - area_id: "gas_turbine_area"
+    assets:
+      # 燃氣渦輪機 #1
+      - id: "gas_turbine_001"
+        asset_type: "SmallLNGPowerPlantAssets::GasTurbine"
+        position: {x: 80, y: 15, z: 0}
+        instance_params:
+          ratedPower: 50  # MW
+          efficiency: 38  # %
+          rpmRated: 3000  # RPM
+          fuelConsumption: 11000  # kg/hr @ full load
+          exhaustTemp: 540  # °C
+          exhaustFlow: 150  # kg/s
+          status: "Running"
+          currentPower: 48  # MW
+          currentLoad: 96  # %
+          currentRPM: 3000  # RPM
+          runningHours: 25000
+          emissions:
+            co2: 95000  # kg/hr
+            nox: 25  # kg/hr (< 25 ppm)
+            co: 5  # kg/hr (< 10 ppm)
+            sox: 0.5  # kg/hr
+          maintenance:
+            schedule: "每 8,000 小時"
+            lastMaintenance: "2024-12-01"
+            nextMaintenance: "2025-04-01"
+            mtbf: 35040  # 4 years
+      
+      # 發電機 #1
+      - id: "generator_001"
+        asset_type: "SmallLNGPowerPlantAssets::Generator"
+        position: {x: 90, y: 15, z: 0}
+        instance_params:
+          ratedPower: 55  # MVA
+          ratedVoltage: 11  # kV
+          ratedCurrent: 2887  # A
+          powerFactor: 0.9
+          efficiency: 98.5  # %
+          frequency: 60  # Hz
+          status: "Running"
+          activePower: 48  # MW
+          reactivePower: 10  # MVAr
+          voltage: 11  # kV
+          current: 2650  # A
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-01-15"
+            nextMaintenance: "2026-01-15"
+            mtbf: 43800  # 5 years
+      
+      # 燃氣渦輪機 #2
+      - id: "gas_turbine_002"
+        asset_type: "SmallLNGPowerPlantAssets::GasTurbine"
+        position: {x: 80, y: 35, z: 0}
+        instance_params:
+          ratedPower: 50  # MW
+          efficiency: 38  # %
+          rpmRated: 3000  # RPM
+          fuelConsumption: 11000  # kg/hr @ full load
+          exhaustTemp: 540  # °C
+          exhaustFlow: 150  # kg/s
+          status: "Running"
+          currentPower: 48  # MW
+          currentLoad: 96  # %
+          currentRPM: 3000  # RPM
+          runningHours: 24500
+          emissions:
+            co2: 95000  # kg/hr
+            nox: 25  # kg/hr
+            co: 5  # kg/hr
+            sox: 0.5  # kg/hr
+          maintenance:
+            schedule: "每 8,000 小時"
+            lastMaintenance: "2024-11-15"
+            nextMaintenance: "2025-03-15"
+            mtbf: 35040
+      
+      # 發電機 #2
+      - id: "generator_002"
+        asset_type: "SmallLNGPowerPlantAssets::Generator"
+        position: {x: 90, y: 35, z: 0}
+        instance_params:
+          ratedPower: 55  # MVA
+          ratedVoltage: 11  # kV
+          ratedCurrent: 2887  # A
+          powerFactor: 0.9
+          efficiency: 98.5  # %
+          frequency: 60  # Hz
+          status: "Running"
+          activePower: 48  # MW
+          reactivePower: 10  # MVAr
+          voltage: 11  # kV
+          current: 2650  # A
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-01-15"
+            nextMaintenance: "2026-01-15"
+            mtbf: 43800
+      
+      # 餘熱回收鍋爐 (HRSG) - 接收兩台燃氣渦輪機的排氣
+      - id: "hrsg_001"
+        asset_type: "SmallLNGPowerPlantAssets::HRSG"
+        position: {x: 100, y: 25, z: 0}
+        instance_params:
+          steamCapacity: 200000  # kg/hr
+          steamPressure: 100  # bar
+          steamTemp: 540  # °C
+          pressureLevels: 3  # HP, IP, LP
+          efficiency: 92  # %
+          status: "Running"
+          currentSteamFlow: 190000  # kg/hr
+          drumLevel: 50  # %
+          exhaustGasInletTemp: 540  # °C
+          exhaustGasOutletTemp: 95  # °C
+          hpSteamPressure: 100  # bar
+          hpSteamTemp: 540  # °C
+          ipSteamPressure: 30  # bar
+          ipSteamTemp: 350  # °C
+          lpSteamPressure: 5  # bar
+          lpSteamTemp: 250  # °C
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-02-01"
+            nextMaintenance: "2026-02-01"
+            mtbf: 52560  # 6 years
+
+  # ==========================================================================
+  # 蒸汽渦輪機區設備
+  # ==========================================================================
+  - area_id: "steam_turbine_area"
+    assets:
+      # 蒸汽渦輪機
+      - id: "steam_turbine_001"
+        asset_type: "SmallLNGPowerPlantAssets::SteamTurbine"
+        position: {x: 150, y: 25, z: 0}
+        instance_params:
+          ratedPower: 50  # MW
+          efficiency: 42  # %
+          rpmRated: 3000  # RPM
+          inletPressure: 100  # bar
+          inletTemp: 540  # °C
+          exhaustPressure: 0.05  # bar (vacuum)
+          status: "Running"
+          currentPower: 48  # MW
+          currentLoad: 96  # %
+          currentRPM: 3000  # RPM
+          steamFlow: 190000  # kg/hr
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-01-20"
+            nextMaintenance: "2026-01-20"
+            mtbf: 43800  # 5 years
+      
+      # 發電機 #3
+      - id: "generator_003"
+        asset_type: "SmallLNGPowerPlantAssets::Generator"
+        position: {x: 160, y: 25, z: 0}
+        instance_params:
+          ratedPower: 55  # MVA
+          ratedVoltage: 11  # kV
+          ratedCurrent: 2887  # A
+          powerFactor: 0.9
+          efficiency: 98.5  # %
+          frequency: 60  # Hz
+          status: "Running"
+          activePower: 48  # MW
+          reactivePower: 10  # MVAr
+          voltage: 11  # kV
+          current: 2650  # A
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-01-15"
+            nextMaintenance: "2026-01-15"
+            mtbf: 43800
+      
+      # 冷凝器
+      - id: "condenser_001"
+        asset_type: "SmallLNGPowerPlantAssets::Condenser"
+        position: {x: 170, y: 25, z: 0}
+        instance_params:
+          coolingCapacity: 120  # MW
+          condenserType: "Surface"
+          designPressure: 0.1  # bar
+          coolingWaterFlow: 15000  # m³/hr
+          status: "Running"
+          vacuumPressure: 0.05  # bar
+          condensateFlow: 190000  # kg/hr
+          coolingWaterInletTemp: 28  # °C
+          coolingWaterOutletTemp: 38  # °C
+          maintenance:
+            schedule: "每半年一次"
+            lastMaintenance: "2025-06-01"
+            nextMaintenance: "2025-12-01"
+            mtbf: 35040  # 4 years
+
+  # ==========================================================================
+  # 冷卻系統區設備
+  # ==========================================================================
+  - area_id: "cooling_system_area"
+    assets:
+      # 循環水泵 (3 台，2 運轉 + 1 備用)
+      - id: "circulating_water_pump_001"
+        asset_type: "SmallLNGPowerPlantAssets::WaterPump"
+        position: {x: 80, y: 70, z: 0}
+        instance_params:
+          capacity: 8000  # m³/hr
+          head: 30  # m
+          power: 250  # kW
+          efficiency: 85  # %
+          status: "Running"
+      
+      - id: "circulating_water_pump_002"
+        asset_type: "SmallLNGPowerPlantAssets::WaterPump"
+        position: {x: 90, y: 70, z: 0}
+        instance_params:
+          capacity: 8000  # m³/hr
+          head: 30  # m
+          power: 250  # kW
+          efficiency: 85  # %
+          status: "Running"
+      
+      - id: "circulating_water_pump_003"
+        asset_type: "SmallLNGPowerPlantAssets::WaterPump"
+        position: {x: 100, y: 70, z: 0}
+        instance_params:
+          capacity: 8000  # m³/hr
+          head: 30  # m
+          power: 250  # kW
+          efficiency: 85  # %
+          status: "Standby"
+
+  # ==========================================================================
+  # 水處理區設備
+  # ==========================================================================
+  - area_id: "water_treatment_area"
+    assets:
+      # 水處理系統
+      - id: "water_treatment_001"
+        asset_type: "SmallLNGPowerPlantAssets::WaterTreatmentSystem"
+        position: {x: 150, y: 70, z: 0}
+        instance_params:
+          capacity: 100  # m³/hr
+          treatmentType: "RO + Demineralization"
+          outputQuality: 0.2  # μS/cm
+          status: "Running"
+          flowRate: 80  # m³/hr
+          conductivity: 0.2  # μS/cm
+          pH: 7.0
+          maintenance:
+            schedule: "每月一次"
+            lastMaintenance: "2025-09-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 17520  # 2 years
+
+  # ==========================================================================
+  # 控制室設備
+  # ==========================================================================
+  - area_id: "control_room"
+    assets:
+      # 分散式控制系統 (DCS)
+      - id: "dcs_001"
+        asset_type: "SmallLNGPowerPlantAssets::DCS"
+        position: {x: 85, y: 10, z: 15}
+        instance_params:
+          softwareVersion: "V12.5"
+          ioPoints: 5000
+          controlLoops: 500
+          scanTime: 100  # ms
+          status: "Running"
+          cpuUsage: 45  # %
+          memoryUsage: 60  # %
+          activeAlarms: 3
+          uptime: 99.95  # %
+          maintenance:
+            schedule: "每月一次"
+            lastMaintenance: "2025-09-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 87600  # 10 years
+
+  # ==========================================================================
+  # 電氣室設備
+  # ==========================================================================
+  - area_id: "electrical_room"
+    assets:
+      # 主變壓器 (3 台)
+      - id: "main_transformer_001"
+        asset_type: "SmallLNGPowerPlantAssets::Transformer"
+        position: {x: 120, y: 10, z: 15}
+        instance_params:
+          ratedCapacity: 60  # MVA
+          primaryVoltage: 11  # kV
+          secondaryVoltage: 161  # kV
+          coolingType: "ONAF"
+          impedance: 12  # %
+          status: "Running"
+          load: 80  # %
+          oilTemp: 65  # °C
+          windingTemp: 75  # °C
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-03-01"
+            nextMaintenance: "2026-03-01"
+            mtbf: 175200  # 20 years
+      
+      - id: "main_transformer_002"
+        asset_type: "SmallLNGPowerPlantAssets::Transformer"
+        position: {x: 130, y: 10, z: 15}
+        instance_params:
+          ratedCapacity: 60  # MVA
+          primaryVoltage: 11  # kV
+          secondaryVoltage: 161  # kV
+          coolingType: "ONAF"
+          impedance: 12  # %
+          status: "Running"
+          load: 80  # %
+          oilTemp: 65  # °C
+          windingTemp: 75  # °C
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-03-01"
+            nextMaintenance: "2026-03-01"
+            mtbf: 175200
+      
+      - id: "main_transformer_003"
+        asset_type: "SmallLNGPowerPlantAssets::Transformer"
+        position: {x: 140, y: 10, z: 15}
+        instance_params:
+          ratedCapacity: 60  # MVA
+          primaryVoltage: 11  # kV
+          secondaryVoltage: 161  # kV
+          coolingType: "ONAF"
+          impedance: 12  # %
+          status: "Running"
+          load: 80  # %
+          oilTemp: 65  # °C
+          windingTemp: 75  # °C
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-03-01"
+            nextMaintenance: "2026-03-01"
+            mtbf: 175200
+      
+      # 斷路器 (多個)
+      - id: "circuit_breaker_001"
+        asset_type: "SmallLNGPowerPlantAssets::CircuitBreaker"
+        position: {x: 120, y: 20, z: 15}
+        instance_params:
+          ratedVoltage: 161  # kV
+          ratedCurrent: 2000  # A
+          breakingCapacity: 2500  # MVA
+          breakerType: "SF6"
+          operatingTime: 50  # ms
+          status: "Closed"
+          current: 1600  # A
+          operationCount: 150
+          maintenance:
+            schedule: "每 3 年一次"
+            lastMaintenance: "2023-06-01"
+            nextMaintenance: "2026-06-01"
+            mtbf: 131400  # 15 years
+
+  # ==========================================================================
+  # 戶外設施 - 冷卻塔
+  # ==========================================================================
+  - area_id: "cooling_tower_area"
+    assets:
+      # 冷卻塔
+      - id: "cooling_tower_001"
+        asset_type: "SmallLNGPowerPlantAssets::CoolingTower"
+        position: {x: 235, y: 20, z: 0}
+        instance_params:
+          coolingCapacity: 150  # MW
+          towerType: "Mechanical Draft"
+          waterFlow: 15000  # m³/hr
+          approachTemp: 5  # °C
+          status: "Running"
+          inletWaterTemp: 38  # °C
+          outletWaterTemp: 28  # °C
+          wetBulbTemp: 23  # °C
+          makeupWaterFlow: 300  # m³/hr
+          efficiency: 90  # %
+          maintenance:
+            schedule: "每季一次"
+            lastMaintenance: "2025-07-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 43800  # 5 years
+
+  # ==========================================================================
+  # 戶外設施 - 排氣煙囪
+  # ==========================================================================
+  - area_id: "stack_area"
+    assets:
+      # 排氣煙囪
+      - id: "stack_001"
+        asset_type: "SmallLNGPowerPlantAssets::Stack"
+        position: {x: 225, y: 105, z: 0}
+        instance_params:
+          diameter: 4  # m
+          height: 80  # m
+          material: "Stainless Steel"
+          maxTemp: 600  # °C
+          status: "Operating"
+          gasFlowRate: 300  # kg/s
+          gasTemp: 95  # °C
+          draft: 50  # Pa
+          opacity: 5  # %
+          emissions:
+            co2: 190000  # kg/hr (from 2 gas turbines)
+            nox: 50  # kg/hr
+            co: 10  # kg/hr
+            sox: 1  # kg/hr
+          maintenance:
+            schedule: "每年一次"
+            lastMaintenance: "2025-02-01"
+            nextMaintenance: "2026-02-01"
+            mtbf: 175200  # 20 years
+      
+      # 連續排放監測系統 (CEMS)
+      - id: "cems_001"
+        asset_type: "SmallLNGPowerPlantAssets::CEMS"
+        position: {x: 225, y: 105, z: 40}
+        instance_params:
+          measuredParameters: "CO2, NOx, CO, SOx, O2"
+          accuracy: 2  # %
+          responseTime: 60  # s
+          status: "Monitoring"
+          currentEmissions:
+            co2: 190000  # kg/hr
+            nox: 50  # kg/hr
+            co: 10  # kg/hr
+            sox: 1  # kg/hr
+          complianceStatus: true
+          calibrationStatus: 98  # %
+          maintenance:
+            schedule: "每季一次"
+            lastMaintenance: "2025-07-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 26280  # 3 years
+
+  # ==========================================================================
+  # 消防系統 (分佈在各區域)
+  # ==========================================================================
+  - area_id: "lng_storage_area"
+    assets:
+      - id: "fire_protection_001"
+        asset_type: "SmallLNGPowerPlantAssets::FireProtectionSystem"
+        position: {x: 30, y: 30, z: 0}
+        instance_params:
+          systemType: "CO2"
+          capacity: 5000  # kg
+          nozzleCount: 20
+          activationTime: 10  # s
+          status: "Standby"
+          pressure: 60  # bar
+          agentLevel: 100  # %
+          fireDetected: false
+          maintenance:
+            schedule: "每季一次"
+            lastMaintenance: "2025-07-01"
+            nextMaintenance: "2025-10-01"
+            mtbf: 87600  # 10 years
+
+# ============================================================================
+# 關係定義
+# ============================================================================
+
+relationships:
+  # 燃料供應關係
+  - type: "FuelSupply"
+    from: "lng_tank_001"
+    to: "lng_vaporizer_001"
+    properties:
+      flowType: "LNG"
+      pipeSize: "DN150"
+      material: "Stainless Steel 304L"
+  
+  - type: "FuelSupply"
+    from: "lng_tank_001"
+    to: "lng_vaporizer_002"
+    properties:
+      flowType: "LNG"
+      pipeSize: "DN150"
+      material: "Stainless Steel 304L"
+  
+  # 氣體供應關係
+  - type: "GasSupply"
+    from: "lng_vaporizer_001"
+    to: "fuel_gas_compressor_001"
+    properties:
+      flowType: "Natural Gas"
+      pipeSize: "DN200"
+      pressure: 5  # bar
+  
+  - type: "GasSupply"
+    from: "fuel_gas_compressor_001"
+    to: "gas_turbine_001"
+    properties:
+      flowType: "Compressed Natural Gas"
+      pipeSize: "DN150"
+      pressure: 30  # bar
+  
+  - type: "GasSupply"
+    from: "fuel_gas_compressor_001"
+    to: "gas_turbine_002"
+    properties:
+      flowType: "Compressed Natural Gas"
+      pipeSize: "DN150"
+      pressure: 30  # bar
+  
+  # 發電關係
+  - type: "PowerGeneration"
+    from: "gas_turbine_001"
+    to: "generator_001"
+    properties:
+      connectionType: "Mechanical Coupling"
+      power: 48  # MW
+  
+  - type: "PowerGeneration"
+    from: "gas_turbine_002"
+    to: "generator_002"
+    properties:
+      connectionType: "Mechanical Coupling"
+      power: 48  # MW
+  
+  - type: "PowerGeneration"
+    from: "steam_turbine_001"
+    to: "generator_003"
+    properties:
+      connectionType: "Mechanical Coupling"
+      power: 48  # MW
+  
+  # 排氣熱能回收
+  - type: "ExhaustHeat"
+    from: "gas_turbine_001"
+    to: "hrsg_001"
+    properties:
+      flowType: "Exhaust Gas"
+      temperature: 540  # °C
+      flowRate: 150  # kg/s
+  
+  - type: "ExhaustHeat"
+    from: "gas_turbine_002"
+    to: "hrsg_001"
+    properties:
+      flowType: "Exhaust Gas"
+      temperature: 540  # °C
+      flowRate: 150  # kg/s
+  
+  # 蒸汽供應
+  - type: "SteamSupply"
+    from: "hrsg_001"
+    to: "steam_turbine_001"
+    properties:
+      flowType: "Steam"
+      pressure: 100  # bar
+      temperature: 540  # °C
+      flowRate: 190000  # kg/hr
+  
+  # 蒸汽冷凝
+  - type: "SteamCondensation"
+    from: "steam_turbine_001"
+    to: "condenser_001"
+    properties:
+      flowType: "Exhaust Steam"
+      pressure: 0.05  # bar
+      flowRate: 190000  # kg/hr
+  
+  # 冷卻水循環
+  - type: "CoolingWater"
+    from: "condenser_001"
+    to: "cooling_tower_001"
+    properties:
+      flowType: "Hot Water"
+      temperature: 38  # °C
+      flowRate: 15000  # m³/hr
+  
+  - type: "CoolingWater"
+    from: "cooling_tower_001"
+    to: "condenser_001"
+    properties:
+      flowType: "Cold Water"
+      temperature: 28  # °C
+      flowRate: 15000  # m³/hr
+  
+  # 電氣連接
+  - type: "ElectricalConnection"
+    from: "generator_001"
+    to: "main_transformer_001"
+    properties:
+      voltage: 11  # kV
+      current: 2650  # A
+      power: 48  # MW
+  
+  - type: "ElectricalConnection"
+    from: "generator_002"
+    to: "main_transformer_002"
+    properties:
+      voltage: 11  # kV
+      current: 2650  # A
+      power: 48  # MW
+  
+  - type: "ElectricalConnection"
+    from: "generator_003"
+    to: "main_transformer_003"
+    properties:
+      voltage: 11  # kV
+      current: 2650  # A
+      power: 48  # MW
+  
+  # 保護裝置
+  - type: "Protection"
+    from: "main_transformer_001"
+    to: "circuit_breaker_001"
+    properties:
+      protectionType: "Overcurrent, Differential"
+  
+  # 控制關係
+  - type: "Control"
+    from: "dcs_001"
+    to: "gas_turbine_001"
+  
+  - type: "Control"
+    from: "dcs_001"
+    to: "gas_turbine_002"
+  
+  - type: "Control"
+    from: "dcs_001"
+    to: "steam_turbine_001"
+  
+  - type: "Control"
+    from: "dcs_001"
+    to: "hrsg_001"
+  
+  # 排放監測
+  - type: "Monitoring"
+    from: "cems_001"
+    to: "stack_001"
+    properties:
+      monitoringType: "Continuous Emission"
+      parameters: "CO2, NOx, CO, SOx, O2"
+
+# ============================================================================
+# 公用系統
+# ============================================================================
+
+utilities:
+  # 電力系統
+  electrical:
+    - id: "main_power_supply"
+      type: "Grid Connection"
+      voltage: 161  # kV
+      frequency: 60  # Hz
+      capacity: 200  # MVA
+      reliability: 99.9  # %
+    
+    - id: "auxiliary_power"
+      type: "Station Service"
+      voltage: 11  # kV
+      capacity: 10  # MVA
+      load: 5  # MVA (約 3.3% 的總發電量)
+    
+    - id: "ups_system"
+      type: "Uninterruptible Power Supply"
+      capacity: 500  # kVA
+      backupTime: 30  # minutes
+      batteryType: "VRLA"
+    
+    - id: "emergency_diesel_generator"
+      type: "Emergency Generator"
+      capacity: 2  # MVA
+      fuelType: "Diesel"
+      startTime: 10  # seconds
+  
+  # 水系統
+  water:
+    - id: "raw_water_supply"
+      type: "Raw Water"
+      source: "Municipal"
+      capacity: 500  # m³/hr
+      quality: "Potable"
+    
+    - id: "demineralized_water"
+      type: "Demineralized Water"
+      capacity: 100  # m³/hr
+      conductivity: 0.2  # μS/cm
+      storage: 1000  # m³
+    
+    - id: "cooling_water_system"
+      type: "Circulating Cooling Water"
+      capacity: 15000  # m³/hr
+      temperature: 28  # °C
+      treatmentType: "Chemical"
+    
+    - id: "fire_water_system"
+      type: "Fire Protection Water"
+      capacity: 2000  # m³/hr
+      pressure: 10  # bar
+      storage: 5000  # m³
+  
+  # 壓縮空氣系統
+  compressed_air:
+    - id: "instrument_air"
+      type: "Instrument Air"
+      capacity: 500  # Nm³/hr
+      pressure: 7  # bar
+      dewPoint: -40  # °C
+      quality: "ISO 8573-1 Class 1.4.1"
+    
+    - id: "service_air"
+      type: "Service Air"
+      capacity: 200  # Nm³/hr
+      pressure: 7  # bar
+      quality: "Industrial"
+  
+  # 氮氣系統
+  nitrogen:
+    - id: "nitrogen_system"
+      type: "Nitrogen"
+      capacity: 100  # Nm³/hr
+      purity: 99.9  # %
+      pressure: 10  # bar
+      usage: "Purging, Blanketing"
+  
+  # 廢水處理
+  wastewater:
+    - id: "wastewater_treatment"
+      type: "Wastewater Treatment"
+      capacity: 100  # m³/day
+      treatmentType: "Physical-Chemical-Biological"
+      outputQuality: "Discharge Standard"
+
+# ============================================================================
+# 全域參數
+# ============================================================================
+
+global_parameters:
+  # 生產參數
+  production:
+    totalInstalledCapacity: 150  # MW
+    netCapacity: 145  # MW (扣除廠用電)
+    plantEfficiency: 58  # % (複循環)
+    heatRate: 6207  # kJ/kWh
+    annualOperatingHours: 8000  # hours
+    annualEnergyProduction: 1160  # GWh
+    capacityFactor: 88  # %
+  
+  # 燃料參數
+  fuel:
+    fuelType: "LNG"
+    lhv: 48  # MJ/kg
+    annualConsumption: 150000  # tons
+    storageCapacity: 3000  # m³
+    storageDays: 7  # days
+  
+  # 環境參數
+  environmental:
+    ambientTemperature: 25  # °C
+    relativeHumidity: 60  # %
+    altitude: 50  # m
+    designTemperature: 35  # °C (夏季設計溫度)
+  
+  # 排放參數
+  emissions:
+    co2Intensity: 380  # kg CO2/MWh
+    noxLimit: 25  # ppm @ 15% O2
+    coLimit: 10  # ppm @ 15% O2
+    soxEmission: 0.5  # kg/hr
+    annualCO2: 440800  # tons/year
+  
+  # 水資源
+  waterUsage:
+    makeupWater: 300  # m³/hr
+    waterIntensity: 2  # m³/MWh
+    waterRecyclingRate: 80  # %
+  
+  # 經濟參數
+  economics:
+    capitalCost: 120  # Million USD
+    operatingCost: 15  # Million USD/year
+    fuelCost: 10  # USD/MMBTU
+    electricityPrice: 0.08  # USD/kWh
+    paybackPeriod: 8  # years
+    irr: 12  # %
+
+# ============================================================================
+# 部署配置
+# ============================================================================
+
+deployment:
+  # NDH 配置
+  ndh:
+    clusterMode: true
+    masterNodes: 3
+    workerNodes: 6
+    highAvailability: true
+    disasterRecovery: true
+    backupFrequency: "hourly"
+    snapshotRetention: 30  # days
+    
+    # Worker 分配提示
+    workerAssignment:
+      - workerId: "worker-01"
+        region: "Taiwan"
+        building: "power_plant_main"
+        floor: "ground_floor"
+        area: "lng_storage_area"
+        assets:
+          - "lng_tank_001"
+          - "lng_vaporizer_001"
+          - "lng_vaporizer_002"
+          - "fuel_gas_compressor_001"
+          - "fuel_gas_compressor_002"
+      
+      - workerId: "worker-02"
+        region: "Taiwan"
+        building: "power_plant_main"
+        floor: "ground_floor"
+        area: "gas_turbine_area"
+        assets:
+          - "gas_turbine_001"
+          - "generator_001"
+      
+      - workerId: "worker-03"
+        region: "Taiwan"
+        building: "power_plant_main"
+        floor: "ground_floor"
+        area: "gas_turbine_area"
+        assets:
+          - "gas_turbine_002"
+          - "generator_002"
+          - "hrsg_001"
+      
+      - workerId: "worker-04"
+        region: "Taiwan"
+        building: "power_plant_main"
+        floor: "ground_floor"
+        area: "steam_turbine_area"
+        assets:
+          - "steam_turbine_001"
+          - "generator_003"
+          - "condenser_001"
+      
+      - workerId: "worker-05"
+        region: "Taiwan"
+        building: "outdoor_facilities"
+        assets:
+          - "cooling_tower_001"
+          - "stack_001"
+          - "cems_001"
+      
+      - workerId: "worker-06"
+        region: "Taiwan"
+        building: "power_plant_main"
+        floor: "mezzanine_floor"
+        assets:
+          - "dcs_001"
+          - "main_transformer_001"
+          - "main_transformer_002"
+          - "main_transformer_003"
+  
+  # Omniverse 配置
+  omniverse:
+    nucleusServer: "omniverse://lng-plant-nucleus.local"
+    usdStage: "/PowerPlant/Small_LNG_CCPP.usd"
+    realTimeSync: true
+    updateFrequency: 1  # Hz
+    maxConcurrentUsers: 20
+  
+  # MCP Server 配置
+  mcpServer:
+    enabled: true
+    port: 8080
+    protocol: "HTTP/2"
+    authentication: "OAuth2"
+    rateLimit: 1000  # requests/minute
+  
+  # 網路配置
+  network:
+    vlans:
+      - id: 10
+        name: "Production"
+        subnet: "10.10.10.0/24"
+      - id: 20
+        name: "Control"
+        subnet: "10.10.20.0/24"
+      - id: 30
+        name: "IT"
+        subnet: "10.10.30.0/24"
+      - id: 40
+        name: "Management"
+        subnet: "10.10.40.0/24"
+    
+    firewall:
+      enabled: true
+      rules:
+        - "Allow Production to Control"
+        - "Allow Control to IT"
+        - "Deny Production to IT"
+        - "Allow Management to All"
+
