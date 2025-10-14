@@ -220,3 +220,22 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 
 為了使 NDH 能夠與 AI 助理（如 Claude、ChatGPT、Manus 等）進行深度整合，我們設計了完整的 MCP (Model Context Protocol) Server 架構。
 
+
+### FDL 與工廠設計軟體整合
+
+**文件**: [FDL_Integration_with_Plant_Design_Software.md](04_FDL_Spec/docs/FDL_Integration_with_Plant_Design_Software.md)
+
+**內容**:
+- 主流工廠設計軟體分析（Autodesk Plant 3D、AVEVA E3D、Intergraph Smart 3D）
+- FDL 與工廠設計軟體的整合架構
+- 雙向整合策略（設計軟體 ↔ FDL）
+- FDL Editor 增強設計
+- 實作細節與程式碼範例
+- 使用場景與實作路線圖
+
+**核心價值**:
+- 降低 IDTF 採用門檻，設計師可繼續使用熟悉的工具
+- 自動生成 FDL，節省 80% 的時間
+- 支援雙向同步，保持設計與執行的一致性
+- 擴展 IDTF 的應用範圍到現有專案
+
