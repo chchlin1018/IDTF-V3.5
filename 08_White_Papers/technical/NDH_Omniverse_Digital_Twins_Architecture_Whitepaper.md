@@ -941,23 +941,95 @@ FDL (3個實例) ←→ Asset Servants (3個) ←→ USD Instances (3個)
 
 #### **6.1.3 USD Instance 的結構**
 
-每個 USD Instance 包含：
+**重要**：每個 Asset Servant 對應一個 **USD Instance**（不是 USD Model）。USD Instance 的 Transform（位置、旋轉、縮放）在 **FDL 中描述**，每個實例都可以不同。
 
+**完整的 FDL 範例（包含 Transform）**：
+```yaml
+factory_design:
+  assets:
+    - id: "compressor_001"
+      type: "iadl://compressor_atlas_copco_ga75.iadl"
+      instance_params:
+        position: [10.0, 0.0, 5.0]  # 位置 1
+        rotation: [0.0, 0.0, 0.0]   # 旋轉角度（歐拉角）
+        scale: [1.0, 1.0, 1.0]      # 縮放比例
+        rated_pressure: 8.0
+        rated_flow: 12.5
+    
+    - id: "compressor_002"
+      type: "iadl://compressor_atlas_copco_ga75.iadl"
+      instance_params:
+        position: [20.0, 0.0, 5.0]  # 位置 2（不同！）
+        rotation: [0.0, 90.0, 0.0]  # 旋轉 90 度
+        scale: [1.0, 1.0, 1.0]
+        rated_pressure: 8.0
+        rated_flow: 12.5
+    
+    - id: "compressor_003"
+      type: "iadl://compressor_atlas_copco_ga75.iadl"
+      instance_params:
+        position: [30.0, 0.0, 5.0]  # 位置 3（又不同！）
+        rotation: [0.0, 180.0, 0.0] # 旋轉 180 度
+        scale: [1.2, 1.2, 1.2]      # 放大 1.2 倍
+        rated_pressure: 8.0
+        rated_flow: 12.5
+```
+
+**對應的 USD 場景結構**：
 ```python
-# USD Instance 結構
-/World/Factory/compressor_001  # USD Prim Path
-    ├─ Reference: compressor_ga75.usd  # 引用 USD Model
-    ├─ Transform:
-    │   └─ translate: (10, 0, 5)  # 來自 FDL 的 position
+# USD 場景中的三個實例
+/World/Factory/compressor_001  # USD Instance 1
+    ├─ Reference: "compressor_ga75.usd"  # 引用 USD Model（模板）
+    ├─ Transform:  # 從 FDL 的 instance_params 讀取
+    │   ├─ translate: (10.0, 0.0, 5.0)
+    │   ├─ rotate: (0.0, 0.0, 0.0)
+    │   └─ scale: (1.0, 1.0, 1.0)
+    ├─ Instance Parameters:  # 從 FDL 的 instance_params 讀取
+    │   ├─ rated_pressure: 8.0
+    │   └─ rated_flow: 12.5
+    └─ Runtime Attributes:  # 從 Asset Servant 的即時狀態同步
+        ├─ temperature: 85.0
+        ├─ pressure: 7.8
+        ├─ flow_rate: 11.2
+        └─ status: "running"
+
+/World/Factory/compressor_002  # USD Instance 2
+    ├─ Reference: "compressor_ga75.usd"  # 引用同一個 USD Model
+    ├─ Transform:  # 不同的 Transform！
+    │   ├─ translate: (20.0, 0.0, 5.0)  # 不同的位置
+    │   ├─ rotate: (0.0, 90.0, 0.0)     # 不同的旋轉
+    │   └─ scale: (1.0, 1.0, 1.0)
     ├─ Instance Parameters:
-    │   ├─ rated_pressure: 8.0    # 來自 FDL 的 instance_params
-    │   ├─ rated_flow: 12.5
-    │   └─ motor_power: 75.0
-    └─ Runtime Attributes:  # 來自 Asset Servant 的即時狀態
-        ├─ temperature: 85.0  # 即時溫度
-        ├─ pressure: 7.8      # 即時壓力
-        ├─ flow_rate: 11.2    # 即時流量
-        └─ status: "running"  # 運行狀態
+    │   ├─ rated_pressure: 8.0
+    │   └─ rated_flow: 12.5
+    └─ Runtime Attributes:
+        ├─ temperature: 82.0  # 不同的即時狀態
+        ├─ pressure: 7.9
+        ├─ flow_rate: 11.8
+        └─ status: "running"
+
+/World/Factory/compressor_003  # USD Instance 3
+    ├─ Reference: "compressor_ga75.usd"  # 引用同一個 USD Model
+    ├─ Transform:  # 又不同的 Transform！
+    │   ├─ translate: (30.0, 0.0, 5.0)  # 又不同的位置
+    │   ├─ rotate: (0.0, 180.0, 0.0)    # 又不同的旋轉
+    │   └─ scale: (1.2, 1.2, 1.2)       # 不同的縮放
+    ├─ Instance Parameters:
+    │   ├─ rated_pressure: 8.0
+    │   └─ rated_flow: 12.5
+    └─ Runtime Attributes:
+        ├─ temperature: 88.0  # 又不同的即時狀態
+        ├─ pressure: 7.6
+        ├─ flow_rate: 10.5
+        └─ status: "running"
+```
+
+**關鍵重點**：
+- ✅ **USD Model 是模板**：只有一個 `compressor_ga75.usd`
+- ✅ **USD Instance 是實例**：有 3 個，每個都引用同一個 USD Model
+- ✅ **Transform 在 FDL 中定義**：每個實例的 position、rotation、scale 都在 FDL 中描述
+- ✅ **Asset Servant 讀取 FDL**：創建時從 FDL 讀取 Transform 和其他參數
+- ✅ **Omniverse Connector 同步**：將 FDL 的 Transform 設定到對應的 USD Instance
 ```
 
 #### **6.1.4 Runtime 動態修改**
