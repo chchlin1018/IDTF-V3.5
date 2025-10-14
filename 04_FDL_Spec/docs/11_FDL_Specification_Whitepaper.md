@@ -224,7 +224,7 @@ layout:
           y: 20.0
           z: 0.0
         orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
-        initial_params:
+        instance_params:
           sorting_speed: 12000  # UPH
           bin_count: 8
           status: "Idle"
@@ -244,7 +244,7 @@ layout:
           x: 10.0
           y: 30.0
           z: 0.0
-        initial_params:
+        instance_params:
           bonding_speed: 8000  # UPH
           accuracy: 0.001  # mm
           status: "Idle"
@@ -263,7 +263,7 @@ layout:
           x: 10.0
           y: 40.0
           z: 0.0
-        initial_params:
+        instance_params:
           wire_diameter: 0.025  # mm
           bonding_speed: 10000  # UPH
           status: "Idle"
@@ -511,7 +511,7 @@ factory_design:
             width: 8.0    # m
             height: 4.0   # m
           power_consumption: 1000  # kW
-          initial_params:
+          instance_params:
             wavelength: 13.5  # nm
             throughput: 170   # WPH (Wafers Per Hour)
   
@@ -682,7 +682,7 @@ factory_design:
               length: 25  # m
               width: 12   # m
               height: 8   # m
-          initial_params:
+          instance_params:
             load: 0  # MW
             status: "Standby"
         
@@ -1574,4 +1574,100 @@ GitHub: https://github.com/chchlin1018
 ---
 
 **FDL - 讓工廠設計標準化、自動化、智能化!** 🏭🚀
+
+
+_
+
+---
+
+## 9. 分散式部署與 Worker 分配
+
+在大型或跨廠區的部署場景中，NDH (Neutral Data Hub) 通常會以分散式叢集的方式運行。為了優化效能、降低延遲並實現地理位置感知，FDL 提供了 `worker_assignment` 機制，允許在設計階段就為資產實例指定執行的 **Worker 節點**。
+
+### 9.1 Worker 分配提示 (Assignment Hints)
+
+通過在資產的 `instance_params` 中加入特定的 `hints`，可以指導 NDH 的調度器將 Asset Servant 部署到最合適的 Worker 節點上。
+
+**核心提示欄位**：
+
+| 欄位 | 類型 | 描述 | 範例 |
+|---|---|---|---|
+| `region` | string | 資產所在的地理區域或廠區。用於將 Servant 分配到對應的 Edge NDH 節點。 | `TW`, `US-West`, `FAB-A` |
+| `building` | string | 資產所在的建築物。 | `Main-Building`, `Office-Tower` |
+| `floor` | integer | 資產所在的樓層。 | `1`, `5`, `-1` |
+| `worker_group` | string | 指定一個特定的 Worker 群組。可用於基於資產類型或重要性進行分組。 | `mep`, `production-critical`, `hvac` |
+| `affinity` | object | 定義親和性規則，讓某些 Servants 盡量部署在同一個 Worker 上。 | `{ key: "robot_arm_group", value: "group1" }` |
+| `anti_affinity` | object | 定義反親和性規則，確保某些 Servants 分散在不同的 Worker 上以提高可用性。 | `{ key: "safety_monitor", value: "true" }` |
+
+### 9.2 FDL 範例
+
+以下範例展示如何在 FDL 中使用 Worker 分配提示：
+
+```yaml
+factory_design:
+  metadata:
+    name: "Global Multi-Site Factory"
+
+  ndh_cluster_config:  # 定義 NDH 叢集拓撲
+    mode: "hybrid"
+    edge_nodes:
+      - id: "edge-tw"
+        region: "TW"
+      - id: "edge-us"
+        region: "US"
+
+    worker_groups:
+      - name: "mep-workers"
+        node_selector:
+          role: "mep"
+      - name: "prod-workers"
+        node_selector:
+          role: "production"
+
+  layout:
+    - area: "TW-FAB1-Floor1"
+      instances:
+        - type: "iadl://compressor_ga75.iadl"
+          id: "comp-tw-001"
+          instance_params:
+            position: [10, 20, 0]
+            hints:  # Worker 分配提示
+              region: "TW"                # -> 分配到 edge-tw 節點
+              building: "FAB1"
+              floor: 1
+              worker_group: "mep-workers" # -> 分配到 MEP 專用 Worker 群組
+
+    - area: "US-FAB2-Floor2"
+      instances:
+        - type: "iadl://robot_arm_kr210.iadl"
+          id: "robot-us-001"
+          instance_params:
+            position: [50, 60, 0]
+            hints:
+              region: "US"                # -> 分配到 edge-us 節點
+              worker_group: "prod-workers"
+              affinity:
+                key: "robot_cell"
+                value: "cell_A"
+
+        - type: "iadl://robot_arm_kr210.iadl"
+          id: "robot-us-002"
+          instance_params:
+            position: [52, 60, 0]
+            hints:
+              region: "US"
+              worker_group: "prod-workers"
+              affinity:
+                key: "robot_cell"
+                value: "cell_A" # -> 與 robot-us-001 部署在同一個 Worker 上
+```
+
+### 9.3 與 NDH 調度器的互動
+
+1.  **FDL 解析**: NDH 在啟動時解析 FDL 文件。
+2.  **讀取提示**: 調度器讀取每個資產實例的 `hints`。
+3.  **匹配 Worker**: 調度器根據提示（`region`, `worker_group` 等）和 Worker 節點的標籤 (`labels`)，選擇最匹配的 Worker。
+4.  **動態調度**: 如果沒有靜態提示，或目標 Worker 不可用，調度器會根據負載均衡策略動態選擇一個 Worker。
+
+這種機制使得工廠設計者可以在不關心底層 Kubernetes 細節的情況下，對分散式系統的行為進行高層次的指導，從而實現設計意圖與運行時行為的一致性。
 

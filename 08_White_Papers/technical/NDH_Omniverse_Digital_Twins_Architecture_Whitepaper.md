@@ -2380,3 +2380,323 @@ IDTF V3.5 的 NDH + Asset Servants + Omniverse 整合架構為工業數位分身
 © 2025 MacroVision Systems / IDTF Alliance. All rights reserved.
 本白皮書採用 CC BY-SA 4.0 授權。
 
+
+
+
+### 10.3 分散式部署與群集架構
+
+對於大型工廠（10,000+ 資產）和多廠房場景，NDH 需要支援群集架構和分散式 Asset Servant 部署，以實現高可用性、水平擴展和低延遲。
+
+#### 10.3.1 架構模式
+
+##### **模式 1：集中式 NDH 群集 + 分散式 Asset Servants**
+
+**適用場景**：單一廠區，多個廠房，資產數量 5,000-50,000
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ NDH Cluster (Kubernetes)                                    │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │ NDH Master 1 │  │ NDH Master 2 │  │ NDH Master 3 │     │
+│  │ (Active)     │  │ (Standby)    │  │ (Standby)    │     │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘     │
+│         │                  │                  │              │
+│         └──────────────────┴──────────────────┘              │
+│                            │                                 │
+│                    ┌───────┴───────┐                        │
+│                    │ Load Balancer │                        │
+│                    │ (HAProxy)     │                        │
+│                    └───────┬───────┘                        │
+│                            │                                 │
+│         ┌──────────────────┼──────────────────┐            │
+│         ↓                  ↓                   ↓            │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐   │
+│  │ Worker 1    │    │ Worker 2    │    │ Worker 3    │   │
+│  │ (Asset      │    │ (Asset      │    │ (Asset      │   │
+│  │  Servants   │    │  Servants   │    │  Servants   │   │
+│  │  1-3000)    │    │  3001-6000) │    │  6001-9000) │   │
+│  └─────┬───────┘    └─────┬───────┘    └─────┬───────┘   │
+└────────┼────────────────────┼────────────────────┼──────────┘
+         │                    │                    │
+         ↓                    ↓                    ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Physical World (OT)                                         │
+│ [FAB 1]          [FAB 2]          [FAB 3]                   │
+│ Assets 1-3000    Assets 3001-6000  Assets 6001-9000        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**特點**：
+- ✅ 集中式管理和監控
+- ✅ 統一的數據存儲和查詢
+- ✅ 簡化的運維和升級
+- ⚠️ 需要高速內部網絡
+- ⚠️ 單點故障風險（需 HA 配置）
+
+##### **模式 2：邊緣 NDH + 中央 NDH（混合架構）**
+
+**適用場景**：多廠區，跨地理位置，資產數量 50,000+
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Central NDH (Data Center / Cloud)                          │
+│  - 全局數據聚合與分析                                       │
+│  - 長期數據存儲（冷數據）                                   │
+│  - 跨廠房 KPI 儀表板                                        │
+│  - Omniverse 全局場景整合                                   │
+│  - AI/ML 模型訓練                                           │
+└────────────────────┬────────────────────────────────────────┘
+                     │ (WAN / VPN / 專線)
+         ┌───────────┼───────────┐
+         │           │           │
+         ↓           ↓           ↓
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ Edge NDH 1  │ │ Edge NDH 2  │ │ Edge NDH 3  │
+│ (台灣 FAB)  │ │ (美國 FAB)  │ │ (日本 FAB)  │
+│             │ │             │ │             │
+│ - 本地數據  │ │ - 本地數據  │ │ - 本地數據  │
+│   採集      │ │   採集      │ │   採集      │
+│ - 即時控制  │ │ - 即時控制  │ │ - 即時控制  │
+│ - 本地告警  │ │ - 本地告警  │ │ - 本地告警  │
+│             │ │             │ │             │
+│ Asset       │ │ Asset       │ │ Asset       │
+│ Servants    │ │ Servants    │ │ Servants    │
+│ 1-10000     │ │ 10001-20000 │ │ 20001-30000 │
+└─────┬───────┘ └─────┬───────┘ └─────┬───────┘
+      │               │               │
+      ↓               ↓               ↓
+┌───────────┐   ┌───────────┐   ┌───────────┐
+│ 台灣 FAB  │   │ 美國 FAB  │   │ 日本 FAB  │
+│ OT Network│   │ OT Network│   │ OT Network│
+└───────────┘   └───────────┘   └───────────┘
+```
+
+**特點**：
+- ✅ 低延遲（本地處理）
+- ✅ 網絡容錯（Edge 可獨立運行）
+- ✅ 數據主權合規
+- ✅ 帶寬優化（僅上傳聚合數據）
+- ⚠️ 運維複雜度較高
+
+#### 10.3.2 Asset Servant 分配策略
+
+##### **策略 1：基於地理位置的分配**
+
+```python
+class GeoLocationAssignmentStrategy:
+    """根據資產的地理位置分配到最近的 Worker"""
+    
+    def assign_servant_to_worker(
+        self,
+        asset_id: str,
+        fdl_instance: Dict
+    ) -> str:
+        # 從 FDL 讀取位置信息
+        position = fdl_instance["instance_params"]["position"]
+        region = fdl_instance["instance_params"].get("region")
+        building = fdl_instance["instance_params"].get("building")
+        floor = fdl_instance["instance_params"].get("floor")
+        
+        # 根據地理位置映射到 Worker
+        worker_id = self.worker_assignment_map.get(
+            (region, building, floor),
+            self.default_worker_id
+        )
+        
+        logger.info(f"Assigned {asset_id} to {worker_id} "
+                   f"(region={region}, building={building}, floor={floor})")
+        
+        return worker_id
+```
+
+##### **策略 2：基於資產類型的分配**
+
+```python
+class AssetTypeAssignmentStrategy:
+    """根據資產類型分配到專門的 Worker"""
+    
+    def assign_servant_to_worker(
+        self,
+        asset_id: str,
+        asset_type: str
+    ) -> str:
+        if asset_type.startswith("compressor") or \
+           asset_type.startswith("pump") or \
+           asset_type.startswith("chiller"):
+            return "worker_mep"  # MEP 設備專用 Worker
+        
+        elif asset_type.startswith("robot") or \
+             asset_type.startswith("conveyor") or \
+             asset_type.startswith("agv"):
+            return "worker_production"  # 生產設備專用 Worker
+        
+        elif asset_type.startswith("hvac") or \
+             asset_type.startswith("lighting") or \
+             asset_type.startswith("security"):
+            return "worker_facility"  # 設施設備專用 Worker
+        
+        else:
+            return "worker_general"
+```
+
+##### **策略 3：基於負載均衡的動態分配**
+
+```python
+class LoadBalancingAssignmentStrategy:
+    """根據 Worker 當前負載動態分配"""
+    
+    async def assign_servant_to_worker(self, asset_id: str) -> str:
+        workers = await self.get_available_workers()
+        
+        # 計算每個 Worker 的負載
+        worker_loads = {}
+        for worker_id in workers:
+            load = await self.calculate_worker_load(worker_id)
+            worker_loads[worker_id] = load
+        
+        # 選擇負載最低的 Worker
+        selected_worker = min(worker_loads, key=worker_loads.get)
+        
+        logger.info(f"Assigned {asset_id} to {selected_worker} "
+                   f"(load={worker_loads[selected_worker]:.2f})")
+        
+        return selected_worker
+```
+
+#### 10.3.3 服務發現與註冊 (etcd)
+
+使用 **etcd** 或 **Consul** 作為服務註冊中心，實現分散式環境下的 Asset Servant 發現。
+
+```python
+import etcd3
+
+class ServiceRegistry:
+    """基於 etcd 的服務註冊中心"""
+    
+    def __init__(self, etcd_host: str, etcd_port: int):
+        self.etcd = etcd3.client(host=etcd_host, port=etcd_port)
+        self.lease_ttl = 10  # 心跳租約 10 秒
+        self.lease_id = None
+    
+    async def register_servant(
+        self,
+        asset_id: str,
+        worker_id: str,
+        endpoint: str
+    ):
+        """註冊 Asset Servant"""
+        # 創建租約（用於心跳）
+        if not self.lease_id:
+            self.lease_id = self.etcd.lease(self.lease_ttl)
+        
+        # 註冊服務
+        key = f"/ndh/servants/{asset_id}"
+        value = json.dumps({
+            "asset_id": asset_id,
+            "worker_id": worker_id,
+            "endpoint": endpoint,
+            "registered_at": datetime.now().isoformat(),
+            "status": "running"
+        })
+        
+        self.etcd.put(key, value, lease=self.lease_id)
+        logger.info(f"Registered servant: {asset_id} on {worker_id}")
+```
+
+#### 10.3.4 跨 Worker 通訊 (gRPC)
+
+使用 **gRPC** 實現高效的跨 Worker Asset Servant 通訊。
+
+```protobuf
+// asset_servant.proto
+syntax = "proto3";
+
+service AssetServantService {
+  rpc ExecuteCommand(CommandRequest) returns (CommandResponse);
+  rpc GetState(StateRequest) returns (StateResponse);
+  rpc SubscribeEvents(SubscribeRequest) returns (stream Event);
+}
+```
+
+#### 10.3.5 故障轉移與高可用性
+
+```python
+class AssetServantFailover:
+    """Asset Servant 故障轉移管理器"""
+    
+    async def handle_worker_failure(self, failed_worker_id: str):
+        """處理 Worker 節點故障"""
+        logger.error(f"Worker {failed_worker_id} failed, starting failover...")
+        
+        # 1. 標記 Worker 為不可用
+        await self.mark_worker_unavailable(failed_worker_id)
+        
+        # 2. 獲取該 Worker 上的所有 Asset Servants
+        servants = await self.get_servants_on_worker(failed_worker_id)
+        
+        # 3. 重新分配到其他健康的 Worker
+        for servant in servants:
+            new_worker = await self.select_healthy_worker()
+            await self.migrate_servant(
+                servant.asset_id,
+                failed_worker_id,
+                new_worker
+            )
+```
+
+#### 10.3.6 FDL 中的分散式配置
+
+```yaml
+factory_design:
+  metadata:
+    name: "Multi-FAB Global Factory"
+    version: "2.0"
+  
+  # NDH 群集配置
+  ndh_cluster:
+    mode: "hybrid"  # centralized, edge, hybrid
+    
+    # 邊緣 NDH 節點
+    edge_nodes:
+      - id: "edge_taiwan"
+        region: "TW"
+      - id: "edge_usa"
+        region: "US"
+  
+  # Worker 分配策略
+  worker_assignment:
+    strategy: "geo_location"
+    
+    workers:
+      - id: "worker_tw_fab1"
+        region: "TW"
+        building: "FAB1"
+      - id: "worker_us_fab1"
+        region: "US"
+        building: "FAB1"
+  
+  # 資產實例
+  assets:
+    - id: "compressor_tw_fab1_001"
+      type: "iadl://compressor_ga75.iadl"
+      instance_params:
+        region: "TW"          # 分配到 edge_taiwan
+        building: "FAB1"      # 分配到 worker_tw_fab1
+```
+
+#### 10.3.7 部署架構建議
+
+| 規模 | 資產數量 | NDH 部署 | 數據庫 | 備註 |
+|---|---|---|---|---|
+| 小型工廠 | < 5,000 | 單一實例 | PostgreSQL + InfluxDB | 3 個 Worker 節點 (HA) |
+| 中型工廠 | 5,000 - 20,000 | NDH 群集 | PostgreSQL (主從) + InfluxDB (群集) | Redis 群集 |
+| 大型工廠 | 20,000 - 100,000 | 混合架構 (Central + Edge) | TDengine (群集) | Kafka, Prometheus, Grafana |
+| 超大型/多廠區 | 100,000+ | 全球分散式架構 | 多地區數據中心備份 | 專線或 SD-WAN |
+
+
+
+
+
+> **詳細部署指南**: 關於 NDH 叢集的詳細部署步驟，請參閱 [NDH 叢集部署指南](../../06_NDH_Spec/docs/NDH_Cluster_Deployment_Guide.md)。
+

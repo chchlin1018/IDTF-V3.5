@@ -1,0 +1,26 @@
+graph TD
+    subgraph "Design Time"
+        A["IADL (Asset Blueprint)"] --> C;
+        B["FDL (Factory Layout)"] --> C;
+    end
+
+    subgraph "Runtime"
+        C{"NDH (Digital Twin Runtime)"} --> D["Asset Servants (Live Instances)"];
+        D <--> E["Physical Assets (PLCs, SCADA)"];
+        C --> F["Omniverse Connector"];
+    end
+
+    subgraph "Visualization & Collaboration"
+        F --> G["NVIDIA Omniverse (3D Visualization)"];
+        G --> H["Users (Engineers, Operators)"];
+    end
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#9c9,stroke:#333,stroke-width:2px
+    style F fill:#fcf,stroke:#333,stroke-width:2px
+    style G fill:#ff9,stroke:#333,stroke-width:2px
+    style H fill:#9cf,stroke:#333,stroke-width:2px
+
