@@ -1,0 +1,1005 @@
+# GB300 AI Data Center Factory Design Language (FDL)
+# Version: 1.0.0
+# Date: 2025-10-14
+
+metadata:
+  name: "GB300 AI Data Center"
+  version: "1.0.0"
+  author: "IDTF Technical Team"
+  date: "2025-10-14"
+  description: "Medium-scale NVIDIA GB300-based AI data center for large language model training and inference"
+  location:
+    address: "AI Innovation Park, Hsinchu, Taiwan"
+    coordinates:
+      latitude: 24.7736
+      longitude: 120.9436
+  tags:
+    - "AI"
+    - "GPU"
+    - "GB300"
+    - "Data Center"
+    - "LLM Training"
+
+# ============================================================================
+# BUILDINGS
+# ============================================================================
+
+buildings:
+  - id: main_datacenter
+    name: "Main Data Center Building"
+    type: "data_center"
+    dimensions:
+      length: 80.0  # meters
+      width: 60.0   # meters
+      height: 12.0  # meters
+    location:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    
+    floors:
+      # Ground Floor - Main Data Hall
+      - id: ground_floor
+        name: "Ground Floor - Data Hall"
+        level: 0
+        height: 6.0  # meters
+        area: 4800.0  # m² (80m × 60m)
+        zones:
+          - id: compute_zone_a
+            name: "Compute Zone A - GB300 Racks"
+            type: "compute"
+            area: 1200.0  # m² (40m × 30m)
+            location:
+              x: 0.0
+              y: 0.0
+            environment:
+              temperature: 24.0  # °C
+              humidity: 45.0     # %RH
+              
+          - id: compute_zone_b
+            name: "Compute Zone B - GB300 Racks"
+            type: "compute"
+            area: 1200.0  # m² (40m × 30m)
+            location:
+              x: 40.0
+              y: 0.0
+            environment:
+              temperature: 24.0  # °C
+              humidity: 45.0     # %RH
+              
+          - id: network_zone
+            name: "Network Zone"
+            type: "networking"
+            area: 400.0  # m² (20m × 20m)
+            location:
+              x: 0.0
+              y: 30.0
+            environment:
+              temperature: 22.0  # °C
+              humidity: 50.0     # %RH
+              
+          - id: storage_zone
+            name: "Storage Zone"
+            type: "storage"
+            area: 400.0  # m² (20m × 20m)
+            location:
+              x: 20.0
+              y: 30.0
+            environment:
+              temperature: 22.0  # °C
+              humidity: 50.0     # %RH
+              
+          - id: hot_aisle_a
+            name: "Hot Aisle A"
+            type: "hot_aisle"
+            area: 600.0  # m² (40m × 15m)
+            location:
+              x: 0.0
+              y: 15.0
+              
+          - id: cold_aisle_a
+            name: "Cold Aisle A"
+            type: "cold_aisle"
+            area: 600.0  # m² (40m × 15m)
+            location:
+              x: 0.0
+              y: 0.0
+              
+          - id: hot_aisle_b
+            name: "Hot Aisle B"
+            type: "hot_aisle"
+            area: 600.0  # m² (40m × 15m)
+            location:
+              x: 40.0
+              y: 15.0
+              
+          - id: cold_aisle_b
+            name: "Cold Aisle B"
+            type: "cold_aisle"
+            area: 600.0  # m² (40m × 15m)
+            location:
+              x: 40.0
+              y: 0.0
+      
+      # Mezzanine Floor - Cooling & Power
+      - id: mezzanine_floor
+        name: "Mezzanine Floor - Infrastructure"
+        level: 1
+        height: 4.0  # meters
+        area: 2400.0  # m² (80m × 30m)
+        zones:
+          - id: cooling_equipment_room
+            name: "Cooling Equipment Room"
+            type: "mechanical"
+            area: 1200.0  # m² (40m × 30m)
+            location:
+              x: 0.0
+              y: 30.0
+              
+          - id: electrical_room
+            name: "Electrical Room"
+            type: "electrical"
+            area: 800.0  # m² (40m × 20m)
+            location:
+              x: 40.0
+              y: 30.0
+              
+          - id: battery_room
+            name: "Battery Room"
+            type: "power"
+            area: 400.0  # m² (20m × 20m)
+            location:
+              x: 60.0
+              y: 40.0
+      
+      # Top Floor - Office & Control
+      - id: top_floor
+        name: "Top Floor - Office & Control"
+        level: 2
+        height: 2.0  # meters
+        area: 1200.0  # m² (40m × 30m)
+        zones:
+          - id: control_room
+            name: "Network Operations Center (NOC)"
+            type: "control"
+            area: 400.0  # m² (20m × 20m)
+            location:
+              x: 0.0
+              y: 30.0
+              
+          - id: office_area
+            name: "Office Area"
+            type: "office"
+            area: 600.0  # m² (30m × 20m)
+            location:
+              x: 20.0
+              y: 30.0
+              
+          - id: meeting_room
+            name: "Meeting Room"
+            type: "office"
+            area: 200.0  # m² (10m × 20m)
+            location:
+              x: 50.0
+              y: 30.0
+  
+  # Outdoor Equipment
+  - id: outdoor_equipment
+    name: "Outdoor Equipment Area"
+    type: "outdoor"
+    dimensions:
+      length: 40.0  # meters
+      width: 30.0   # meters
+      height: 15.0  # meters
+    location:
+      x: 80.0
+      y: 0.0
+      z: 0.0
+    zones:
+      - id: generator_yard
+        name: "Generator Yard"
+        type: "power"
+        area: 400.0  # m² (20m × 20m)
+        location:
+          x: 0.0
+          y: 0.0
+          
+      - id: cooling_tower_yard
+        name: "Cooling Tower Yard"
+        type: "cooling"
+        area: 600.0  # m² (30m × 20m)
+        location:
+          x: 20.0
+          y: 0.0
+          
+      - id: chiller_yard
+        name: "Chiller Yard"
+        type: "cooling"
+        area: 200.0  # m² (10m × 20m)
+        location:
+          x: 0.0
+          y: 20.0
+
+# ============================================================================
+# LAYOUT - ASSET INSTANCES
+# ============================================================================
+
+layout:
+  # -------------------------------------------------------------------------
+  # COMPUTE INFRASTRUCTURE (Zone A)
+  # -------------------------------------------------------------------------
+  
+  # GB300 NVL72 Racks - Zone A (10 racks)
+  - id: gb300_rack_a01
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 2.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A01"
+      
+  - id: gb300_rack_a02
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 6.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A02"
+      
+  - id: gb300_rack_a03
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 10.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A03"
+      
+  - id: gb300_rack_a04
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 14.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A04"
+      
+  - id: gb300_rack_a05
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 18.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A05"
+      
+  - id: gb300_rack_a06
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 22.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A06"
+      
+  - id: gb300_rack_a07
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 26.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A07"
+      
+  - id: gb300_rack_a08
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 30.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A08"
+      
+  - id: gb300_rack_a09
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 34.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A09"
+      
+  - id: gb300_rack_a10
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_a
+    location: {x: 38.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "A10"
+  
+  # GB300 NVL72 Racks - Zone B (10 racks)
+  - id: gb300_rack_b01
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 42.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B01"
+      
+  - id: gb300_rack_b02
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 46.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B02"
+      
+  - id: gb300_rack_b03
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 50.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B03"
+      
+  - id: gb300_rack_b04
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 54.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B04"
+      
+  - id: gb300_rack_b05
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 58.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B05"
+      
+  - id: gb300_rack_b06
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 62.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B06"
+      
+  - id: gb300_rack_b07
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 66.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B07"
+      
+  - id: gb300_rack_b08
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 70.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B08"
+      
+  - id: gb300_rack_b09
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 74.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B09"
+      
+  - id: gb300_rack_b10
+    asset_type: gb300_nvl72_rack
+    zone: compute_zone_b
+    location: {x: 78.0, y: 2.0, z: 0.0}
+    instance_params:
+      rack_id: "B10"
+  
+  # -------------------------------------------------------------------------
+  # NETWORKING INFRASTRUCTURE
+  # -------------------------------------------------------------------------
+  
+  # InfiniBand Switches (Spine-Leaf Architecture)
+  # Spine Switches (4 switches)
+  - id: ib_spine_01
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 2.0, y: 32.0, z: 0.0}
+    instance_params:
+      switch_role: "spine"
+      switch_id: "IB-SPINE-01"
+      
+  - id: ib_spine_02
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 6.0, y: 32.0, z: 0.0}
+    instance_params:
+      switch_role: "spine"
+      switch_id: "IB-SPINE-02"
+      
+  - id: ib_spine_03
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 10.0, y: 32.0, z: 0.0}
+    instance_params:
+      switch_role: "spine"
+      switch_id: "IB-SPINE-03"
+      
+  - id: ib_spine_04
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 14.0, y: 32.0, z: 0.0}
+    instance_params:
+      switch_role: "spine"
+      switch_id: "IB-SPINE-04"
+  
+  # Leaf Switches (20 switches, 1 per rack)
+  - id: ib_leaf_a01
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 2.0, y: 36.0, z: 0.0}
+    instance_params:
+      switch_role: "leaf"
+      switch_id: "IB-LEAF-A01"
+      connected_rack: "gb300_rack_a01"
+      
+  - id: ib_leaf_a02
+    asset_type: infiniband_switch_400g
+    zone: network_zone
+    location: {x: 2.5, y: 36.0, z: 0.0}
+    instance_params:
+      switch_role: "leaf"
+      switch_id: "IB-LEAF-A02"
+      connected_rack: "gb300_rack_a02"
+  
+  # ... (similar for all 20 racks)
+  
+  # Ethernet Switches (Management Network)
+  - id: eth_core_01
+    asset_type: ethernet_switch_400g
+    zone: network_zone
+    location: {x: 2.0, y: 40.0, z: 0.0}
+    instance_params:
+      switch_role: "core"
+      switch_id: "ETH-CORE-01"
+      
+  - id: eth_core_02
+    asset_type: ethernet_switch_400g
+    zone: network_zone
+    location: {x: 6.0, y: 40.0, z: 0.0}
+    instance_params:
+      switch_role: "core"
+      switch_id: "ETH-CORE-02"
+  
+  # Core Routers
+  - id: core_router_01
+    asset_type: core_router
+    zone: network_zone
+    location: {x: 10.0, y: 40.0, z: 0.0}
+    instance_params:
+      router_id: "CORE-RTR-01"
+      
+  - id: core_router_02
+    asset_type: core_router
+    zone: network_zone
+    location: {x: 14.0, y: 40.0, z: 0.0}
+    instance_params:
+      router_id: "CORE-RTR-02"
+  
+  # Firewalls
+  - id: firewall_01
+    asset_type: firewall
+    zone: network_zone
+    location: {x: 2.0, y: 44.0, z: 0.0}
+    instance_params:
+      firewall_id: "FW-01"
+      
+  - id: firewall_02
+    asset_type: firewall
+    zone: network_zone
+    location: {x: 6.0, y: 44.0, z: 0.0}
+    instance_params:
+      firewall_id: "FW-02"
+  
+  # -------------------------------------------------------------------------
+  # STORAGE INFRASTRUCTURE
+  # -------------------------------------------------------------------------
+  
+  # Storage Servers (10 servers, 10 PB total)
+  - id: storage_server_01
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 22.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-01"
+      
+  - id: storage_server_02
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 24.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-02"
+      
+  - id: storage_server_03
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 26.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-03"
+      
+  - id: storage_server_04
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 28.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-04"
+      
+  - id: storage_server_05
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 30.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-05"
+      
+  - id: storage_server_06
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 32.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-06"
+      
+  - id: storage_server_07
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 34.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-07"
+      
+  - id: storage_server_08
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 36.0, y: 32.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-08"
+      
+  - id: storage_server_09
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 22.0, y: 36.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-09"
+      
+  - id: storage_server_10
+    asset_type: storage_server
+    zone: storage_zone
+    location: {x: 24.0, y: 36.0, z: 0.0}
+    instance_params:
+      server_id: "STORAGE-10"
+  
+  # -------------------------------------------------------------------------
+  # POWER INFRASTRUCTURE
+  # -------------------------------------------------------------------------
+  
+  # PDUs (20 units, 1 per rack)
+  - id: pdu_a01
+    asset_type: pdu_400kw
+    zone: compute_zone_a
+    location: {x: 2.0, y: 4.0, z: 0.0}
+    instance_params:
+      pdu_id: "PDU-A01"
+      connected_rack: "gb300_rack_a01"
+      
+  - id: pdu_a02
+    asset_type: pdu_400kw
+    zone: compute_zone_a
+    location: {x: 6.0, y: 4.0, z: 0.0}
+    instance_params:
+      pdu_id: "PDU-A02"
+      connected_rack: "gb300_rack_a02"
+  
+  # ... (similar for all 20 racks)
+  
+  # UPS Systems (2 units, N+1 redundancy)
+  - id: ups_01
+    asset_type: ups_2mw
+    zone: electrical_room
+    location: {x: 42.0, y: 32.0, z: 6.0}
+    instance_params:
+      ups_id: "UPS-01"
+      
+  - id: ups_02
+    asset_type: ups_2mw
+    zone: electrical_room
+    location: {x: 46.0, y: 32.0, z: 6.0}
+    instance_params:
+      ups_id: "UPS-02"
+  
+  # Diesel Generators (2 units, N+1 redundancy)
+  - id: generator_01
+    asset_type: diesel_generator_3mw
+    zone: generator_yard
+    location: {x: 82.0, y: 2.0, z: 0.0}
+    instance_params:
+      generator_id: "GEN-01"
+      
+  - id: generator_02
+    asset_type: diesel_generator_3mw
+    zone: generator_yard
+    location: {x: 86.0, y: 2.0, z: 0.0}
+    instance_params:
+      generator_id: "GEN-02"
+  
+  # -------------------------------------------------------------------------
+  # COOLING INFRASTRUCTURE
+  # -------------------------------------------------------------------------
+  
+  # Liquid CDUs (20 units, 1 per rack)
+  - id: cdu_a01
+    asset_type: liquid_cdu_500kw
+    zone: cooling_equipment_room
+    location: {x: 2.0, y: 32.0, z: 6.0}
+    instance_params:
+      cdu_id: "CDU-A01"
+      connected_rack: "gb300_rack_a01"
+      
+  - id: cdu_a02
+    asset_type: liquid_cdu_500kw
+    zone: cooling_equipment_room
+    location: {x: 4.0, y: 32.0, z: 6.0}
+    instance_params:
+      cdu_id: "CDU-A02"
+      connected_rack: "gb300_rack_a02"
+  
+  # ... (similar for all 20 racks)
+  
+  # Chillers (4 units, N+1 redundancy)
+  - id: chiller_01
+    asset_type: chiller_2mw
+    zone: chiller_yard
+    location: {x: 82.0, y: 22.0, z: 0.0}
+    instance_params:
+      chiller_id: "CHILLER-01"
+      
+  - id: chiller_02
+    asset_type: chiller_2mw
+    zone: chiller_yard
+    location: {x: 84.0, y: 22.0, z: 0.0}
+    instance_params:
+      chiller_id: "CHILLER-02"
+      
+  - id: chiller_03
+    asset_type: chiller_2mw
+    zone: chiller_yard
+    location: {x: 86.0, y: 22.0, z: 0.0}
+    instance_params:
+      chiller_id: "CHILLER-03"
+      
+  - id: chiller_04
+    asset_type: chiller_2mw
+    zone: chiller_yard
+    location: {x: 88.0, y: 22.0, z: 0.0}
+    instance_params:
+      chiller_id: "CHILLER-04"
+  
+  # Cooling Towers (4 units, N+1 redundancy)
+  - id: cooling_tower_01
+    asset_type: cooling_tower_3mw
+    zone: cooling_tower_yard
+    location: {x: 102.0, y: 2.0, z: 0.0}
+    instance_params:
+      tower_id: "CT-01"
+      
+  - id: cooling_tower_02
+    asset_type: cooling_tower_3mw
+    zone: cooling_tower_yard
+    location: {x: 106.0, y: 2.0, z: 0.0}
+    instance_params:
+      tower_id: "CT-02"
+      
+  - id: cooling_tower_03
+    asset_type: cooling_tower_3mw
+    zone: cooling_tower_yard
+    location: {x: 110.0, y: 2.0, z: 0.0}
+    instance_params:
+      tower_id: "CT-03"
+      
+  - id: cooling_tower_04
+    asset_type: cooling_tower_3mw
+    zone: cooling_tower_yard
+    location: {x: 114.0, y: 2.0, z: 0.0}
+    instance_params:
+      tower_id: "CT-04"
+  
+  # CRAC Units (10 units for supplemental cooling)
+  - id: crac_01
+    asset_type: crac_100kw
+    zone: compute_zone_a
+    location: {x: 0.0, y: 0.0, z: 0.0}
+    instance_params:
+      crac_id: "CRAC-01"
+      
+  - id: crac_02
+    asset_type: crac_100kw
+    zone: compute_zone_a
+    location: {x: 0.0, y: 10.0, z: 0.0}
+    instance_params:
+      crac_id: "CRAC-02"
+      
+  - id: crac_03
+    asset_type: crac_100kw
+    zone: compute_zone_a
+    location: {x: 0.0, y: 20.0, z: 0.0}
+    instance_params:
+      crac_id: "CRAC-03"
+      
+  - id: crac_04
+    asset_type: crac_100kw
+    zone: compute_zone_b
+    location: {x: 40.0, y: 0.0, z: 0.0}
+    instance_params:
+      crac_id: "CRAC-04"
+      
+  - id: crac_05
+    asset_type: crac_100kw
+    zone: compute_zone_b
+    location: {x: 40.0, y: 10.0, z: 0.0}
+    instance_params:
+      crac_id: "CRAC-05"
+  
+  # -------------------------------------------------------------------------
+  # MONITORING & MANAGEMENT
+  # -------------------------------------------------------------------------
+  
+  # DCIM Server
+  - id: dcim_server_01
+    asset_type: dcim_server
+    zone: control_room
+    location: {x: 2.0, y: 32.0, z: 12.0}
+    instance_params:
+      server_id: "DCIM-01"
+  
+  # Environmental Sensors (40 sensors, distributed)
+  - id: env_sensor_a01
+    asset_type: environmental_sensor
+    zone: compute_zone_a
+    location: {x: 5.0, y: 5.0, z: 2.0}
+    instance_params:
+      sensor_id: "ENV-A01"
+      
+  - id: env_sensor_a02
+    asset_type: environmental_sensor
+    zone: compute_zone_a
+    location: {x: 15.0, y: 5.0, z: 2.0}
+    instance_params:
+      sensor_id: "ENV-A02"
+  
+  # ... (similar for all zones)
+  
+  # Fire Suppression Systems (2 systems, one per compute zone)
+  - id: fire_suppression_a
+    asset_type: fire_suppression_system
+    zone: compute_zone_a
+    location: {x: 20.0, y: 15.0, z: 5.0}
+    instance_params:
+      system_id: "FIRE-A"
+      protected_zone: "compute_zone_a"
+      
+  - id: fire_suppression_b
+    asset_type: fire_suppression_system
+    zone: compute_zone_b
+    location: {x: 60.0, y: 15.0, z: 5.0}
+    instance_params:
+      system_id: "FIRE-B"
+      protected_zone: "compute_zone_b"
+
+# ============================================================================
+# RELATIONSHIPS
+# ============================================================================
+
+relationships:
+  # Power Distribution
+  - type: "power_supply"
+    from: "ups_01"
+    to: ["pdu_a01", "pdu_a02", "pdu_a03", "pdu_a04", "pdu_a05", "pdu_a06", "pdu_a07", "pdu_a08", "pdu_a09", "pdu_a10"]
+    
+  - type: "power_supply"
+    from: "ups_02"
+    to: ["pdu_b01", "pdu_b02", "pdu_b03", "pdu_b04", "pdu_b05", "pdu_b06", "pdu_b07", "pdu_b08", "pdu_b09", "pdu_b10"]
+    
+  - type: "backup_power"
+    from: "generator_01"
+    to: ["ups_01"]
+    
+  - type: "backup_power"
+    from: "generator_02"
+    to: ["ups_02"]
+    
+  - type: "power_supply"
+    from: "pdu_a01"
+    to: ["gb300_rack_a01"]
+  
+  # ... (similar for all racks)
+  
+  # Cooling Distribution
+  - type: "coolant_supply"
+    from: "cdu_a01"
+    to: ["gb300_rack_a01"]
+    
+  - type: "coolant_supply"
+    from: "cdu_a02"
+    to: ["gb300_rack_a02"]
+  
+  # ... (similar for all racks)
+  
+  - type: "chilled_water_supply"
+    from: "chiller_01"
+    to: ["cdu_a01", "cdu_a02", "cdu_a03", "cdu_a04", "cdu_a05"]
+    
+  - type: "chilled_water_supply"
+    from: "chiller_02"
+    to: ["cdu_a06", "cdu_a07", "cdu_a08", "cdu_a09", "cdu_a10"]
+    
+  - type: "chilled_water_supply"
+    from: "chiller_03"
+    to: ["cdu_b01", "cdu_b02", "cdu_b03", "cdu_b04", "cdu_b05"]
+    
+  - type: "chilled_water_supply"
+    from: "chiller_04"
+    to: ["cdu_b06", "cdu_b07", "cdu_b08", "cdu_b09", "cdu_b10"]
+    
+  - type: "cooling_water_supply"
+    from: "cooling_tower_01"
+    to: ["chiller_01"]
+    
+  - type: "cooling_water_supply"
+    from: "cooling_tower_02"
+    to: ["chiller_02"]
+    
+  - type: "cooling_water_supply"
+    from: "cooling_tower_03"
+    to: ["chiller_03"]
+    
+  - type: "cooling_water_supply"
+    from: "cooling_tower_04"
+    to: ["chiller_04"]
+  
+  # Network Connectivity
+  - type: "infiniband_connection"
+    from: "gb300_rack_a01"
+    to: ["ib_leaf_a01"]
+    
+  - type: "infiniband_connection"
+    from: "ib_leaf_a01"
+    to: ["ib_spine_01", "ib_spine_02", "ib_spine_03", "ib_spine_04"]
+  
+  # ... (similar for all racks)
+  
+  - type: "ethernet_connection"
+    from: "gb300_rack_a01"
+    to: ["eth_core_01"]
+  
+  # ... (similar for all racks)
+  
+  - type: "ethernet_connection"
+    from: "eth_core_01"
+    to: ["core_router_01"]
+    
+  - type: "ethernet_connection"
+    from: "eth_core_02"
+    to: ["core_router_02"]
+    
+  - type: "ethernet_connection"
+    from: "core_router_01"
+    to: ["firewall_01"]
+    
+  - type: "ethernet_connection"
+    from: "core_router_02"
+    to: ["firewall_02"]
+  
+  # Storage Connectivity
+  - type: "storage_connection"
+    from: "storage_server_01"
+    to: ["gb300_rack_a01", "gb300_rack_a02"]
+  
+  # ... (similar for all storage servers)
+  
+  # Monitoring
+  - type: "monitoring"
+    from: "dcim_server_01"
+    to: ["gb300_rack_a01", "gb300_rack_a02", "gb300_rack_a03", "gb300_rack_a04", "gb300_rack_a05", 
+         "gb300_rack_a06", "gb300_rack_a07", "gb300_rack_a08", "gb300_rack_a09", "gb300_rack_a10",
+         "gb300_rack_b01", "gb300_rack_b02", "gb300_rack_b03", "gb300_rack_b04", "gb300_rack_b05",
+         "gb300_rack_b06", "gb300_rack_b07", "gb300_rack_b08", "gb300_rack_b09", "gb300_rack_b10",
+         "ups_01", "ups_02", "chiller_01", "chiller_02", "chiller_03", "chiller_04"]
+
+# ============================================================================
+# GLOBAL PARAMETERS
+# ============================================================================
+
+global_parameters:
+  # Compute Specifications
+  compute:
+    total_gpu_count: 1440  # 20 racks × 72 GPUs
+    total_cpu_count: 720   # 20 racks × 36 CPUs
+    total_gpu_memory: 207360.0  # GB (1440 × 144GB)
+    total_system_memory: 92160.0  # GB (720 × 128GB)
+    peak_fp8_performance: 28800.0  # PFLOPS (1440 × 20 PFLOPS)
+    
+  # Power Specifications
+  power:
+    total_it_load: 2000.0  # kW (20 racks × 100kW)
+    total_cooling_load: 571.0  # kW (4 chillers × 142.75kW)
+    total_facility_load: 2571.0  # kW
+    pue: 1.29  # Power Usage Effectiveness
+    design_capacity: 3000.0  # kW
+    ups_capacity: 4000.0  # kW (2 × 2000kW)
+    generator_capacity: 6000.0  # kW (2 × 3000kW)
+    
+  # Cooling Specifications
+  cooling:
+    total_cooling_capacity: 8000.0  # kW (4 chillers × 2000kW)
+    liquid_cooling_percentage: 90.0  # %
+    air_cooling_percentage: 10.0  # %
+    design_ambient_temp: 35.0  # °C
+    supply_coolant_temp: 25.0  # °C
+    return_coolant_temp: 45.0  # °C
+    
+  # Storage Specifications
+  storage:
+    total_capacity: 10000.0  # TB (10 servers × 1000TB)
+    total_read_bandwidth: 1000.0  # GB/s (10 servers × 100GB/s)
+    total_write_bandwidth: 800.0  # GB/s (10 servers × 80GB/s)
+    total_iops: 100000000.0  # IOPS (10 servers × 10M IOPS)
+    
+  # Network Specifications
+  network:
+    infiniband_fabric: "400G NDR"
+    ethernet_fabric: "400G"
+    spine_count: 4
+    leaf_count: 20
+    oversubscription_ratio: "1:1"  # Non-blocking
+    
+  # Environmental Specifications
+  environment:
+    data_hall_temp: 24.0  # °C
+    data_hall_humidity: 45.0  # %RH
+    max_altitude: 1000.0  # meters
+    
+  # Reliability Specifications
+  reliability:
+    target_uptime: 99.99  # %
+    mtbf: 100000.0  # hours
+    mttr: 4.0  # hours
+    
+  # Economic Parameters
+  economics:
+    capex: 50000000.0  # USD (total capital expenditure)
+    opex_annual: 5000000.0  # USD (annual operating expenditure)
+    electricity_cost: 0.10  # USD/kWh
+    cooling_cost: 0.05  # USD/kWh
+    
+# ============================================================================
+# DEPLOYMENT CONFIGURATION
+# ============================================================================
+
+deployment:
+  # NDH Configuration
+  ndh:
+    cluster_name: "gb300-datacenter-ndh"
+    master_nodes: 3
+    worker_nodes: 5
+    worker_assignment_hints:
+      - worker_group: "compute"
+        affinity: ["gb300_rack_*"]
+      - worker_group: "infrastructure"
+        affinity: ["ups_*", "chiller_*", "cdu_*"]
+      - worker_group: "network"
+        affinity: ["ib_*", "eth_*", "core_router_*"]
+    high_availability:
+      enabled: true
+      replication_factor: 3
+    disaster_recovery:
+      enabled: true
+      snapshot_interval: 3600  # seconds (1 hour)
+      backup_retention: 30  # days
+      
+  # Omniverse Configuration
+  omniverse:
+    nucleus_server: "omniverse://gb300-datacenter-nucleus.local"
+    usd_stage: "/DataCenter/GB300_DataCenter.usd"
+    real_time_sync: true
+    lod_enabled: true
+    physics_enabled: false
+    
+  # MCP Server Configuration
+  mcp_server:
+    enabled: true
+    port: 8080
+    authentication: "oauth2"
+    rate_limit: 1000  # requests per minute
+    
+  # Network Configuration
+  network:
+    management_vlan: 100
+    infiniband_vlan: 200
+    storage_vlan: 300
+    out_of_band_vlan: 400
+    dns_servers: ["8.8.8.8", "8.8.4.4"]
+    ntp_servers: ["time.google.com"]
+

@@ -1,0 +1,954 @@
+# GB300 AI Data Center Asset Definitions (IADL)
+# Version: 1.0.0
+# Date: 2025-10-14
+# Description: Asset definitions for NVIDIA GB300-based AI data center
+
+# ============================================================================
+# 1. COMPUTE INFRASTRUCTURE
+# ============================================================================
+
+## 1.1 GB300 NVL72 Rack
+asset_type:
+  id: gb300_nvl72_rack
+  name: "NVIDIA GB300 NVL72 Rack"
+  category: compute
+  description: "72-GPU rack-scale system with Grace-Blackwell architecture"
+  
+  attributes:
+    manufacturer: "NVIDIA"
+    model: "GB300 NVL72"
+    form_factor: "Rack-scale (42U)"
+    
+  parameters:
+    # Compute specifications
+    - name: gpu_count
+      type: integer
+      value: 72
+      unit: "GPUs"
+      description: "Number of Blackwell GPUs per rack"
+      
+    - name: cpu_count
+      type: integer
+      value: 36
+      unit: "CPUs"
+      description: "Number of Grace CPUs per rack"
+      
+    - name: total_gpu_memory
+      type: float
+      value: 10368.0
+      unit: "GB"
+      description: "Total GPU HBM3e memory (72 × 144GB)"
+      
+    - name: total_system_memory
+      type: float
+      value: 4608.0
+      unit: "GB"
+      description: "Total system memory (36 × 128GB)"
+      
+    - name: nvlink_bandwidth
+      type: float
+      value: 1800.0
+      unit: "GB/s"
+      description: "NVLink Switch bandwidth per GPU"
+      
+    - name: peak_fp8_performance
+      type: float
+      value: 1440.0
+      unit: "PFLOPS"
+      description: "Peak FP8 performance (72 × 20 PFLOPS)"
+      
+    # Power specifications
+    - name: max_power
+      type: float
+      value: 120.0
+      unit: "kW"
+      description: "Maximum power consumption per rack"
+      
+    - name: typical_power
+      type: float
+      value: 100.0
+      unit: "kW"
+      description: "Typical power consumption"
+      
+    # Cooling specifications
+    - name: cooling_method
+      type: string
+      value: "Liquid cooling (direct-to-chip)"
+      
+    - name: coolant_inlet_temp
+      type: float
+      value: 25.0
+      unit: "°C"
+      
+    - name: coolant_outlet_temp
+      type: float
+      value: 45.0
+      unit: "°C"
+      
+    - name: coolant_flow_rate
+      type: float
+      value: 120.0
+      unit: "L/min"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "idle", "maintenance", "fault"]
+      
+    - name: gpu_utilization
+      type: float
+      unit: "%"
+      range: [0, 100]
+      
+    - name: cpu_utilization
+      type: float
+      unit: "%"
+      range: [0, 100]
+      
+    - name: memory_utilization
+      type: float
+      unit: "%"
+      range: [0, 100]
+      
+    - name: power_consumption
+      type: float
+      unit: "kW"
+      
+    - name: inlet_temp
+      type: float
+      unit: "°C"
+      
+    - name: outlet_temp
+      type: float
+      unit: "°C"
+      
+  data_tags:
+    - name: gpu_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: cpu_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: hbm_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: power_draw
+      type: float
+      unit: "kW"
+      sample_rate: 0.1
+      
+    - name: nvlink_errors
+      type: integer
+      sample_rate: 1.0
+      
+    - name: ecc_errors
+      type: integer
+      sample_rate: 1.0
+      
+  behaviors:
+    - name: start_training
+      description: "Start AI training workload"
+      parameters:
+        - model_name: string
+        - batch_size: integer
+        - learning_rate: float
+        
+    - name: start_inference
+      description: "Start AI inference workload"
+      parameters:
+        - model_name: string
+        - batch_size: integer
+        
+    - name: shutdown
+      description: "Graceful shutdown"
+      
+    - name: reboot
+      description: "Reboot the system"
+
+## 1.2 InfiniBand Switch (400G)
+asset_type:
+  id: infiniband_switch_400g
+  name: "InfiniBand Switch 400G"
+  category: networking
+  description: "NVIDIA Quantum-2 InfiniBand switch"
+  
+  attributes:
+    manufacturer: "NVIDIA"
+    model: "Quantum-2"
+    form_factor: "1U"
+    
+  parameters:
+    - name: port_count
+      type: integer
+      value: 64
+      unit: "ports"
+      
+    - name: port_speed
+      type: float
+      value: 400.0
+      unit: "Gb/s"
+      
+    - name: total_bandwidth
+      type: float
+      value: 51.2
+      unit: "Tb/s"
+      description: "Total switching capacity"
+      
+    - name: latency
+      type: float
+      value: 0.6
+      unit: "μs"
+      description: "Port-to-port latency"
+      
+    - name: power_consumption
+      type: float
+      value: 1.5
+      unit: "kW"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "standby", "fault"]
+      
+    - name: port_utilization
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: packet_rate
+      type: float
+      unit: "Mpps"
+      sample_rate: 1.0
+      
+    - name: error_rate
+      type: float
+      unit: "errors/s"
+      sample_rate: 1.0
+
+## 1.3 Ethernet Switch (400G)
+asset_type:
+  id: ethernet_switch_400g
+  name: "Ethernet Switch 400G"
+  category: networking
+  description: "NVIDIA Spectrum-4 Ethernet switch"
+  
+  attributes:
+    manufacturer: "NVIDIA"
+    model: "Spectrum-4"
+    form_factor: "1U"
+    
+  parameters:
+    - name: port_count
+      type: integer
+      value: 64
+      unit: "ports"
+      
+    - name: port_speed
+      type: float
+      value: 400.0
+      unit: "Gb/s"
+      
+    - name: power_consumption
+      type: float
+      value: 1.2
+      unit: "kW"
+
+## 1.4 Storage Server
+asset_type:
+  id: storage_server
+  name: "High-Performance Storage Server"
+  category: storage
+  description: "NVMe-based storage server for AI datasets"
+  
+  attributes:
+    manufacturer: "Dell/HPE"
+    form_factor: "2U"
+    
+  parameters:
+    - name: storage_capacity
+      type: float
+      value: 1000.0
+      unit: "TB"
+      description: "Total NVMe SSD capacity"
+      
+    - name: read_bandwidth
+      type: float
+      value: 100.0
+      unit: "GB/s"
+      
+    - name: write_bandwidth
+      type: float
+      value: 80.0
+      unit: "GB/s"
+      
+    - name: iops
+      type: float
+      value: 10000000.0
+      unit: "IOPS"
+      
+    - name: power_consumption
+      type: float
+      value: 2.0
+      unit: "kW"
+
+# ============================================================================
+# 2. POWER INFRASTRUCTURE
+# ============================================================================
+
+## 2.1 PDU (Power Distribution Unit)
+asset_type:
+  id: pdu_400kw
+  name: "400kW Power Distribution Unit"
+  category: power
+  description: "High-capacity PDU for GB300 racks"
+  
+  attributes:
+    manufacturer: "Schneider Electric / Eaton"
+    model: "StruxureWare / PowerWare"
+    form_factor: "Floor-standing"
+    
+  parameters:
+    - name: rated_capacity
+      type: float
+      value: 400.0
+      unit: "kW"
+      
+    - name: input_voltage
+      type: float
+      value: 480.0
+      unit: "V"
+      description: "3-phase 480V AC"
+      
+    - name: output_voltage
+      type: float
+      value: 400.0
+      unit: "V"
+      description: "3-phase 400V AC"
+      
+    - name: efficiency
+      type: float
+      value: 98.0
+      unit: "%"
+      
+  status:
+    - name: load
+      type: float
+      unit: "kW"
+      
+    - name: load_percentage
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: voltage_l1
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: voltage_l2
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: voltage_l3
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: current_l1
+      type: float
+      unit: "A"
+      sample_rate: 1.0
+      
+    - name: current_l2
+      type: float
+      unit: "A"
+      sample_rate: 1.0
+      
+    - name: current_l3
+      type: float
+      unit: "A"
+      sample_rate: 1.0
+      
+    - name: power_factor
+      type: float
+      sample_rate: 1.0
+
+## 2.2 UPS (Uninterruptible Power Supply)
+asset_type:
+  id: ups_2mw
+  name: "2MW UPS System"
+  category: power
+  description: "High-capacity UPS for data center"
+  
+  attributes:
+    manufacturer: "Schneider Electric / Eaton"
+    model: "Galaxy VX / 93PM"
+    
+  parameters:
+    - name: rated_capacity
+      type: float
+      value: 2000.0
+      unit: "kW"
+      
+    - name: battery_capacity
+      type: float
+      value: 500.0
+      unit: "kWh"
+      
+    - name: backup_time
+      type: float
+      value: 15.0
+      unit: "minutes"
+      description: "At full load"
+      
+    - name: efficiency
+      type: float
+      value: 96.0
+      unit: "%"
+      description: "Double-conversion mode"
+      
+  status:
+    - name: operational_mode
+      type: string
+      values: ["normal", "battery", "bypass", "fault"]
+      
+    - name: load
+      type: float
+      unit: "kW"
+      
+    - name: battery_charge
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: input_voltage
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: output_voltage
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: battery_voltage
+      type: float
+      unit: "V"
+      sample_rate: 1.0
+      
+    - name: runtime_remaining
+      type: float
+      unit: "minutes"
+      sample_rate: 1.0
+
+## 2.3 Diesel Generator
+asset_type:
+  id: diesel_generator_3mw
+  name: "3MW Diesel Generator"
+  category: power
+  description: "Backup power generator"
+  
+  attributes:
+    manufacturer: "Caterpillar / Cummins"
+    
+  parameters:
+    - name: rated_capacity
+      type: float
+      value: 3000.0
+      unit: "kW"
+      
+    - name: fuel_capacity
+      type: float
+      value: 10000.0
+      unit: "L"
+      
+    - name: runtime_at_full_load
+      type: float
+      value: 24.0
+      unit: "hours"
+      
+    - name: startup_time
+      type: float
+      value: 10.0
+      unit: "seconds"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["off", "standby", "running", "fault"]
+      
+    - name: power_output
+      type: float
+      unit: "kW"
+      
+    - name: fuel_level
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: engine_rpm
+      type: float
+      unit: "RPM"
+      sample_rate: 1.0
+      
+    - name: oil_pressure
+      type: float
+      unit: "bar"
+      sample_rate: 1.0
+      
+    - name: coolant_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+
+# ============================================================================
+# 3. COOLING INFRASTRUCTURE
+# ============================================================================
+
+## 3.1 Liquid Cooling Distribution Unit (CDU)
+asset_type:
+  id: liquid_cdu_500kw
+  name: "500kW Liquid Cooling Distribution Unit"
+  category: cooling
+  description: "Direct-to-chip liquid cooling system"
+  
+  attributes:
+    manufacturer: "Vertiv / Schneider Electric"
+    model: "Liebert DSE / EcoStruxure"
+    
+  parameters:
+    - name: cooling_capacity
+      type: float
+      value: 500.0
+      unit: "kW"
+      
+    - name: coolant_type
+      type: string
+      value: "Water-glycol mix"
+      
+    - name: supply_temp
+      type: float
+      value: 25.0
+      unit: "°C"
+      
+    - name: return_temp
+      type: float
+      value: 45.0
+      unit: "°C"
+      
+    - name: flow_rate
+      type: float
+      value: 600.0
+      unit: "L/min"
+      
+    - name: pressure
+      type: float
+      value: 3.0
+      unit: "bar"
+      
+    - name: power_consumption
+      type: float
+      value: 15.0
+      unit: "kW"
+      description: "Pump power"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "standby", "fault"]
+      
+    - name: cooling_load
+      type: float
+      unit: "kW"
+      
+  data_tags:
+    - name: supply_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: return_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: flow_rate
+      type: float
+      unit: "L/min"
+      sample_rate: 1.0
+      
+    - name: pressure_drop
+      type: float
+      unit: "bar"
+      sample_rate: 1.0
+      
+    - name: leak_detection
+      type: boolean
+      sample_rate: 1.0
+
+## 3.2 Chiller
+asset_type:
+  id: chiller_2mw
+  name: "2MW Air-Cooled Chiller"
+  category: cooling
+  description: "High-efficiency chiller for liquid cooling system"
+  
+  attributes:
+    manufacturer: "Carrier / Trane"
+    model: "AquaEdge / CenTraVac"
+    
+  parameters:
+    - name: cooling_capacity
+      type: float
+      value: 2000.0
+      unit: "kW"
+      
+    - name: chilled_water_supply_temp
+      type: float
+      value: 18.0
+      unit: "°C"
+      
+    - name: chilled_water_return_temp
+      type: float
+      value: 28.0
+      unit: "°C"
+      
+    - name: cop
+      type: float
+      value: 3.5
+      description: "Coefficient of Performance"
+      
+    - name: power_consumption
+      type: float
+      value: 571.0
+      unit: "kW"
+      description: "At full load (2000 kW / 3.5)"
+      
+    - name: refrigerant
+      type: string
+      value: "R134a"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "standby", "fault"]
+      
+    - name: load_percentage
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: chilled_water_supply_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: chilled_water_return_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: condenser_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: compressor_current
+      type: float
+      unit: "A"
+      sample_rate: 1.0
+
+## 3.3 Cooling Tower
+asset_type:
+  id: cooling_tower_3mw
+  name: "3MW Cooling Tower"
+  category: cooling
+  description: "Evaporative cooling tower"
+  
+  attributes:
+    manufacturer: "BAC / Evapco"
+    
+  parameters:
+    - name: cooling_capacity
+      type: float
+      value: 3000.0
+      unit: "kW"
+      
+    - name: water_flow_rate
+      type: float
+      value: 1500.0
+      unit: "L/min"
+      
+    - name: fan_power
+      type: float
+      value: 30.0
+      unit: "kW"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "standby", "fault"]
+      
+  data_tags:
+    - name: inlet_water_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: outlet_water_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: ambient_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: wet_bulb_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+
+## 3.4 CRAC (Computer Room Air Conditioning)
+asset_type:
+  id: crac_100kw
+  name: "100kW CRAC Unit"
+  category: cooling
+  description: "Precision air conditioning for data center"
+  
+  attributes:
+    manufacturer: "Vertiv / Stulz"
+    model: "Liebert CRV / CyberAir"
+    
+  parameters:
+    - name: cooling_capacity
+      type: float
+      value: 100.0
+      unit: "kW"
+      
+    - name: airflow
+      type: float
+      value: 20000.0
+      unit: "m³/hr"
+      
+    - name: supply_air_temp
+      type: float
+      value: 18.0
+      unit: "°C"
+      
+    - name: power_consumption
+      type: float
+      value: 25.0
+      unit: "kW"
+      
+  status:
+    - name: operational_status
+      type: string
+      values: ["running", "standby", "fault"]
+      
+  data_tags:
+    - name: supply_air_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: return_air_temp
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: humidity
+      type: float
+      unit: "%RH"
+      sample_rate: 1.0
+
+# ============================================================================
+# 4. MONITORING & MANAGEMENT
+# ============================================================================
+
+## 4.1 DCIM (Data Center Infrastructure Management) Server
+asset_type:
+  id: dcim_server
+  name: "DCIM Management Server"
+  category: management
+  description: "Centralized data center infrastructure management"
+  
+  attributes:
+    manufacturer: "Schneider Electric / Vertiv"
+    model: "EcoStruxure IT / Trellis"
+    
+  parameters:
+    - name: monitored_devices
+      type: integer
+      value: 1000
+      unit: "devices"
+      
+    - name: data_retention
+      type: integer
+      value: 365
+      unit: "days"
+      
+  behaviors:
+    - name: generate_report
+      description: "Generate infrastructure report"
+      parameters:
+        - report_type: string
+        - time_range: string
+        
+    - name: set_alert_threshold
+      description: "Configure alert thresholds"
+      parameters:
+        - metric: string
+        - threshold: float
+
+## 4.2 Environmental Sensor
+asset_type:
+  id: environmental_sensor
+  name: "Data Center Environmental Sensor"
+  category: monitoring
+  description: "Temperature, humidity, and airflow monitoring"
+  
+  parameters:
+    - name: temp_range
+      type: string
+      value: "-40 to 85°C"
+      
+    - name: humidity_range
+      type: string
+      value: "0 to 100%RH"
+      
+    - name: accuracy_temp
+      type: float
+      value: 0.5
+      unit: "°C"
+      
+    - name: accuracy_humidity
+      type: float
+      value: 2.0
+      unit: "%RH"
+      
+  data_tags:
+    - name: temperature
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+      
+    - name: humidity
+      type: float
+      unit: "%RH"
+      sample_rate: 1.0
+      
+    - name: dew_point
+      type: float
+      unit: "°C"
+      sample_rate: 1.0
+
+## 4.3 Fire Suppression System
+asset_type:
+  id: fire_suppression_system
+  name: "Clean Agent Fire Suppression System"
+  category: safety
+  description: "FM-200 / Novec 1230 fire suppression"
+  
+  attributes:
+    manufacturer: "Ansul / Kidde"
+    
+  parameters:
+    - name: agent_type
+      type: string
+      value: "Novec 1230"
+      
+    - name: protected_volume
+      type: float
+      value: 10000.0
+      unit: "m³"
+      
+    - name: discharge_time
+      type: float
+      value: 10.0
+      unit: "seconds"
+      
+  status:
+    - name: system_status
+      type: string
+      values: ["armed", "discharged", "maintenance", "fault"]
+      
+    - name: agent_level
+      type: float
+      unit: "%"
+      
+  data_tags:
+    - name: smoke_detector
+      type: boolean
+      sample_rate: 1.0
+      
+    - name: heat_detector
+      type: boolean
+      sample_rate: 1.0
+
+# ============================================================================
+# 5. NETWORKING & CONNECTIVITY
+# ============================================================================
+
+## 5.1 Core Router
+asset_type:
+  id: core_router
+  name: "Core Network Router"
+  category: networking
+  description: "High-performance core router"
+  
+  attributes:
+    manufacturer: "Cisco / Juniper"
+    model: "Nexus 9000 / QFX10000"
+    
+  parameters:
+    - name: routing_capacity
+      type: float
+      value: 25.6
+      unit: "Tb/s"
+      
+    - name: port_count_100g
+      type: integer
+      value: 32
+      unit: "ports"
+      
+    - name: power_consumption
+      type: float
+      value: 2.5
+      unit: "kW"
+
+## 5.2 Firewall
+asset_type:
+  id: firewall
+  name: "Next-Generation Firewall"
+  category: security
+  description: "High-performance firewall"
+  
+  attributes:
+    manufacturer: "Palo Alto / Fortinet"
+    model: "PA-7000 / FortiGate 3000"
+    
+  parameters:
+    - name: throughput
+      type: float
+      value: 100.0
+      unit: "Gb/s"
+      
+    - name: concurrent_sessions
+      type: integer
+      value: 64000000
+      unit: "sessions"
+      
+    - name: power_consumption
+      type: float
+      value: 1.5
+      unit: "kW"
+
