@@ -1,0 +1,1319 @@
+# ============================================================================
+# 宏齊科技新廠房 FDL 工廠佈局設計
+# ============================================================================
+# 版本: 1.0.0
+# 日期: 2025-10-14
+# 作者: IDTF Technical Team
+# 描述: 宏齊科技新竹新廠房完整佈局設計，包含 LED 封裝完整製程
+# ============================================================================
+
+factory_design:
+  # ==========================================================================
+  # 元數據
+  # ==========================================================================
+  metadata:
+    name: "HarvaTek New LED Packaging Factory"
+    version: "1.0.0"
+    author: "IDTF Technical Team"
+    date: "2025-10-14"
+    description: "宏齊科技新竹新廠房完整佈局設計，採用最新的 LED 封裝技術和智能製造系統"
+    tags:
+      - "LED"
+      - "Semiconductor"
+      - "High-Tech"
+      - "Smart Manufacturing"
+      - "Industry 4.0"
+    industry: "Electronics Manufacturing"
+    sub_industry: "LED Packaging"
+    location:
+      country: "Taiwan"
+      city: "Hsinchu"
+      district: "Xiangshan"
+      address: "No. 123, Technology Road, Hsinchu Science Park"
+      coordinates:
+        latitude: 24.8138
+        longitude: 120.9675
+    capacity:
+      annual_production: 5000000000  # 50 億顆 LED/年
+      employees: 500
+      shifts: 3
+      operating_hours: 24
+
+  # ==========================================================================
+  # 建築物定義
+  # ==========================================================================
+  buildings:
+    - building_id: "MainBuilding"
+      name: "主廠房"
+      type: "Production"
+      construction_year: 2025
+      total_area: 60000  # 平方米
+      floors:
+        - floor_id: "B1"
+          level: -1
+          height: 5.0
+          area: 12000
+          purpose: "Utility, Storage & Mechanical Room"
+          features:
+            - "Electrical Room"
+            - "Mechanical Room"
+            - "Compressor Room"
+            - "DI Water System"
+            - "Nitrogen Generation"
+            - "Raw Material Storage"
+            - "Chemical Storage"
+        
+        - floor_id: "1F"
+          level: 1
+          height: 5.5
+          area: 12000
+          purpose: "Production - Die Preparation & Bonding"
+          features:
+            - "Die Sorting Area"
+            - "Die Bonding Area"
+            - "Wire Bonding Area"
+            - "Material Handling"
+            - "WIP Storage"
+        
+        - floor_id: "2F"
+          level: 2
+          height: 5.0
+          area: 12000
+          purpose: "Production - Molding & Curing"
+          features:
+            - "Molding Area"
+            - "Curing Area"
+            - "Plating Area"
+            - "Singulation Area"
+        
+        - floor_id: "3F"
+          level: 3
+          height: 5.0
+          area: 12000
+          purpose: "Production - Testing & Binning"
+          features:
+            - "Electrical Testing Area"
+            - "Optical Testing Area"
+            - "Binning Area"
+            - "Packaging Area"
+            - "Finished Goods Storage"
+        
+        - floor_id: "4F"
+          level: 4
+          height: 4.5
+          area: 6000
+          purpose: "R&D & Quality Lab"
+          features:
+            - "R&D Lab"
+            - "Reliability Lab"
+            - "Failure Analysis Lab"
+            - "Metrology Lab"
+            - "Sample Room"
+        
+        - floor_id: "5F"
+          level: 5
+          height: 4.0
+          area: 6000
+          purpose: "Office & Administration"
+          features:
+            - "Executive Office"
+            - "Engineering Office"
+            - "Meeting Rooms"
+            - "Training Room"
+            - "Cafeteria"
+            - "Locker Room"
+
+  # ==========================================================================
+  # 佈局定義 - 1F: Die Preparation & Bonding
+  # ==========================================================================
+  layout:
+    # ------------------------------------------------------------------------
+    # 1F - Zone A: Die Sorting Area
+    # ------------------------------------------------------------------------
+    - area: "1F_Zone_A_DieSorting"
+      building: "MainBuilding"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_6"
+      temperature: 23  # °C
+      humidity: 45     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 晶片分選機 (Die Sorter)
+        - type: "DieSorter"
+          count: 20
+          naming_prefix: "DS_1F_A_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 4
+            columns: 5
+            spacing_x: 3.5  # 米
+            spacing_y: 4.0  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0  # 度
+          instance_params:
+            sortingSpeed: 12000  # UPH
+            binCount: 8
+            accuracy: 0.001  # mm
+            visionSystem: "High-Resolution CCD"
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 5000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "1F"
+            worker_group: "die_sorting_team"
+            affinity: ["DS_1F_A_*"]
+      
+      relationships:
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "DS_1F_A_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "yield", "bin_distribution"]
+        
+        # 電力供應
+        - type: "power_supply"
+          from: "Transformer_1F_A"
+          to: "DS_1F_A_*"
+          properties:
+            voltage: 220  # V
+            phase: 3
+            capacity: 5.7  # kW per machine
+
+    # ------------------------------------------------------------------------
+    # 1F - Zone B: Die Bonding Area
+    # ------------------------------------------------------------------------
+    - area: "1F_Zone_B_DieBonding"
+      building: "MainBuilding"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_5"
+      temperature: 23  # °C
+      humidity: 40     # %RH
+      area_size: 2500  # m²
+      
+      instances:
+        # 固晶機 (Die Bonder)
+        - type: "DieBonder"
+          count: 30
+          naming_prefix: "DB_1F_B_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 5
+            columns: 6
+            spacing_x: 3.8  # 米
+            spacing_y: 4.2  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            bondingSpeed: 8000  # UPH
+            accuracy: 0.001  # mm
+            bondingMethod: "Eutectic"
+            bondForce: 50  # N
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 4500  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "1F"
+            worker_group: "die_bonding_team"
+            affinity: ["DB_1F_B_*"]
+      
+      relationships:
+        # 物料流：從 Die Sorter 到 Die Bonder
+        - type: "material_flow"
+          from: "DS_1F_A_*"
+          to: "DB_1F_B_*"
+          properties:
+            transport_method: "AGV"
+            cycle_time: 180  # 秒
+            batch_size: 200
+            route: "1F_Route_A_to_B"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "DB_1F_B_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "yield", "bond_quality"]
+
+    # ------------------------------------------------------------------------
+    # 1F - Zone C: Wire Bonding Area
+    # ------------------------------------------------------------------------
+    - area: "1F_Zone_C_WireBonding"
+      building: "MainBuilding"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_5"
+      temperature: 23  # °C
+      humidity: 40     # %RH
+      area_size: 3000  # m²
+      
+      instances:
+        # 打線機 (Wire Bonder)
+        - type: "WireBonder"
+          count: 40
+          naming_prefix: "WB_1F_C_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 5
+            columns: 8
+            spacing_x: 3.5  # 米
+            spacing_y: 4.0  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            bondingSpeed: 10000  # UPH
+            wireDiameter: 0.025  # mm
+            wireType: "Gold"
+            bondCount: 2
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 4000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "1F"
+            worker_group: "wire_bonding_team"
+            affinity: ["WB_1F_C_*"]
+      
+      relationships:
+        # 物料流：從 Die Bonder 到 Wire Bonder
+        - type: "material_flow"
+          from: "DB_1F_B_*"
+          to: "WB_1F_C_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "1F_Conveyor_B_to_C"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "WB_1F_C_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "yield", "wire_break_count"]
+
+    # ------------------------------------------------------------------------
+    # 1F - Material Handling: AGV Fleet
+    # ------------------------------------------------------------------------
+    - area: "1F_Material_Handling"
+      building: "MainBuilding"
+      floor: "1F"
+      zone_type: "Corridor"
+      
+      instances:
+        # AGV 車隊
+        - type: "AGV"
+          count: 15
+          naming_prefix: "AGV_1F_"
+          naming_pattern: "{prefix}{index:02d}"
+          instance_params:
+            maxSpeed: 1.5  # m/s
+            maxLoad: 50  # kg
+            batteryCapacity: 100  # Ah
+            navigationMethod: "Laser"
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 8000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "1F"
+            worker_group: "logistics_team"
+      
+      relationships:
+        # AGV 與各區域的連接
+        - type: "serves"
+          from: "AGV_1F_*"
+          to: ["1F_Zone_A_DieSorting", "1F_Zone_B_DieBonding", "1F_Zone_C_WireBonding"]
+          properties:
+            service_type: "material_transport"
+
+  # ==========================================================================
+  # 佈局定義 - 2F: Molding & Curing
+  # ==========================================================================
+    # ------------------------------------------------------------------------
+    # 2F - Zone A: Molding Area
+    # ------------------------------------------------------------------------
+    - area: "2F_Zone_A_Molding"
+      building: "MainBuilding"
+      floor: "2F"
+      zone_type: "Production"
+      temperature: 25  # °C
+      humidity: 50     # %RH
+      area_size: 2500  # m²
+      
+      instances:
+        # 封膠機 (Molding Machine)
+        - type: "MoldingMachine"
+          count: 20
+          naming_prefix: "MM_2F_A_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 4
+            columns: 5
+            spacing_x: 4.5  # 米
+            spacing_y: 5.0  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            moldingSpeed: 6000  # UPH
+            moldingType: "Transfer"
+            moldTemperature: 175  # °C
+            cureTime: 120  # 秒
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 3500  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "2F"
+            worker_group: "molding_team"
+            affinity: ["MM_2F_A_*"]
+      
+      relationships:
+        # 物料流：從 1F Wire Bonding 到 2F Molding (垂直運輸)
+        - type: "material_flow"
+          from: "WB_1F_C_*"
+          to: "MM_2F_A_*"
+          properties:
+            transport_method: "Elevator"
+            cycle_time: 300  # 秒
+            batch_size: 500
+            route: "Elevator_1F_to_2F"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "MM_2F_A_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "temperature", "pressure", "resin_level"]
+
+    # ------------------------------------------------------------------------
+    # 2F - Zone B: Curing Area
+    # ------------------------------------------------------------------------
+    - area: "2F_Zone_B_Curing"
+      building: "MainBuilding"
+      floor: "2F"
+      zone_type: "Production"
+      temperature: 25  # °C
+      humidity: 50     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 固化爐 (Curing Oven)
+        - type: "CuringOven"
+          count: 10
+          naming_prefix: "CO_2F_B_"
+          naming_pattern: "{prefix}{index:02d}"
+          layout_pattern: "linear"
+          linear_config:
+            direction: "horizontal"
+            spacing: 7.0  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            capacity: 6000  # UPH
+            maxTemperature: 200  # °C
+            zones: 4
+            beltSpeed: 0.5  # m/min
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 6000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "2F"
+            worker_group: "curing_team"
+            affinity: ["CO_2F_B_*"]
+      
+      relationships:
+        # 物料流：從 Molding 到 Curing
+        - type: "material_flow"
+          from: "MM_2F_A_*"
+          to: "CO_2F_B_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "2F_Conveyor_A_to_B"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "CO_2F_B_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 5  # 秒
+            data_items: ["status", "zone_temperatures", "belt_speed"]
+
+    # ------------------------------------------------------------------------
+    # 2F - Zone C: Plating Area
+    # ------------------------------------------------------------------------
+    - area: "2F_Zone_C_Plating"
+      building: "MainBuilding"
+      floor: "2F"
+      zone_type: "Production"
+      temperature: 25  # °C
+      humidity: 50     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 電鍍機 (Plating Machine)
+        - type: "PlatingMachine"
+          count: 15
+          naming_prefix: "PM_2F_C_"
+          naming_pattern: "{prefix}{index:02d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 3
+            columns: 5
+            spacing_x: 5.0  # 米
+            spacing_y: 5.5  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            platingSpeed: 5000  # UPH
+            platingMaterial: "Silver"
+            thickness: 3.0  # μm
+            tankCount: 6
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 4000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "2F"
+            worker_group: "plating_team"
+            affinity: ["PM_2F_C_*"]
+      
+      relationships:
+        # 物料流：從 Curing 到 Plating
+        - type: "material_flow"
+          from: "CO_2F_B_*"
+          to: "PM_2F_C_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "2F_Conveyor_B_to_C"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "PM_2F_C_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "current", "pH", "temperature"]
+
+    # ------------------------------------------------------------------------
+    # 2F - Zone D: Singulation Area
+    # ------------------------------------------------------------------------
+    - area: "2F_Zone_D_Singulation"
+      building: "MainBuilding"
+      floor: "2F"
+      zone_type: "Production"
+      temperature: 25  # °C
+      humidity: 50     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 切割機 (Singulation Machine)
+        - type: "SingulationMachine"
+          count: 15
+          naming_prefix: "SM_2F_D_"
+          naming_pattern: "{prefix}{index:02d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 3
+            columns: 5
+            spacing_x: 4.0  # 米
+            spacing_y: 4.5  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            cuttingSpeed: 7000  # UPH
+            cuttingMethod: "Saw"
+            bladeThickness: 0.05  # mm
+            accuracy: 0.01  # mm
+            status: "Idle"
+          maintenance:
+            schedule: "weekly"
+            lastMaintenance: "2025-10-07"
+            nextMaintenance: "2025-10-14"
+            mtbf: 3000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "2F"
+            worker_group: "singulation_team"
+            affinity: ["SM_2F_D_*"]
+      
+      relationships:
+        # 物料流：從 Plating 到 Singulation
+        - type: "material_flow"
+          from: "PM_2F_C_*"
+          to: "SM_2F_D_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "2F_Conveyor_C_to_D"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "SM_2F_D_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "chip_rate", "blade_life"]
+
+  # ==========================================================================
+  # 佈局定義 - 3F: Testing & Binning
+  # ==========================================================================
+    # ------------------------------------------------------------------------
+    # 3F - Zone A: Electrical Testing Area
+    # ------------------------------------------------------------------------
+    - area: "3F_Zone_A_ElectricalTesting"
+      building: "MainBuilding"
+      floor: "3F"
+      zone_type: "Testing"
+      temperature: 23  # °C
+      humidity: 45     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 測試機 (Testing Machine) - 電性測試
+        - type: "TestingMachine"
+          count: 25
+          naming_prefix: "TM_3F_A_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 5
+            columns: 5
+            spacing_x: 3.5  # 米
+            spacing_y: 3.5  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            testingSpeed: 15000  # UPH
+            testType: "Electrical"
+            testItems: 10
+            accuracy: 0.1  # %
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 8000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "3F"
+            worker_group: "testing_team"
+            affinity: ["TM_3F_A_*"]
+      
+      relationships:
+        # 物料流：從 2F Singulation 到 3F Testing (垂直運輸)
+        - type: "material_flow"
+          from: "SM_2F_D_*"
+          to: "TM_3F_A_*"
+          properties:
+            transport_method: "Elevator"
+            cycle_time: 300  # 秒
+            batch_size: 1000
+            route: "Elevator_2F_to_3F"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "TM_3F_A_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "pass_rate", "test_results"]
+
+    # ------------------------------------------------------------------------
+    # 3F - Zone B: Optical Testing Area
+    # ------------------------------------------------------------------------
+    - area: "3F_Zone_B_OpticalTesting"
+      building: "MainBuilding"
+      floor: "3F"
+      zone_type: "Testing"
+      temperature: 23  # °C
+      humidity: 45     # %RH
+      area_size: 2000  # m²
+      
+      instances:
+        # 測試機 (Testing Machine) - 光學測試
+        - type: "TestingMachine"
+          count: 25
+          naming_prefix: "TM_3F_B_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 5
+            columns: 5
+            spacing_x: 3.5  # 米
+            spacing_y: 3.5  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            testingSpeed: 15000  # UPH
+            testType: "Optical"
+            testItems: 8
+            accuracy: 0.5  # %
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 8000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "3F"
+            worker_group: "testing_team"
+            affinity: ["TM_3F_B_*"]
+      
+      relationships:
+        # 物料流：從 Electrical Testing 到 Optical Testing
+        - type: "material_flow"
+          from: "TM_3F_A_*"
+          to: "TM_3F_B_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "3F_Conveyor_A_to_B"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "TM_3F_B_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "pass_rate", "optical_parameters"]
+
+    # ------------------------------------------------------------------------
+    # 3F - Zone C: Binning Area
+    # ------------------------------------------------------------------------
+    - area: "3F_Zone_C_Binning"
+      building: "MainBuilding"
+      floor: "3F"
+      zone_type: "Testing"
+      temperature: 23  # °C
+      humidity: 45     # %RH
+      area_size: 2500  # m²
+      
+      instances:
+        # 分光分色機 (Binning Machine)
+        - type: "BinningMachine"
+          count: 30
+          naming_prefix: "BM_3F_C_"
+          naming_pattern: "{prefix}{index:03d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 5
+            columns: 6
+            spacing_x: 3.8  # 米
+            spacing_y: 4.0  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            binningSpeed: 18000  # UPH
+            binCount: 12
+            criteria: "Wavelength, Brightness, Color"
+            accuracy: 0.5  # nm
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 10000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "3F"
+            worker_group: "binning_team"
+            affinity: ["BM_3F_C_*"]
+      
+      relationships:
+        # 物料流：從 Optical Testing 到 Binning
+        - type: "material_flow"
+          from: "TM_3F_B_*"
+          to: "BM_3F_C_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "3F_Conveyor_B_to_C"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "BM_3F_C_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "bin_distribution", "yield"]
+
+    # ------------------------------------------------------------------------
+    # 3F - Zone D: Packaging Area
+    # ------------------------------------------------------------------------
+    - area: "3F_Zone_D_Packaging"
+      building: "MainBuilding"
+      floor: "3F"
+      zone_type: "Packaging"
+      temperature: 23  # °C
+      humidity: 45     # %RH
+      area_size: 2500  # m²
+      
+      instances:
+        # 包裝機 (Packaging Machine)
+        - type: "PackagingMachine"
+          count: 20
+          naming_prefix: "PKG_3F_D_"
+          naming_pattern: "{prefix}{index:02d}"
+          layout_pattern: "grid"
+          grid_config:
+            rows: 4
+            columns: 5
+            spacing_x: 4.0  # 米
+            spacing_y: 4.5  # 米
+          origin:
+            x: 10.0
+            y: 10.0
+            z: 0.0
+          orientation: 0
+          instance_params:
+            packagingSpeed: 20000  # UPH
+            packagingType: "Tape & Reel"
+            capacity: 5000  # per reel
+            status: "Idle"
+          maintenance:
+            schedule: "monthly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2025-11-01"
+            mtbf: 12000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "3F"
+            worker_group: "packaging_team"
+            affinity: ["PKG_3F_D_*"]
+      
+      relationships:
+        # 物料流：從 Binning 到 Packaging
+        - type: "material_flow"
+          from: "BM_3F_C_*"
+          to: "PKG_3F_D_*"
+          properties:
+            transport_method: "Conveyor"
+            speed: 0.3  # m/s
+            route: "3F_Conveyor_C_to_D"
+        
+        # 數據連接到 MES
+        - type: "data_connection"
+          from: "PKG_3F_D_*"
+          to: "MES_Server_01"
+          properties:
+            protocol: "SECS/GEM"
+            update_interval: 1  # 秒
+            data_items: ["status", "speed", "reel_count", "material_level"]
+
+  # ==========================================================================
+  # 佈局定義 - IT Infrastructure
+  # ==========================================================================
+    # ------------------------------------------------------------------------
+    # B1 - IT Room: MES & Data Center
+    # ------------------------------------------------------------------------
+    - area: "B1_IT_Room"
+      building: "MainBuilding"
+      floor: "B1"
+      zone_type: "IT"
+      temperature: 20  # °C
+      humidity: 50     # %RH
+      area_size: 500  # m²
+      
+      instances:
+        # MES 伺服器
+        - type: "MESServer"
+          count: 2
+          naming_prefix: "MES_Server_"
+          naming_pattern: "{prefix}{index:02d}"
+          instance_params:
+            softwareVersion: "MES_v5.0"
+            maxConnections: 500
+            dataRate: 10000  # records/sec
+            status: "Running"
+          maintenance:
+            schedule: "quarterly"
+            lastMaintenance: "2025-10-01"
+            nextMaintenance: "2026-01-01"
+            mtbf: 20000  # hours
+          worker_assignment_hints:
+            region: "Taiwan"
+            building: "MainBuilding"
+            floor: "B1"
+            worker_group: "it_team"
+      
+      relationships:
+        # MES 與所有生產設備的連接已在各區域定義
+
+  # ==========================================================================
+  # 公用系統 (Utilities)
+  # ==========================================================================
+  utilities:
+    # ------------------------------------------------------------------------
+    # 電力系統
+    # ------------------------------------------------------------------------
+    - type: "electrical"
+      specifications:
+        total_capacity: 8000  # kW
+        voltage_levels:
+          - 22000  # V (高壓輸入)
+          - 380    # V (三相)
+          - 220    # V (單相)
+        transformers:
+          - id: "Transformer_Main"
+            capacity: 3000  # kVA
+            location: "B1_Electrical_Room"
+            voltage_in: 22000  # V
+            voltage_out: 380  # V
+          - id: "Transformer_1F"
+            capacity: 2000  # kVA
+            location: "1F_Electrical_Room"
+            voltage_in: 380  # V
+            voltage_out: 220  # V
+          - id: "Transformer_2F"
+            capacity: 2000  # kVA
+            location: "2F_Electrical_Room"
+            voltage_in: 380  # V
+            voltage_out: 220  # V
+          - id: "Transformer_3F"
+            capacity: 1000  # kVA
+            location: "3F_Electrical_Room"
+            voltage_in: 380  # V
+            voltage_out: 220  # V
+        ups_systems:
+          - id: "UPS_Main"
+            capacity: 500  # kVA
+            backup_time: 30  # minutes
+            location: "B1_UPS_Room"
+            serves: ["MES_Server_*", "Critical_Equipment"]
+      distribution:
+        - floor: "1F"
+          zones: ["1F_Zone_A_DieSorting", "1F_Zone_B_DieBonding", "1F_Zone_C_WireBonding"]
+          capacity: 2000  # kW
+        - floor: "2F"
+          zones: ["2F_Zone_A_Molding", "2F_Zone_B_Curing", "2F_Zone_C_Plating", "2F_Zone_D_Singulation"]
+          capacity: 2500  # kW
+        - floor: "3F"
+          zones: ["3F_Zone_A_ElectricalTesting", "3F_Zone_B_OpticalTesting", "3F_Zone_C_Binning", "3F_Zone_D_Packaging"]
+          capacity: 1500  # kW
+
+    # ------------------------------------------------------------------------
+    # HVAC 系統
+    # ------------------------------------------------------------------------
+    - type: "hvac"
+      specifications:
+        total_cooling_capacity: 3000  # RT
+        air_handling_units:
+          - id: "AHU_1F_A"
+            capacity: 60000  # CMH
+            location: "1F_Ceiling"
+            serving_zones: ["1F_Zone_A_DieSorting"]
+            filter_class: "HEPA_H14"
+          - id: "AHU_1F_B"
+            capacity: 70000  # CMH
+            location: "1F_Ceiling"
+            serving_zones: ["1F_Zone_B_DieBonding"]
+            filter_class: "ULPA_U15"
+          - id: "AHU_1F_C"
+            capacity: 80000  # CMH
+            location: "1F_Ceiling"
+            serving_zones: ["1F_Zone_C_WireBonding"]
+            filter_class: "ULPA_U15"
+          - id: "AHU_2F"
+            capacity: 100000  # CMH
+            location: "2F_Ceiling"
+            serving_zones: ["2F_Zone_A_Molding", "2F_Zone_B_Curing", "2F_Zone_C_Plating", "2F_Zone_D_Singulation"]
+            filter_class: "HEPA_H13"
+          - id: "AHU_3F"
+            capacity: 100000  # CMH
+            location: "3F_Ceiling"
+            serving_zones: ["3F_Zone_A_ElectricalTesting", "3F_Zone_B_OpticalTesting", "3F_Zone_C_Binning", "3F_Zone_D_Packaging"]
+            filter_class: "HEPA_H13"
+        chillers:
+          - id: "Chiller_01"
+            capacity: 1500  # RT
+            location: "B1_Mechanical_Room"
+            type: "Water-Cooled"
+            efficiency: 0.6  # kW/RT
+          - id: "Chiller_02"
+            capacity: 1500  # RT
+            location: "B1_Mechanical_Room"
+            type: "Water-Cooled"
+            efficiency: 0.6  # kW/RT
+      distribution:
+        - floor: "1F"
+          temperature_setpoint: 23  # °C
+          humidity_setpoint: 40-45  # %RH
+          air_changes_per_hour: 30
+          cleanliness_class: "ISO_Class_5/6"
+        - floor: "2F"
+          temperature_setpoint: 25  # °C
+          humidity_setpoint: 50  # %RH
+          air_changes_per_hour: 20
+        - floor: "3F"
+          temperature_setpoint: 23  # °C
+          humidity_setpoint: 45  # %RH
+          air_changes_per_hour: 25
+
+    # ------------------------------------------------------------------------
+    # 純水系統 (DI Water)
+    # ------------------------------------------------------------------------
+    - type: "di_water"
+      specifications:
+        production_capacity: 200  # m³/day
+        resistivity: 18.2  # MΩ·cm
+        toc: 5  # ppb (Total Organic Carbon)
+        particles: 1  # particles/mL (>0.2μm)
+        production_method: "RO + EDI + UV"
+        storage_tanks:
+          - id: "DI_Tank_01"
+            capacity: 100  # m³
+            location: "B1_Utility_Room"
+            material: "Stainless Steel 316L"
+          - id: "DI_Tank_02"
+            capacity: 100  # m³
+            location: "B1_Utility_Room"
+            material: "Stainless Steel 316L"
+        pumps:
+          - id: "DI_Pump_01"
+            capacity: 50  # m³/hr
+            pressure: 5.0  # bar
+            location: "B1_Pump_Room"
+          - id: "DI_Pump_02"
+            capacity: 50  # m³/hr
+            pressure: 5.0  # bar
+            location: "B1_Pump_Room"
+      distribution:
+        - floor: "1F"
+          flow_rate: 30  # L/min
+          pressure: 4.0  # bar
+          usage: "Die Bonding, Wire Bonding"
+        - floor: "2F"
+          flow_rate: 40  # L/min
+          pressure: 4.0  # bar
+          usage: "Molding, Plating, Singulation"
+        - floor: "3F"
+          flow_rate: 20  # L/min
+          pressure: 4.0  # bar
+          usage: "Testing, Cleaning"
+
+    # ------------------------------------------------------------------------
+    # 氮氣系統 (Nitrogen)
+    # ------------------------------------------------------------------------
+    - type: "nitrogen"
+      specifications:
+        purity: 99.999  # %
+        production_method: "PSA"
+        capacity: 800  # Nm³/hr
+        generators:
+          - id: "N2_Generator_01"
+            capacity: 400  # Nm³/hr
+            location: "B1_Gas_Room"
+            purity: 99.999  # %
+          - id: "N2_Generator_02"
+            capacity: 400  # Nm³/hr
+            location: "B1_Gas_Room"
+            purity: 99.999  # %
+        storage_tanks:
+          - id: "N2_Tank_01"
+            capacity: 50  # m³
+            pressure: 20  # bar
+            location: "B1_Gas_Room"
+      distribution:
+        - floor: "1F"
+          pressure: 6.0  # bar
+          flow_rate: 300  # Nm³/hr
+          usage: "Die Bonding, Wire Bonding (Inert Atmosphere)"
+        - floor: "2F"
+          pressure: 6.0  # bar
+          flow_rate: 300  # Nm³/hr
+          usage: "Molding, Curing (Inert Atmosphere)"
+        - floor: "3F"
+          pressure: 6.0  # bar
+          flow_rate: 200  # Nm³/hr
+          usage: "Testing, Storage (Inert Atmosphere)"
+
+    # ------------------------------------------------------------------------
+    # 壓縮空氣系統 (Compressed Air)
+    # ------------------------------------------------------------------------
+    - type: "compressed_air"
+      specifications:
+        pressure: 7.0  # bar
+        capacity: 1500  # Nm³/hr
+        dew_point: -40  # °C
+        oil_content: 0.01  # ppm
+        compressors:
+          - id: "Compressor_01"
+            capacity: 750  # Nm³/hr
+            type: "Screw"
+            location: "B1_Compressor_Room"
+            power: 150  # kW
+          - id: "Compressor_02"
+            capacity: 750  # Nm³/hr
+            type: "Screw"
+            location: "B1_Compressor_Room"
+            power: 150  # kW
+        dryers:
+          - id: "Dryer_01"
+            capacity: 750  # Nm³/hr
+            type: "Refrigerated"
+            dew_point: -40  # °C
+          - id: "Dryer_02"
+            capacity: 750  # Nm³/hr
+            type: "Refrigerated"
+            dew_point: -40  # °C
+        storage_tanks:
+          - id: "Air_Tank_01"
+            capacity: 10  # m³
+            pressure: 8  # bar
+            location: "B1_Compressor_Room"
+      distribution:
+        - floor: "1F"
+          pressure: 6.0  # bar
+          flow_rate: 500  # Nm³/hr
+          usage: "Pneumatic Tools, Equipment"
+        - floor: "2F"
+          pressure: 6.0  # bar
+          flow_rate: 600  # Nm³/hr
+          usage: "Pneumatic Tools, Equipment"
+        - floor: "3F"
+          pressure: 6.0  # bar
+          flow_rate: 400  # Nm³/hr
+          usage: "Pneumatic Tools, Equipment"
+
+    # ------------------------------------------------------------------------
+    # 真空系統 (Vacuum)
+    # ------------------------------------------------------------------------
+    - type: "vacuum"
+      specifications:
+        vacuum_level: 0.1  # mbar
+        capacity: 500  # m³/hr
+        pumps:
+          - id: "Vacuum_Pump_01"
+            capacity: 250  # m³/hr
+            type: "Dry Screw"
+            location: "B1_Vacuum_Room"
+            power: 30  # kW
+          - id: "Vacuum_Pump_02"
+            capacity: 250  # m³/hr
+            type: "Dry Screw"
+            location: "B1_Vacuum_Room"
+            power: 30  # kW
+      distribution:
+        - floor: "1F"
+          vacuum_level: 0.1  # mbar
+          usage: "Die Bonding (Vacuum Chuck)"
+        - floor: "2F"
+          vacuum_level: 1.0  # mbar
+          usage: "Molding (Vacuum Degassing)"
+
+    # ------------------------------------------------------------------------
+    # 化學品供應系統 (Chemical Supply)
+    # ------------------------------------------------------------------------
+    - type: "chemical_supply"
+      specifications:
+        chemicals:
+          - name: "Epoxy Resin"
+            storage_capacity: 5000  # L
+            location: "B1_Chemical_Storage"
+            safety_class: "Flammable"
+          - name: "Silicone"
+            storage_capacity: 3000  # L
+            location: "B1_Chemical_Storage"
+            safety_class: "Non-Hazardous"
+          - name: "Plating Solution"
+            storage_capacity: 10000  # L
+            location: "B1_Chemical_Storage"
+            safety_class: "Corrosive"
+          - name: "Cleaning Agent"
+            storage_capacity: 2000  # L
+            location: "B1_Chemical_Storage"
+            safety_class: "Corrosive"
+      distribution:
+        - floor: "2F"
+          chemicals: ["Epoxy Resin", "Silicone", "Plating Solution", "Cleaning Agent"]
+          delivery_method: "Automated Piping System"
+
+    # ------------------------------------------------------------------------
+    # 廢水處理系統 (Wastewater Treatment)
+    # ------------------------------------------------------------------------
+    - type: "wastewater_treatment"
+      specifications:
+        capacity: 100  # m³/day
+        treatment_method: "Physical-Chemical"
+        discharge_standard: "Industrial Wastewater Standard"
+        treatment_units:
+          - id: "WWT_Unit_01"
+            capacity: 100  # m³/day
+            location: "B1_Wastewater_Room"
+            processes: ["Neutralization", "Precipitation", "Filtration"]
+      collection:
+        - floor: "2F"
+          sources: ["Plating Area", "Singulation Area"]
+          flow_rate: 50  # m³/day
+
+  # ==========================================================================
+  # 全域參數
+  # ==========================================================================
+  parameters:
+    # 生產參數
+    production:
+      target_oee: 85  # %
+      target_yield: 98  # %
+      target_uptime: 90  # %
+      shift_hours: 8
+      shifts_per_day: 3
+      working_days_per_year: 350
+    
+    # 品質參數
+    quality:
+      cpk_target: 1.67
+      defect_rate_target: 0.02  # %
+      sampling_rate: 0.1  # %
+    
+    # 維護參數
+    maintenance:
+      preventive_maintenance_interval: 168  # hours (weekly)
+      predictive_maintenance_enabled: true
+      spare_parts_stock_level: 0.1  # % of equipment count
+    
+    # 環境參數
+    environment:
+      energy_efficiency_target: 0.85
+      water_recycling_rate: 0.7  # %
+      waste_reduction_target: 0.5  # %
+    
+    # 安全參數
+    safety:
+      emergency_shutdown_time: 30  # seconds
+      evacuation_time: 5  # minutes
+      fire_suppression_system: "FM-200"
+      gas_detection_system: true
+
+  # ==========================================================================
+  # 部署配置
+  # ==========================================================================
+  deployment:
+    ndh_config:
+      master_nodes: 3
+      worker_nodes: 10
+      asset_servant_distribution: "distributed"
+      high_availability: true
+      disaster_recovery: true
+      backup_frequency: "hourly"
+      snapshot_retention: 30  # days
+    
+    omniverse_config:
+      nucleus_server: "omniverse://harvatek-nucleus.local"
+      usd_stage: "/Factory/HarvaTek_New_Factory.usd"
+      real_time_sync: true
+      collaboration_enabled: true
+      max_concurrent_users: 50
+    
+    network_config:
+      vlan_segmentation:
+        - vlan_id: 10
+          name: "Production_Network"
+          subnets: ["10.10.10.0/24"]
+        - vlan_id: 20
+          name: "IT_Network"
+          subnets: ["10.10.20.0/24"]
+        - vlan_id: 30
+          name: "Management_Network"
+          subnets: ["10.10.30.0/24"]
+      firewall_rules:
+        - rule_id: 1
+          source: "Production_Network"
+          destination: "IT_Network"
+          action: "Allow"
+          protocol: "SECS/GEM"
+        - rule_id: 2
+          source: "IT_Network"
+          destination: "Internet"
+          action: "Allow"
+          protocol: "HTTPS"
+

@@ -1,0 +1,767 @@
+// ============================================================================
+// 宏齊科技 LED 封裝設備 IADL 資產定義
+// ============================================================================
+// 版本: 1.0.0
+// 日期: 2025-10-14
+// 作者: IDTF Technical Team
+// 描述: 定義 LED 封裝製程所需的所有設備類型
+// ============================================================================
+
+module HarvaTekLEDAssets {
+
+    // ========================================================================
+    // 基礎數據結構
+    // ========================================================================
+    
+    struct Location {
+        double x;
+        double y;
+        double z;
+    }
+    
+    struct Dimensions {
+        double length;   // 米
+        double width;    // 米
+        double height;   // 米
+    }
+    
+    struct PowerRequirements {
+        double voltage;      // 伏特
+        int phase;           // 相數 (1 或 3)
+        double current;      // 安培
+        double power;        // 千瓦
+    }
+    
+    struct MaintenanceInfo {
+        string schedule;           // 維護週期
+        string lastMaintenance;    // 上次維護日期
+        string nextMaintenance;    // 下次維護日期
+        int mtbf;                  // 平均故障間隔時間 (小時)
+    }
+
+    // ========================================================================
+    // 1. 晶片分選機 (Die Sorter)
+    // ========================================================================
+    
+    entity DieSorter {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 2.5,
+            width: 2.0,
+            height: 2.2
+        };
+        
+        // 技術規格
+        property int sortingSpeed;        // UPH (Units Per Hour)
+        property int binCount;            // 分選箱數量
+        property double accuracy;         // 分選精度 (mm)
+        property string visionSystem;     // 視覺系統類型
+        
+        // 運行狀態
+        property string status;           // Idle, Running, Error, Maintenance
+        property int currentSpeed;        // 當前速度 UPH
+        property int totalProcessed;      // 累計處理數量
+        property double uptime;           // 稼動率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 15,
+            power: 5.7
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;      // 設備溫度 (°C)
+        property double vibration;        // 振動值 (mm/s)
+        property int errorCount;          // 錯誤計數
+        
+        // 行為定義
+        behavior StartSorting(int speed) returns bool;
+        behavior StopSorting() returns bool;
+        behavior ChangeBin(int binNumber) returns bool;
+        behavior Calibrate() returns bool;
+        behavior GetStatistics() returns string;
+    }
+
+    // ========================================================================
+    // 2. 固晶機 (Die Bonder)
+    // ========================================================================
+    
+    entity DieBonder {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 2.8,
+            width: 2.2,
+            height: 2.0
+        };
+        
+        // 技術規格
+        property int bondingSpeed;        // UPH
+        property double accuracy;         // 精度 (mm)
+        property string bondingMethod;    // Eutectic, Epoxy, etc.
+        property double bondForce;        // 接合力 (N)
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalBonded;
+        property double yieldRate;        // 良率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 20,
+            power: 7.6
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property double pressure;         // 真空壓力 (Pa)
+        property int errorCount;
+        
+        // 行為定義
+        behavior StartBonding(int speed) returns bool;
+        behavior StopBonding() returns bool;
+        behavior AdjustForce(double force) returns bool;
+        behavior Calibrate() returns bool;
+    }
+
+    // ========================================================================
+    // 3. 打線機 (Wire Bonder)
+    // ========================================================================
+    
+    entity WireBonder {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 2.5,
+            width: 2.0,
+            height: 2.3
+        };
+        
+        // 技術規格
+        property int bondingSpeed;        // UPH
+        property double wireDiameter;     // 線徑 (mm)
+        property string wireType;         // Gold, Copper, Aluminum
+        property int bondCount;           // 每個晶片的線數
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalWiresBonded;
+        property double bondStrength;     // 接合強度 (gf)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 18,
+            power: 6.8
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property double ultrasonic Power;  // 超音波功率 (W)
+        property int wireBreakCount;       // 斷線次數
+        
+        // 行為定義
+        behavior StartBonding(int speed) returns bool;
+        behavior StopBonding() returns bool;
+        behavior ChangeWire(string wireType) returns bool;
+        behavior Calibrate() returns bool;
+    }
+
+    // ========================================================================
+    // 4. 封膠機 (Molding Machine)
+    // ========================================================================
+    
+    entity MoldingMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 3.5,
+            width: 2.5,
+            height: 2.8
+        };
+        
+        // 技術規格
+        property int moldingSpeed;        // UPH
+        property string moldingType;      // Transfer, Compression
+        property double moldTemperature;  // 模具溫度 (°C)
+        property double cureTime;         // 固化時間 (秒)
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalMolded;
+        property double moldQuality;      // 封膠品質指標
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 30,
+            power: 19.7
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property double pressure;         // 成型壓力 (MPa)
+        property int resinLevel;          // 樹脂液位 (%)
+        
+        // 行為定義
+        behavior StartMolding(int speed) returns bool;
+        behavior StopMolding() returns bool;
+        behavior SetTemperature(double temp) returns bool;
+        behavior RefillResin() returns bool;
+    }
+
+    // ========================================================================
+    // 5. 固化爐 (Curing Oven)
+    // ========================================================================
+    
+    entity CuringOven {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 6.0,
+            width: 2.0,
+            height: 2.5
+        };
+        
+        // 技術規格
+        property int capacity;            // 產能 UPH
+        property double maxTemperature;   // 最高溫度 (°C)
+        property int zones;               // 溫區數量
+        property double beltSpeed;        // 輸送帶速度 (m/min)
+        
+        // 運行狀態
+        property string status;
+        property double currentTemperature;
+        property int totalCured;
+        property double uniformity;       // 溫度均勻性 (±°C)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 50,
+            power: 32.9
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double zone1Temperature;
+        property double zone2Temperature;
+        property double zone3Temperature;
+        property double zone4Temperature;
+        
+        // 行為定義
+        behavior StartCuring() returns bool;
+        behavior StopCuring() returns bool;
+        behavior SetZoneTemperature(int zone, double temp) returns bool;
+        behavior SetBeltSpeed(double speed) returns bool;
+    }
+
+    // ========================================================================
+    // 6. 電鍍機 (Plating Machine)
+    // ========================================================================
+    
+    entity PlatingMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 4.0,
+            width: 2.5,
+            height: 2.0
+        };
+        
+        // 技術規格
+        property int platingSpeed;        // UPH
+        property string platingMaterial;  // Gold, Silver, Nickel
+        property double thickness;        // 鍍層厚度 (μm)
+        property int tankCount;           // 電鍍槽數量
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalPlated;
+        property double platingQuality;   // 鍍層品質
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 40,
+            power: 15.2
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property double current;          // 電鍍電流 (A)
+        property double pH;               // 溶液 pH 值
+        
+        // 行為定義
+        behavior StartPlating(int speed) returns bool;
+        behavior StopPlating() returns bool;
+        behavior AdjustCurrent(double current) returns bool;
+        behavior MonitorSolution() returns string;
+    }
+
+    // ========================================================================
+    // 7. 切割機 (Singulation Machine)
+    // ========================================================================
+    
+    entity SingulationMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 3.0,
+            width: 2.5,
+            height: 2.2
+        };
+        
+        // 技術規格
+        property int cuttingSpeed;        // UPH
+        property string cuttingMethod;    // Saw, Laser
+        property double bladeThickness;   // 刀片厚度 (mm)
+        property double accuracy;         // 切割精度 (mm)
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalCut;
+        property double chipRate;         // 崩邊率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 25,
+            power: 9.5
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double spindleSpeed;     // 主軸轉速 (RPM)
+        property double coolantFlow;      // 冷卻液流量 (L/min)
+        property int bladeLife;           // 刀片壽命 (%)
+        
+        // 行為定義
+        behavior StartCutting(int speed) returns bool;
+        behavior StopCutting() returns bool;
+        behavior ChangeBlade() returns bool;
+        behavior Calibrate() returns bool;
+    }
+
+    // ========================================================================
+    // 8. 測試機 (Testing Machine)
+    // ========================================================================
+    
+    entity TestingMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 2.5,
+            width: 2.0,
+            height: 2.0
+        };
+        
+        // 技術規格
+        property int testingSpeed;        // UPH
+        property string testType;         // Electrical, Optical, Thermal
+        property int testItems;           // 測試項目數量
+        property double accuracy;         // 測試精度
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalTested;
+        property double passRate;         // 良率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 10,
+            power: 2.2
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property int passCount;
+        property int failCount;
+        
+        // 行為定義
+        behavior StartTesting(int speed) returns bool;
+        behavior StopTesting() returns bool;
+        behavior Calibrate() returns bool;
+        behavior GetTestResults() returns string;
+    }
+
+    // ========================================================================
+    // 9. 分光分色機 (Binning Machine)
+    // ========================================================================
+    
+    entity BinningMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 2.8,
+            width: 2.2,
+            height: 2.3
+        };
+        
+        // 技術規格
+        property int binningSpeed;        // UPH
+        property int binCount;            // 分類箱數量
+        property string criteria;         // Wavelength, Brightness, Color
+        property double accuracy;         // 分類精度
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalBinned;
+        property double distribution;     // 分佈均勻度
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 8,
+            power: 1.8
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double temperature;
+        property int binStatus[];         // 各分類箱狀態
+        
+        // 行為定義
+        behavior StartBinning(int speed) returns bool;
+        behavior StopBinning() returns bool;
+        behavior ChangeBin(int binNumber) returns bool;
+        behavior Calibrate() returns bool;
+    }
+
+    // ========================================================================
+    // 10. 包裝機 (Packaging Machine)
+    // ========================================================================
+    
+    entity PackagingMachine {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions = {
+            length: 3.5,
+            width: 2.0,
+            height: 2.5
+        };
+        
+        // 技術規格
+        property int packagingSpeed;      // UPH
+        property string packagingType;    // Tape & Reel, Tray, Tube
+        property int capacity;            // 每卷/盤容量
+        
+        // 運行狀態
+        property string status;
+        property int currentSpeed;
+        property int totalPackaged;
+        property double efficiency;       // 包裝效率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 5,
+            power: 1.1
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property int materialLevel;       // 包材餘量 (%)
+        property int reelCount;           // 已完成卷數
+        
+        // 行為定義
+        behavior StartPackaging(int speed) returns bool;
+        behavior StopPackaging() returns bool;
+        behavior ChangeReel() returns bool;
+        behavior RefillMaterial() returns bool;
+    }
+
+    // ========================================================================
+    // 11. AGV (Automated Guided Vehicle)
+    // ========================================================================
+    
+    entity AGV {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location currentPosition;
+        property Dimensions dimensions = {
+            length: 1.5,
+            width: 1.0,
+            height: 0.5
+        };
+        
+        // 技術規格
+        property double maxSpeed;         // 最大速度 (m/s)
+        property double maxLoad;          // 最大載重 (kg)
+        property int batteryCapacity;     // 電池容量 (Ah)
+        property string navigationMethod; // Magnetic, Laser, Vision
+        
+        // 運行狀態
+        property string status;           // Idle, Moving, Loading, Charging
+        property double currentSpeed;
+        property double batteryLevel;     // 電池電量 (%)
+        property string currentTask;
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 48,
+            phase: 1,
+            current: 20,
+            power: 0.96
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property Location targetPosition;
+        property double distanceToTarget;
+        property int totalTrips;
+        
+        // 行為定義
+        behavior MoveTo(Location target) returns bool;
+        behavior Load(string itemId) returns bool;
+        behavior Unload() returns bool;
+        behavior Charge() returns bool;
+        behavior GetStatus() returns string;
+    }
+
+    // ========================================================================
+    // 12. 輸送帶 (Conveyor)
+    // ========================================================================
+    
+    entity Conveyor {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location startPosition;
+        property Location endPosition;
+        property Dimensions dimensions;
+        
+        // 技術規格
+        property double speed;            // 速度 (m/s)
+        property double maxLoad;          // 最大載重 (kg)
+        property string beltType;         // Flat, Roller, Chain
+        
+        // 運行狀態
+        property string status;
+        property double currentSpeed;
+        property int itemsOnBelt;
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 3,
+            current: 5,
+            power: 1.9
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double motorTemperature;
+        property double tension;          // 皮帶張力
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior SetSpeed(double speed) returns bool;
+    }
+
+    // ========================================================================
+    // 13. 儲罐 (Storage Tank)
+    // ========================================================================
+    
+    entity StorageTank {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions;
+        
+        // 技術規格
+        property double capacity;         // 容量 (L)
+        property string material;         // Stainless Steel, Plastic
+        property string contentType;      // DI Water, Nitrogen, Resin
+        property double maxPressure;      // 最大壓力 (bar)
+        
+        // 運行狀態
+        property string status;
+        property double currentLevel;     // 當前液位 (%)
+        property double temperature;
+        property double pressure;
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double flowRate;         // 流量 (L/min)
+        property double purity;           // 純度 (%)
+        
+        // 行為定義
+        behavior Fill(double amount) returns bool;
+        behavior Drain(double amount) returns bool;
+        behavior MonitorLevel() returns double;
+    }
+
+    // ========================================================================
+    // 14. 空調系統 (HVAC Unit)
+    // ========================================================================
+    
+    entity HVACUnit {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        property Dimensions dimensions;
+        
+        // 技術規格
+        property double coolingCapacity;  // 冷卻能力 (RT)
+        property double airFlow;          // 風量 (CMH)
+        property string filterClass;      // HEPA, ULPA
+        
+        // 運行狀態
+        property string status;
+        property double currentTemperature;
+        property double currentHumidity;
+        property double setpointTemperature;
+        property double setpointHumidity;
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 380,
+            phase: 3,
+            current: 30,
+            power: 19.7
+        };
+        
+        // 維護資訊
+        property MaintenanceInfo maintenance;
+        
+        // 數據標籤
+        property double filterPressureDrop; // 濾網壓差 (Pa)
+        property int filterLife;            // 濾網壽命 (%)
+        
+        // 行為定義
+        behavior Start() returns bool;
+        behavior Stop() returns bool;
+        behavior SetTemperature(double temp) returns bool;
+        behavior SetHumidity(double humidity) returns bool;
+        behavior ChangeFilter() returns bool;
+    }
+
+    // ========================================================================
+    // 15. MES 伺服器 (MES Server)
+    // ========================================================================
+    
+    entity MESServer {
+        // 基本屬性
+        property string id;
+        property string name;
+        property Location position;
+        
+        // 技術規格
+        property string softwareVersion;
+        property int maxConnections;      // 最大連接數
+        property double dataRate;         // 數據處理速率 (records/sec)
+        
+        // 運行狀態
+        property string status;
+        property int activeConnections;
+        property double cpuUsage;         // CPU 使用率 (%)
+        property double memoryUsage;      // 記憶體使用率 (%)
+        
+        // 電力需求
+        property PowerRequirements power = {
+            voltage: 220,
+            phase: 1,
+            current: 10,
+            power: 2.2
+        };
+        
+        // 數據標籤
+        property int totalRecords;
+        property double uptime;
+        
+        // 行為定義
+        behavior ConnectDevice(string deviceId) returns bool;
+        behavior DisconnectDevice(string deviceId) returns bool;
+        behavior QueryData(string query) returns string;
+        behavior SendCommand(string deviceId, string command) returns bool;
+    }
+
+    // ========================================================================
+    // 關係定義
+    // ========================================================================
+    
+    relation MaterialFlow(entity source, entity target);
+    relation DataConnection(entity device, MESServer server);
+    relation PowerSupply(entity source, entity target);
+    relation Monitors(entity sensor, entity equipment);
+    relation LocatedIn(entity equipment, string zone);
+}
+
