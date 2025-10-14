@@ -128,3 +128,95 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 - **金絲雀部署**：漸進式部署策略（風險最小化）
 
 這些機制使 NDH 的系統更新過程**安全、可靠、可控**，滿足工業級應用的嚴格要求。
+
+---
+
+## 最新更新：NDH MCP Server 整合
+
+**更新日期**: 2025年10月14日
+
+為了使 NDH 能夠與 AI 助理（如 Claude、ChatGPT、Manus 等）進行深度整合，我們設計了完整的 MCP (Model Context Protocol) Server 架構：
+
+### NDH MCP Server 整合設計
+
+- **[NDH MCP Server 整合詳細文件](./06_NDH_Spec/docs/NDH_MCP_Server_Integration.md)**
+  - MCP 協議簡介與核心概念
+  - NDH 作為 MCP Server 的架構設計
+  - MCP 功能映射（Resources、Tools、Prompts）
+  - 實作細節（Python/TypeScript SDK）
+  - 安全性與授權機制
+  - 部署架構（獨立/嵌入式/Kubernetes）
+  - 實際使用場景
+  - 實作路線圖（6 個階段）
+
+### 核心價值
+
+**對使用者**：
+- ✅ 使用自然語言與數位分身系統互動
+- ✅ 快速獲取工廠洞察和分析
+- ✅ 降低系統使用門檻
+
+**對開發者**：
+- ✅ 標準化的 AI 整合介面
+- ✅ 無需為每個 AI 平台單獨開發整合
+- ✅ 自動生成工具描述和文檔
+
+**對系統**：
+- ✅ 擴展 NDH 的應用場景
+- ✅ 提升系統的智能化水平
+- ✅ 增強生態系統的開放性
+
+### MCP 功能映射
+
+#### Resources（資源）
+- 工廠資產列表：`ndh://factory/{factory_id}/assets`
+- 資產即時狀態：`ndh://factory/{factory_id}/asset/{asset_id}/status`
+- 資產歷史數據：`ndh://factory/{factory_id}/asset/{asset_id}/history`
+- 工廠佈局：`ndh://factory/{factory_id}/layout`
+- 資產定義：`ndh://factory/{factory_id}/asset/{asset_id}/definition`
+
+#### Tools（工具）
+- `query_asset_status`：查詢資產狀態
+- `set_asset_parameter`：設置資產參數
+- `query_historical_data`：查詢歷史數據
+- `execute_asset_command`：執行資產命令
+- `analyze_data_trend`：分析數據趨勢
+- `generate_report`：生成報告
+- `search_assets`：搜尋資產
+
+#### Prompts（提示模板）
+- `factory_inspection`：工廠巡檢
+- `anomaly_analysis`：異常分析
+- `performance_optimization`：效能優化
+- `predictive_maintenance`：預測性維護
+
+### 使用場景範例
+
+1. **智能工廠巡檢**：AI 助理自動檢查所有關鍵設備狀態並生成報告
+2. **異常分析與診斷**：AI 助理分析設備異常並提供根本原因分析
+3. **效能優化建議**：AI 助理識別瓶頸並提供具體的優化建議
+4. **預測性維護**：AI 助理預測設備故障並生成維護計畫
+5. **自然語言查詢**：使用者用自然語言查詢工廠資訊
+
+### 實作路線圖
+
+- **階段 1**：基礎架構（1-2 個月）
+- **階段 2**：Resources 實作（1 個月）
+- **階段 3**：Tools 實作（2 個月）
+- **階段 4**：Prompts 實作（1 個月）
+- **階段 5**：測試與優化（1 個月）
+- **階段 6**：部署與發布（1 個月）
+
+**總計**：7-8 個月完整實作
+
+這個整合將使 IDTF V3.5 成為業界首個支援 MCP 的工業數位分身平台，大幅提升系統的智能化水平和使用者體驗。
+
+
+---
+
+## 最新更新：NDH MCP Server 整合
+
+**更新日期**: 2025年10月14日
+
+為了使 NDH 能夠與 AI 助理（如 Claude、ChatGPT、Manus 等）進行深度整合，我們設計了完整的 MCP (Model Context Protocol) Server 架構。
+
