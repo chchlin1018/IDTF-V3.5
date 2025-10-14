@@ -899,6 +899,37 @@ class NamingService:
 
 ## 6. Omniverse 連接器架構
 
+### 5.6 基於 FDL 的動態創建與銷毀
+
+Asset Servants 的生命週期完全由 FDL 文件控制。當 FDL 文件更新時，NDH 會自動調整 Asset Servants 的實例。
+
+#### 5.6.1 FDL 部署與動態更新
+
+**完整的 FDL 範例**：
+```yaml
+factory_design:
+  metadata:
+    name: "MicroLED Factory CDA System"
+    version: "1.0"
+  
+  assets:
+    - id: "compressor_001"
+      type: "iadl://compressor_atlas_copco_ga75.iadl"
+      instance_params:
+        position: [10.0, 0.0, 5.0]
+        rated_pressure: 8.0  # bar
+        rated_flow: 12.5     # m³/min
+      connections:
+        - target: "dryer_001"
+          port: "inlet"
+```
+
+**FDL 動態更新機制**：
+- FDL 新增資產 → NDH 自動創建 Asset Servant
+- FDL 刪除資產 → NDH 自動銷毀 Asset Servant  
+- FDL 修改資產 → NDH 自動更新 Asset Servant 配置
+
+
 ### 6.1 連接器設計
 
 Omniverse 連接器負責在 NDH/Asset Servants 和 Omniverse 之間同步數據：
