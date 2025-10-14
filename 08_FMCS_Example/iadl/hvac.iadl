@@ -1,6 +1,6 @@
 /*
  * IADL Definition for HVAC System
- * Version: 1.0
+ * Version: 1.1 (Added USD 3D Models)
  * Author: Manus AI
  */
 
@@ -26,6 +26,21 @@ System HVAC_System {
             capacity: 1250 // tons
             power: 750 // kW
             refrigerant: "R-123"
+            
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/hvac/chiller_trane_cvhf1250.usd",
+                transform: {
+                    position: { x: 0, y: 0, z: 0 },
+                    rotation: { x: 0, y: 0, z: 0 },
+                    scale: { x: 1, y: 1, z: 1 }
+                },
+                dimensions: {
+                    length: 5.2, // meters
+                    width: 2.4,
+                    height: 2.8
+                }
+            }
             
             // Data Tags
             data_tags: [
@@ -58,6 +73,16 @@ System HVAC_System {
             flow_rate: 800 // m³/h
             power: 90 // kW
             
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/hvac/pump_grundfos_tp200.usd",
+                dimensions: {
+                    length: 1.8,
+                    width: 0.8,
+                    height: 1.2
+                }
+            }
+            
             // Data Tags
             data_tags: [
                 { tag_id: "running_status", source: { type: "modbus", address: 10011 } },
@@ -80,6 +105,16 @@ System HVAC_System {
             manufacturer: "Daikin"
             model: "D-AHU Professional"
             airflow: 100000 // CMH
+            
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/hvac/mau_daikin_dahu.usd",
+                dimensions: {
+                    length: 8.0,
+                    width: 3.5,
+                    height: 3.0
+                }
+            }
             
             // Data Tags
             data_tags: [
@@ -105,6 +140,16 @@ System HVAC_System {
             manufacturer: "American Air Filter"
             model: "AstroFan FFU"
             
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/hvac/ffu_aaf_astrofan.usd",
+                dimensions: {
+                    length: 1.2,
+                    width: 1.2,
+                    height: 0.3
+                }
+            }
+            
             // Data Tags
             data_tags: [
                 { tag_id: "fan_speed", source: { type: "bacnet", object_id: "AV:101" } },
@@ -118,6 +163,11 @@ System HVAC_System {
             manufacturer: "Setra"
             model: "267"
             
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/sensors/pressure_sensor_setra_267.usd"
+            }
+            
             // Data Tags
             data_tags: [
                 { tag_id: "pressure", source: { type: "bacnet", object_id: "AI:201" } }
@@ -129,6 +179,11 @@ System HVAC_System {
             manufacturer: "TSI"
             model: "AeroTrak 9306"
             
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/sensors/particle_counter_tsi_9306.usd"
+            }
+            
             // Data Tags
             data_tags: [
                 { tag_id: "particle_count_0_5um", source: { type: "modbus", address: 40101 } }
@@ -136,3 +191,4 @@ System HVAC_System {
         }
     }
 }
+

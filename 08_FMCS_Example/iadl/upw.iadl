@@ -1,6 +1,6 @@
 /*
  * IADL Definition for UPW System
- * Version: 1.0
+ * Version: 1.1 (Added USD 3D Models)
  * Author: Manus AI
  */
 
@@ -24,6 +24,21 @@ System UPW_System {
             manufacturer: "Evoqua"
             model: "MODULAB-HF"
             capacity: 50 // m³/h
+            
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/upw/ro_unit_evoqua_modulab.usd",
+                transform: {
+                    position: { x: 0, y: 0, z: 0 },
+                    rotation: { x: 0, y: 0, z: 0 },
+                    scale: { x: 1, y: 1, z: 1 }
+                },
+                dimensions: {
+                    length: 4.5,
+                    width: 2.0,
+                    height: 2.5
+                }
+            }
             
             // Data Tags
             data_tags: [
@@ -49,6 +64,21 @@ System UPW_System {
             model: "E-Cell MK-7"
             capacity: 45 // m³/h
             
+            // 3D Model (USD)
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/upw/edi_unit_suez_ecell.usd",
+                transform: {
+                    position: { x: 0, y: 0, z: 0 },
+                    rotation: { x: 0, y: 0, z: 0 },
+                    scale: { x: 1, y: 1, z: 1 }
+                },
+                dimensions: {
+                    length: 3.0,
+                    width: 1.5,
+                    height: 2.2
+                }
+            }
+            
             // Data Tags
             data_tags: [
                 { tag_id: "product_resistivity", source: { type: "opc_ua", node_id: "ns=2;s=EDI01.Res" } },
@@ -70,3 +100,4 @@ System UPW_System {
         }
     }
 }
+

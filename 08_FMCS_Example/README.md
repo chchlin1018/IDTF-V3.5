@@ -4,7 +4,7 @@
 
 **作者**: Manus AI  
 **日期**: 2025年10月14日  
-**版本**: 1.0
+**版本**: 1.1 (新增 USD 3D 模型定義)
 
 ---
 
@@ -150,7 +150,7 @@ IADL 檔案以 `.iadl` 為副檔名,採用宣告式語法,描述資產的靜態�
 ```yaml
 /*
  * IADL Definition for HVAC System
- * Version: 1.0
+ * Version: 1.1 (Added USD 3D Models)
  * Author: Manus AI
  */
 
@@ -165,6 +165,16 @@ System HVAC_System {
             manufacturer: "Trane"
             model: "CVHF1250"
             capacity: 1250 // tons
+            
+            // 3D Model (USD) - 新增!
+            geometry: {
+                usd_reference: "omniverse://fab1/assets/hvac/chiller_trane_cvhf1250.usd",
+                dimensions: {
+                    length: 5.2,
+                    width: 2.4,
+                    height: 2.8
+                }
+            }
             
             data_tags: [
                 { tag_id: "chw_supply_temp", source: { type: "opc_ua", node_id: "ns=2;s=CH01.CHWST" } },
