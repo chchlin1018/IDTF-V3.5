@@ -2,7 +2,7 @@
 
 **版本**: 3.5.1  
 **發布日期**: 2025-10-15  
-**作者**: C.C. Lin  
+**作者**: 林志錚 Michael Lin (Chih Cheng Lin)  
 **組織**: IDTF Consortium
 
 ---
@@ -456,7 +456,7 @@ IDTF V3.5 提供零停機的系統更新機制，支援安全的版本升級。
 
 ## 📧 聯絡資訊
 
-**作者**: C.C. Lin  
+**作者**: 林志錚 Michael Lin (Chih Cheng Lin)  
 **Email**: chchlin1018@gmail.com  
 **GitHub**: https://github.com/chchlin1018
 
