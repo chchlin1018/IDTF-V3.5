@@ -1,6 +1,9 @@
 # FDL 與主流工廠設計軟體整合設計文件
 
 **版本**: IDTF V3.5  
+
+> **重要提示**：本文件描述 FDL（工廠佈局）與工廠設計軟體的整合。關於 IADL（資產定義）的整合，請參考 [IADL_Integration_with_Plant_Design_Software.md](../../03_IADL_Spec/docs/IADL_Integration_with_Plant_Design_Software.md)。完整的整合方案需要同時包括 IADL 和 FDL 的整合。
+
 **日期**: 2025年10月14日  
 **狀態**: 設計階段
 
