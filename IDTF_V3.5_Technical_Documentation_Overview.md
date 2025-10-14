@@ -294,3 +294,38 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 - FDL → NDH → Omniverse（執行與視覺化）
 - 三者結合實現完整的閉環
 
+
+## 應用情境
+
+### IDTF AI Agent 與 Omniverse Digital Twins 整合應用情境
+
+**文件**: [IDTF_AI_Agent_Omniverse_Factory_Scenarios.md](09_Use_Cases/IDTF_AI_Agent_Omniverse_Factory_Scenarios.md)
+
+**內容**:
+- 整合架構（IDTF + MCP Server + AI Agent + Omniverse）
+- 8 個核心應用情境的詳細設計：
+  1. 智能工廠巡檢與異常診斷
+  2. 生產效能優化與建議
+  3. 預測性維護與排程
+  4. 緊急事件處理與決策支援
+  5. 能源管理與成本優化
+  6. 生產計畫調整與模擬
+  7. 品質分析與根因追蹤
+  8. 新手操作員培訓與指導
+- 完整的互動流程和對話範例
+- 技術實作細節（MCP Tools、Omniverse 視覺化、AI 分析）
+
+**核心價值**:
+- 自然語言互動：使用自然語言查詢和控制工廠
+- 智能分析：AI 驅動的數據分析和洞察
+- 視覺化反饋：在 Omniverse 中即時視覺化工廠狀態
+- 決策支援：基於數據和 AI 的智能決策建議
+- 自動化操作：AI 驅動的自動化工廠管理
+- 預測性維護：AI 預測故障並優化維護排程
+
+**技術亮點**:
+- MCP Server 提供標準化的 AI 整合介面
+- Omniverse 提供沉浸式的 3D 視覺化體驗
+- AI Agent 提供自然語言互動和智能分析
+- 完整的端到端整合（從自然語言到視覺化反饋）
+
