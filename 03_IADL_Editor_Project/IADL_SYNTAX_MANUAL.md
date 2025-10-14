@@ -308,6 +308,24 @@ Equipment Die_Bonder-01 {
 }
 ```
 
+#### ERP 屬性 (ERP Properties)
+
+- **equipment_id**: ERP 中的設備編號
+- **cost_center**: 成本中心
+- **work_center**: 工作中心
+- **asset_class**: 資產類別
+
+```iadl
+Equipment Die_Bonder-01 {
+    erp: {
+        equipment_id: "10001234",
+        cost_center: "CC-FAB1-ASSEMBLY",
+        work_center: "WC-DB-01",
+        asset_class: "MACH-ASSEMBLY"
+    }
+}
+```
+
 ### 維護屬性
 
 - **installDate**: 安裝日期
