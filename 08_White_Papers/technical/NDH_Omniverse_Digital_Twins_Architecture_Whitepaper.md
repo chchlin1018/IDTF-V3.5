@@ -899,6 +899,110 @@ class NamingService:
 
 ## 6. Omniverse 連接器架構
 
+
+### 6.1 IADL/FDL 到 USD 的映射關係
+
+正確理解 IADL、FDL、Asset Servants 與 USD 之間的映射關係是整合的關鍵。
+
+#### **6.1.1 映射層次**
+
+**層次 1：IADL ↔ USD Model（類型定義）**
+- **IADL**：定義資產**類型**（Asset Type），例如 `compressor_atlas_copco_ga75.iadl`
+- **USD Model**：對應的 3D 模型**模板**（USD Reference），例如 `compressor_ga75.usd`
+- **關係**：一對一映射，USD Model 可被多個 USD Instance 引用
+- **類比**：IADL 是 Class 定義，USD Model 是 Class 的視覺表示
+
+**層次 2：FDL ↔ Asset Servants ↔ USD Instances（實例）**
+- **FDL 實例**：定義工廠中的具體資產實例，例如 `compressor_001`, `compressor_002`, `compressor_003`
+- **Asset Servant**：FDL 實例的執行時代理，例如 `AssetServant(compressor_001)`
+- **USD Instance**：Omniverse 場景中的 3D 實例（USD Prim），例如 `/World/Factory/compressor_001`
+- **關係**：三者一一對應，數量完全一致
+- **類比**：FDL 是 Object 實例化，Asset Servant 是運行時 Object，USD Instance 是 Object 的 3D 表示
+
+#### **6.1.2 數量關係**
+
+```
+IADL (1個類型)
+    ↓ 定義
+USD Model (1個模板)
+    ↓ 引用
+FDL (3個實例) ←→ Asset Servants (3個) ←→ USD Instances (3個)
+```
+
+**範例**：
+- **IADL**：`compressor_atlas_copco_ga75.iadl`（1個類型定義）
+- **USD Model**：`compressor_ga75.usd`（1個 3D 模型模板）
+- **FDL 實例**：
+  - `compressor_001` (position: [10, 0, 5])
+  - `compressor_002` (position: [20, 0, 5])
+  - `compressor_003` (position: [30, 0, 5])
+- **Asset Servants**：3個運行時代理
+- **USD Instances**：3個 USD Prim，都引用同一個 USD Model
+
+#### **6.1.3 USD Instance 的結構**
+
+每個 USD Instance 包含：
+
+```python
+# USD Instance 結構
+/World/Factory/compressor_001  # USD Prim Path
+    ├─ Reference: compressor_ga75.usd  # 引用 USD Model
+    ├─ Transform:
+    │   └─ translate: (10, 0, 5)  # 來自 FDL 的 position
+    ├─ Instance Parameters:
+    │   ├─ rated_pressure: 8.0    # 來自 FDL 的 instance_params
+    │   ├─ rated_flow: 12.5
+    │   └─ motor_power: 75.0
+    └─ Runtime Attributes:  # 來自 Asset Servant 的即時狀態
+        ├─ temperature: 85.0  # 即時溫度
+        ├─ pressure: 7.8      # 即時壓力
+        ├─ flow_rate: 11.2    # 即時流量
+        └─ status: "running"  # 運行狀態
+```
+
+#### **6.1.4 Runtime 動態修改**
+
+**場景 1：狀態更新（高頻，毫秒級）**
+```
+Physical Device (PLC)
+    ↓ OPC UA (溫度 = 85°C)
+Asset Servant (compressor_001)
+    ↓ 更新內部狀態
+Omniverse Connector
+    ↓ USD Live Sync
+USD Instance (/World/Factory/compressor_001)
+    ↓ 更新 Custom Attribute
+prim.GetAttribute("temperature").Set(85.0)
+```
+
+**場景 2：幾何更新（低頻，按需）**
+```
+IADL 參數變更（管線直徑 100mm → 150mm）
+    ↓
+FDL 更新並部署
+    ↓
+Asset Servant 重新載入配置
+    ↓
+Omniverse Connector 偵測到幾何參數變更
+    ↓
+USD Model 重新生成（參數化建模）
+    ↓
+所有引用該 USD Model 的 USD Instances 自動更新
+```
+
+**場景 3：實例新增/刪除**
+```
+FDL 新增 compressor_004
+    ↓
+NDH 創建 Asset Servant (compressor_004)
+    ↓
+Omniverse Connector 創建 USD Instance
+    ↓
+stage.DefinePrim("/World/Factory/compressor_004")
+prim.GetReferences().AddReference("compressor_ga75.usd")
+```
+
+
 ### 5.6 基於 FDL 的動態創建與銷毀
 
 Asset Servants 的生命週期完全由 FDL 文件控制。當 FDL 文件更新時，NDH 會自動調整 Asset Servants 的實例。
