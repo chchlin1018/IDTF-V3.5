@@ -73,7 +73,9 @@
   - **NDH 叢集部署指南** 🆕
   - **NDH 高可用性與災難復原** 🆕
   - **NDH 系統更新機制** 🆕
+  - **NDH 第三方依賴管理** 🆕
   - **NDH MCP Server 整合** 🆕
+  - **NDH Schneider PME 整合** 🆕
   - 時序數據庫分析
   - 安全性分析
 - **包含**: 架構圖、API 規格
@@ -105,6 +107,20 @@
   - 供應鏈可視化與優化
   - 培訓與模擬
   - 遠端專家協作
+- **PME + MCP Server + AI 智能電力管理應用情境** 🆕
+  - 智能能源效率分析
+  - 預測性維護
+  - 需量管理與成本優化
+  - 電力品質監控與改善
+  - 碳排放追蹤與優化
+  - 緊急事件處理
+  - 能源報告自動生成
+- **IDTF + AI 實際應用場景** 🆕
+  - GB300 數據中心智能運營（3 個場景）
+  - LNG 發電廠智能調度（3 個場景）
+  - 宏齊科技 LED 廠智能製造（3 個場景）
+  - 跨設施能源供需協同優化
+  - 跨設施預測性維護協同
 
 ### 10. Harvatek New Factory（宏齊科技新廠房）🆕
 - **完整的 IADL/FDL 設計**
@@ -346,6 +362,85 @@ IDTF V3.5 提供零停機的系統更新機制，支援安全的版本升級。
 
 ---
 
+### 5. IDTF + AI 實際應用場景 🆕
+
+**應用範圍**:
+- GB300 AI 數據中心智能運營
+- 小型 LNG 發電廠智能調度
+- 宏齊科技 LED 封裝廠智能製造
+- 跨設施能源供需協同優化
+- 跨設施預測性維護協同
+
+**核心場景**（11 個）:
+1. **數據中心** (3 個): 智能 PUE 優化、GPU 故障預測、動態資源調度
+2. **發電廠** (3 個): 需量響應、預測性維護、燃料優化
+3. **LED 廠** (3 個): 生產排程優化、品質預測、能源管理
+4. **跨設施** (2 個): 能源供需協同、維護資源協同
+
+**商業價值**:
+- GB300 數據中心: NT$ 106,800,000/年
+- LNG 發電廠: NT$ 584,000,000/年
+- 宏齊科技 LED 廠: NT$ 452,200,000/年
+- 跨設施協同: NT$ 834,900,000/年
+- **總計: NT$ 1,977,900,000/年**（近 20 億新台幣）
+
+**技術特色**:
+- ✅ 自然語言互動（透過 MCP Server）
+- ✅ AI 驅動的智能分析和建議
+- ✅ 自動化執行優化措施
+- ✅ 跨設施協同優化
+- ✅ 即時視覺化（Omniverse）
+
+詳見：`09_Use_Cases/IDTF_AI_Real_World_Applications.md`
+
+---
+
+### 6. Schneider PME + MCP + AI 智能電力管理 🆕
+
+**整合架構**:
+```
+AI Agent (Claude/ChatGPT/Manus)
+    ↓ (自然語言)
+MCP Server
+    ↓ (GraphQL)
+NDH PME Connector
+    ↓ (GraphQL API)
+Schneider PME
+    ↓
+現場電力設備
+```
+
+**核心功能**:
+- ✅ 即時電力監控（電壓、電流、功率、功率因數）
+- ✅ 能源效率分析和優化建議
+- ✅ 預測性維護（基於電力品質和設備健康）
+- ✅ 需量管理和成本優化
+- ✅ 電力品質監控（諧波、電壓驟降、不平衡）
+- ✅ 碳排放追蹤和減排建議
+- ✅ 自動化能源報告生成
+
+**應用場景**（7 個）:
+1. 智能能源效率分析
+2. 預測性維護
+3. 需量管理與成本優化
+4. 電力品質監控與改善
+5. 碳排放追蹤與優化
+6. 緊急事件處理
+7. 能源報告自動生成
+
+**商業價值**:
+- 年節省能源成本: NT$ 10,500,000
+- 年節省維護成本: NT$ 3,000,000
+- 避免停機損失: NT$ 8,000,000
+- 碳交易收益: NT$ 500,000
+- **總年度價值: NT$ 22,000,000**
+
+詳見：
+- `06_NDH_Spec/docs/NDH_Schneider_PME_Integration.md`
+- `09_Use_Cases/PME_MCP_AI_Application_Scenarios.md`
+
+---
+
 ## 🚀 快速開始
 
 ### 1. 了解 IDTF 框架
@@ -421,12 +516,16 @@ IDTF V3.5 提供零停機的系統更新機制，支援安全的版本升級。
 
 ### 整合指南
 - [NDH MCP Server 整合](06_NDH_Spec/docs/NDH_MCP_Server_Integration.md)
+- [NDH Schneider PME 整合](06_NDH_Spec/docs/NDH_Schneider_PME_Integration.md) 🆕
+- [NDH 第三方依賴管理](06_NDH_Spec/docs/NDH_Third_Party_Dependency_Management.md) 🆕
 - [IADL 與工廠設計軟體整合](03_IADL_Spec/docs/IADL_Integration_with_Plant_Design_Software.md)
 - [FDL 與工廠設計軟體整合](04_FDL_Spec/docs/FDL_Integration_with_Plant_Design_Software.md)
 - [從 Omniverse 生成 FDL](04_FDL_Spec/docs/FDL_Generation_from_Omniverse.md)
 
 ### 應用案例
 - [IDTF AI Agent 與 Omniverse 整合應用情境](09_Use_Cases/IDTF_AI_Agent_Omniverse_Factory_Scenarios.md)
+- [PME + MCP + AI 智能電力管理應用情境](09_Use_Cases/PME_MCP_AI_Application_Scenarios.md) 🆕
+- [IDTF + AI 實際應用場景](09_Use_Cases/IDTF_AI_Real_World_Applications.md) 🆕
 - [宏齊科技新廠房](10_Harvatek_New_Factory/docs/README.md)
 - [小型 LNG 發電廠](11_Small_LNG_Power_Plant/docs/README.md)
 - [台積電 FMCS](12_TSMC_FMCS/docs/README.md)
