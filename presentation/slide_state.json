@@ -1,0 +1,140 @@
+{
+  "project_info": {
+    "main_title": "IDTF V3.5 工業數位分身框架技術介紹",
+    "created": 1760439492.177457,
+    "last_updated": 1760439734.3577747,
+    "total_slides": 16
+  },
+  "slides": {
+    "cover": "edited",
+    "agenda": "edited",
+    "industry_challenges": "edited",
+    "idtf_overview": "edited",
+    "architecture_overview": "edited",
+    "core_components": "edited",
+    "iadl_details": "edited",
+    "fdl_details": "edited",
+    "ndh_architecture": "edited",
+    "distributed_architecture": "edited",
+    "omniverse_integration": "edited",
+    "use_case_harvatek": "edited",
+    "roi_analysis": "edited",
+    "technical_advantages": "edited",
+    "roadmap": "edited",
+    "conclusion": "edited"
+  },
+  "outline": [
+    {
+      "id": "cover",
+      "title": "封面",
+      "summary": "IDTF V3.5 工業數位分身框架技術介紹，展示標題、副標題和版本資訊。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "agenda",
+      "title": "簡報大綱",
+      "summary": "列出簡報的主要章節，包括背景與挑戰、IDTF 概述、核心組件、技術架構、實際案例和商業價值。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "industry_challenges",
+      "title": "工業數位分身的挑戰",
+      "summary": "說明當前工業數位分身面臨的五大核心挑戰：標準化缺失、供應商鎖定、設計執行鴻溝、協作能力不足、部署複雜度高。",
+      "image_plan": "/home/ubuntu/idtf-v3.5/presentation/images/digital_twin_factory.png - 展示數位分身工廠的複雜性",
+      "slide_template_key": ""
+    },
+    {
+      "id": "idtf_overview",
+      "title": "IDTF V3.5 概述",
+      "summary": "介紹 IDTF V3.5 的核心理念：開放、中立、可擴展的工業數位分身框架，實現「一次建模，到處使用」的願景。",
+      "image_plan": "/home/ubuntu/idtf-v3.5/presentation/images/factory_visualization.png - 展示工廠視覺化效果",
+      "slide_template_key": ""
+    },
+    {
+      "id": "architecture_overview",
+      "title": "整體架構",
+      "summary": "展示 IDTF V3.5 的整體架構圖，說明從設計時（IADL, FDL）到執行時（NDH, Asset Servants）再到可視化（Omniverse）的完整流程。",
+      "image_plan": "/home/ubuntu/idtf-v3.5/presentation/images/idtf_v3.5_architecture.png - 使用專案中的架構圖",
+      "slide_template_key": ""
+    },
+    {
+      "id": "core_components",
+      "title": "四大核心組件",
+      "summary": "詳細介紹 IDTF V3.5 的四大核心組件：IADL（資產建模）、FDL（工廠設計）、NDH（數據中樞）、Omniverse Connector（可視化）。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "iadl_details",
+      "title": "IADL - 資產定義語言",
+      "summary": "深入說明 IADL V3.1 的功能：標準化資產定義、數據標籤、3D 幾何、行為模型、MEP 系統整合，以及 YAML 語法範例。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "fdl_details",
+      "title": "FDL - 工廠設計語言",
+      "summary": "介紹 FDL 的聲明式語法、工廠佈局定義、資產實例化、關係定義，以及 Worker 分配提示機制。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "ndh_architecture",
+      "title": "NDH - 中立數據中樞",
+      "summary": "說明 NDH 的微服務架構、Asset Servants 管理、多協議整合（OPC UA, MQTT, Modbus）、可插拔時序數據庫支援。",
+      "image_plan": "/home/ubuntu/idtf-v3.5/presentation/images/digital_twin_architecture.webp - 展示數位分身架構層次",
+      "slide_template_key": ""
+    },
+    {
+      "id": "distributed_architecture",
+      "title": "分散式部署架構",
+      "summary": "介紹 IDTF V3.5 的分散式部署能力：集中式群集、混合邊緣架構、Worker 分配策略、故障轉移機制。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "omniverse_integration",
+      "title": "Omniverse 整合",
+      "summary": "說明與 NVIDIA Omniverse 的雙向連接器、USD 同步、多用戶協作、即時渲染能力。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "use_case_harvatek",
+      "title": "實際案例：宏齊科技 LED 封裝廠",
+      "summary": "展示宏齊科技的實際部署案例：5 層樓、2,847 個資產、設計時間減少 67%、設計錯誤減少 80%。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "roi_analysis",
+      "title": "商業價值與 ROI 分析",
+      "summary": "量化分析 IDTF V3.5 的商業價值：IRR 193.8%、回收期 6.2 個月、5 年 NPV $2,813,000 USD。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "technical_advantages",
+      "title": "技術優勢",
+      "summary": "總結 IDTF V3.5 的技術優勢：開放標準、供應商中立、設計執行一體化、可擴展性、視覺化優先。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "roadmap",
+      "title": "未來發展路線圖",
+      "summary": "展示 IDTF 的未來發展方向：AI/ML 整合、邊緣運算、5G 支援、AR/VR 擴展、產業標準化推動。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "conclusion",
+      "title": "總結",
+      "summary": "總結 IDTF V3.5 的核心價值、開源貢獻、產業影響，以及如何開始使用。",
+      "image_plan": "",
+      "slide_template_key": ""
+    }
+  ]
+}

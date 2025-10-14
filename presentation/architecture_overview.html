@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>整體架構</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .architecture-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .architecture-image {
+            width: 100%;
+            max-width: 1000px;
+            height: 450px;
+            object-fit: contain;
+        }
+        .description-box {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 20px 30px;
+            text-align: center;
+        }
+        .description-text {
+            font-size: 20px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        .highlight {
+            color: #ff6b35;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-sitemap" style="margin-right: 20px;"></i>IDTF V3.5 整體架構
+        </div>
+        
+        <div class="architecture-image-container">
+            <img src="/home/ubuntu/idtf-v3.5/presentation/images/idtf_v3.5_architecture.png" 
+                 alt="IDTF V3.5 Architecture" 
+                 class="architecture-image">
+        </div>
+        
+        <div class="description-box">
+            <div class="description-text">
+                從 <span class="highlight">設計時</span>（IADL 資產藍圖、FDL 工廠佈局）到 <span class="highlight">執行時</span>（NDH 數據中樞、Asset Servants 即時實例）
+                再到 <span class="highlight">視覺化</span>（NVIDIA Omniverse 高保真 3D 渲染），實現完整的數位分身生命週期閉環
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IADL - 資產定義語言</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+        .page-subtitle {
+            font-size: 20px;
+            color: #ffffff;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        .feature-icon {
+            color: #ff6b35;
+            font-size: 20px;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .feature-desc {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+        .code-block {
+            background: #0d1117;
+            padding: 20px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            color: #c9d1d9;
+            line-height: 1.6;
+            overflow-x: auto;
+            height: 420px;
+        }
+        .code-keyword {
+            color: #ff7b72;
+        }
+        .code-string {
+            color: #a5d6ff;
+        }
+        .code-comment {
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-cube" style="margin-right: 20px;"></i>IADL - 資產定義語言
+        </div>
+        <div class="page-subtitle">
+            Industrial Asset Description Language V3.1 | 標準化資產建模的核心
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-12">
+            <div>
+                <div style="font-size: 24px; font-weight: 700; color: #00d4ff; margin-bottom: 25px;">核心功能</div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-file-code feature-icon"></i>
+                    <div>
+                        <div class="feature-title">標準化語法</div>
+                        <div class="feature-desc">人類可讀的 YAML 格式，機器可解析</div>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-tags feature-icon"></i>
+                    <div>
+                        <div class="feature-title">數據標籤定義</div>
+                        <div class="feature-desc">完整的 OPC UA、MQTT、Modbus 標籤映射</div>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-cube feature-icon"></i>
+                    <div>
+                        <div class="feature-title">3D 幾何整合</div>
+                        <div class="feature-desc">支援 USD、GLTF、FBX 等主流格式</div>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-code-branch feature-icon"></i>
+                    <div>
+                        <div class="feature-title">行為模型</div>
+                        <div class="feature-desc">Python/JavaScript 腳本定義資產行為</div>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-plug feature-icon"></i>
+                    <div>
+                        <div class="feature-title">MEP 系統</div>
+                        <div class="feature-desc">電力、水、氣體、HVAC 系統整合</div>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <div>
+                        <div class="feature-title">5D 整合</div>
+                        <div class="feature-desc">3D 空間 + 時間 + 成本維度</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div style="font-size: 24px; font-weight: 700; color: #00d4ff; margin-bottom: 25px;">YAML 語法範例</div>
+                
+                <div class="code-block">
+<span class="code-keyword">asset_definition:</span>
+  <span class="code-keyword">metadata:</span>
+    <span class="code-keyword">name:</span> <span class="code-string">"Compressor_GA75"</span>
+    <span class="code-keyword">version:</span> <span class="code-string">"1.0"</span>
+    <span class="code-keyword">category:</span> <span class="code-string">"MEP/Compressed_Air"</span>
+    
+  <span class="code-keyword">data_tags:</span>
+    - <span class="code-keyword">name:</span> <span class="code-string">"pressure"</span>
+      <span class="code-keyword">type:</span> <span class="code-string">"float"</span>
+      <span class="code-keyword">unit:</span> <span class="code-string">"bar"</span>
+      <span class="code-keyword">protocol:</span> <span class="code-string">"OPC_UA"</span>
+      <span class="code-keyword">address:</span> <span class="code-string">"ns=2;s=Compressor.Pressure"</span>
+      
+    - <span class="code-keyword">name:</span> <span class="code-string">"status"</span>
+      <span class="code-keyword">type:</span> <span class="code-string">"string"</span>
+      <span class="code-keyword">enum:</span> [<span class="code-string">"Running"</span>, <span class="code-string">"Idle"</span>, <span class="code-string">"Fault"</span>]
+      
+  <span class="code-keyword">geometry:</span>
+    <span class="code-keyword">model_file:</span> <span class="code-string">"compressor_ga75.usd"</span>
+    <span class="code-keyword">dimensions:</span>
+      <span class="code-keyword">width:</span> 1.2  <span class="code-comment"># meters</span>
+      <span class="code-keyword">depth:</span> 0.8
+      <span class="code-keyword">height:</span> 1.5
+      
+  <span class="code-keyword">behavior:</span>
+    <span class="code-keyword">script:</span> <span class="code-string">"compressor_control.py"</span>
+    <span class="code-keyword">events:</span>
+      - <span class="code-keyword">trigger:</span> <span class="code-string">"pressure > 8.0"</span>
+        <span class="code-keyword">action:</span> <span class="code-string">"shutdown"</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

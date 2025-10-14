@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDTF V3.5 概述</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 40px;
+        }
+        .vision-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        .principle-item {
+            margin-bottom: 25px;
+            padding-left: 50px;
+            position: relative;
+        }
+        .principle-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #00d4ff;
+            font-size: 32px;
+        }
+        .principle-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .principle-desc {
+            font-size: 18px;
+            color: #ffffff;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-lightbulb" style="margin-right: 20px;"></i>IDTF V3.5 概述
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-16">
+            <div>
+                <div class="vision-text">
+                    「一次建模，到處使用」<br>Build Once, Use Everywhere
+                </div>
+                
+                <div class="principle-item">
+                    <i class="fas fa-unlock-alt principle-icon"></i>
+                    <div>
+                        <div class="principle-title">開放標準</div>
+                        <div class="principle-desc">基於 USD、OPC UA、MQTT 等開放標準，避免供應商鎖定</div>
+                    </div>
+                </div>
+                
+                <div class="principle-item">
+                    <i class="fas fa-balance-scale principle-icon"></i>
+                    <div>
+                        <div class="principle-title">供應商中立</div>
+                        <div class="principle-desc">支援多廠商設備整合，不依賴特定雲平台或硬體供應商</div>
+                    </div>
+                </div>
+                
+                <div class="principle-item">
+                    <i class="fas fa-expand-arrows-alt principle-icon"></i>
+                    <div>
+                        <div class="principle-title">高度可擴展</div>
+                        <div class="principle-desc">從單一工廠到多廠部署，從數百資產到數萬資產的彈性擴展</div>
+                    </div>
+                </div>
+                
+                <div class="principle-item">
+                    <i class="fas fa-eye principle-icon"></i>
+                    <div>
+                        <div class="principle-title">視覺化優先</div>
+                        <div class="principle-desc">提供視覺化工具，降低技術門檻，讓領域專家直接建模</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-center">
+                <img src="/home/ubuntu/idtf-v3.5/presentation/images/factory_visualization.png" 
+                     alt="Factory Visualization" 
+                     style="width: 100%; height: 500px; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商業價值與 ROI 分析</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 40px;
+        }
+        .metric-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px 30px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 52px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+        .metric-label {
+            font-size: 18px;
+            color: #ffffff;
+            opacity: 0.8;
+        }
+        .irr-color {
+            color: #10b981;
+        }
+        .payback-color {
+            color: #ff6b35;
+        }
+        .npv-color {
+            color: #00d4ff;
+        }
+        .chart-container {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .chart-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-chart-line" style="margin-right: 20px;"></i>商業價值與 ROI 分析
+        </div>
+        
+        <div class="grid grid-cols-3 gap-x-8">
+            <div class="metric-box">
+                <div class="metric-value irr-color">193.8%</div>
+                <div class="metric-label">內部報酬率 (IRR)</div>
+            </div>
+            
+            <div class="metric-box">
+                <div class="metric-value payback-color">6.2 月</div>
+                <div class="metric-label">投資回收期</div>
+            </div>
+            
+            <div class="metric-box">
+                <div class="metric-value npv-color">$2.81M</div>
+                <div class="metric-label">5 年淨現值 (NPV)</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">累積現金流量分析（5 年期）</div>
+            <div style="height: 280px;">
+                <canvas id="roiChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('roiChart').getContext('2d');
+        const roiChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Year 0', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                datasets: [{
+                    label: '累積現金流量 (USD)',
+                    data: [-450000, 280000, 920000, 1580000, 2210000, 2813000],
+                    backgroundColor: [
+                        'rgba(255, 107, 53, 0.6)',
+                        'rgba(0, 212, 255, 0.6)',
+                        'rgba(0, 212, 255, 0.6)',
+                        'rgba(0, 212, 255, 0.6)',
+                        'rgba(16, 185, 129, 0.6)',
+                        'rgba(16, 185, 129, 0.6)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            color: '#ffffff',
+                            callback: function(value) {
+                                return '$' + (value / 1000000).toFixed(2) + 'M';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

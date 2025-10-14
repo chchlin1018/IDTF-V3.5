@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omniverse 整合</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .page-subtitle {
+            font-size: 20px;
+            color: #ffffff;
+            opacity: 0.8;
+            margin-bottom: 50px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        .feature-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px 20px;
+            text-align: center;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .feature-icon {
+            font-size: 64px;
+            margin-bottom: 25px;
+        }
+        .feature-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+        .feature-desc {
+            font-size: 16px;
+            color: #ffffff;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        .icon-green {
+            color: #10b981;
+        }
+        .icon-blue {
+            color: #00d4ff;
+        }
+        .icon-orange {
+            color: #ff6b35;
+        }
+        .icon-purple {
+            color: #a78bfa;
+        }
+        .highlight-bar {
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #10b981, #00d4ff, #ff6b35, #a78bfa);
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-vr-cardboard" style="margin-right: 20px;"></i>Omniverse 整合
+        </div>
+        <div class="page-subtitle">
+            與 NVIDIA Omniverse 的雙向連接器 | 高保真 3D 視覺化與多用戶協作
+        </div>
+        
+        <div class="highlight-bar"></div>
+        
+        <div class="feature-grid">
+            <div class="feature-box">
+                <i class="fas fa-sync-alt feature-icon icon-green"></i>
+                <div class="feature-title">雙向同步</div>
+                <div class="feature-desc">
+                    IADL/FDL 與 USD 格式的雙向轉換，實現設計階段與視覺化的即時同步
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <i class="fas fa-users feature-icon icon-blue"></i>
+                <div class="feature-title">多用戶協作</div>
+                <div class="feature-desc">
+                    支援全球分散團隊在同一數位分身環境中即時協作，包含資源鎖定和衝突解決
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <i class="fas fa-cube feature-icon icon-orange"></i>
+                <div class="feature-title">高保真渲染</div>
+                <div class="feature-desc">
+                    利用 NVIDIA RTX 技術實現照片級即時渲染，支援物理正確的光照和材質
+                </div>
+            </div>
+            
+            <div class="feature-box">
+                <i class="fas fa-bolt feature-icon icon-purple"></i>
+                <div class="feature-title">即時更新</div>
+                <div class="feature-desc">
+                    Asset Servants 的狀態變化即時反映到 Omniverse 場景，實現虛實同步
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 50px; padding: 25px; background: rgba(16, 185, 129, 0.08);">
+            <div style="font-size: 18px; color: #ffffff; line-height: 1.8;">
+                <span style="color: #10b981; font-weight: 700;">USD (Universal Scene Description)</span> 
+                是 Pixar 開發的開放標準，IDTF V3.5 透過 USD 實現與 Omniverse 的無縫整合，
+                支援從工廠設計、調試、培訓到運營維護的全生命週期視覺化需求。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

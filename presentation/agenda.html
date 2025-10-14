@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡報大綱</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 50px;
+        }
+        .agenda-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 28px;
+            color: #ffffff;
+        }
+        .agenda-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff6b35;
+            min-width: 60px;
+        }
+        .agenda-content {
+            flex: 1;
+        }
+        .agenda-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .agenda-desc {
+            font-size: 16px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-list-ul" style="margin-right: 20px;"></i>簡報大綱
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-16">
+            <div>
+                <div class="agenda-item">
+                    <div class="agenda-number">01</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">產業挑戰</div>
+                        <div class="agenda-desc">工業數位分身面臨的五大核心挑戰</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">02</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">IDTF 概述</div>
+                        <div class="agenda-desc">開放、中立、可擴展的框架</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">03</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">整體架構</div>
+                        <div class="agenda-desc">從設計到執行的完整閉環</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">04</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">核心組件</div>
+                        <div class="agenda-desc">IADL、FDL、NDH、Omniverse</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">05</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">技術深入</div>
+                        <div class="agenda-desc">資產建模、工廠設計、數據中樞</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="agenda-item">
+                    <div class="agenda-number">06</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">分散式架構</div>
+                        <div class="agenda-desc">集中式與混合邊緣部署</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">07</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">視覺化整合</div>
+                        <div class="agenda-desc">NVIDIA Omniverse 雙向連接</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">08</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">實際案例</div>
+                        <div class="agenda-desc">宏齊科技 LED 封裝廠</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">09</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">商業價值</div>
+                        <div class="agenda-desc">ROI 分析與投資回報</div>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-number">10</div>
+                    <div class="agenda-content">
+                        <div class="agenda-title">未來展望</div>
+                        <div class="agenda-desc">技術路線圖與發展方向</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

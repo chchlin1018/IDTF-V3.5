@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四大核心組件</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .component-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 35px 30px;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .component-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+        }
+        .component-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .component-fullname {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        .component-desc {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .iadl-theme {
+            color: #00d4ff;
+        }
+        .iadl-bg {
+            background: rgba(0, 212, 255, 0.08);
+        }
+        .fdl-theme {
+            color: #ff6b35;
+        }
+        .fdl-bg {
+            background: rgba(255, 107, 53, 0.08);
+        }
+        .ndh-theme {
+            color: #a78bfa;
+        }
+        .ndh-bg {
+            background: rgba(167, 139, 250, 0.08);
+        }
+        .omni-theme {
+            color: #10b981;
+        }
+        .omni-bg {
+            background: rgba(16, 185, 129, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-cubes" style="margin-right: 20px;"></i>四大核心組件
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8">
+            <div class="component-box iadl-bg">
+                <i class="fas fa-cube component-icon iadl-theme"></i>
+                <div class="component-name iadl-theme">IADL</div>
+                <div class="component-fullname" style="color: #ffffff;">Industrial Asset Description Language</div>
+                <div class="component-desc" style="color: #ffffff;">
+                    標準化資產定義語言，涵蓋 3D 幾何、數據標籤、行為模型、MEP 系統，實現「一次建模，到處使用」
+                </div>
+            </div>
+            
+            <div class="component-box fdl-bg">
+                <i class="fas fa-industry component-icon fdl-theme"></i>
+                <div class="component-name fdl-theme">FDL</div>
+                <div class="component-fullname" style="color: #ffffff;">Factory Design Language</div>
+                <div class="component-desc" style="color: #ffffff;">
+                    聲明式工廠設計語言，描述資產的佈局、數量、位置和關係，支援分散式 Worker 分配提示
+                </div>
+            </div>
+            
+            <div class="component-box ndh-bg">
+                <i class="fas fa-server component-icon ndh-theme"></i>
+                <div class="component-name ndh-theme">NDH</div>
+                <div class="component-fullname" style="color: #ffffff;">Neutral Data Hub</div>
+                <div class="component-desc" style="color: #ffffff;">
+                    中立數據中樞，管理 Asset Servants 生命週期，整合 OT/IT 數據源，支援可插拔時序數據庫
+                </div>
+            </div>
+            
+            <div class="component-box omni-bg">
+                <i class="fas fa-vr-cardboard component-icon omni-theme"></i>
+                <div class="component-name omni-theme">Omniverse</div>
+                <div class="component-fullname" style="color: #ffffff;">NVIDIA Omniverse Connector</div>
+                <div class="component-desc" style="color: #ffffff;">
+                    雙向連接器，實現與 NVIDIA Omniverse 的即時同步，支援多用戶協作和高保真 3D 渲染
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技術優勢</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 45px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .advantage-icon {
+            font-size: 48px;
+            margin-right: 25px;
+            flex-shrink: 0;
+            width: 70px;
+            text-align: center;
+        }
+        .advantage-content {
+            flex: 1;
+        }
+        .advantage-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .advantage-desc {
+            font-size: 16px;
+            color: #ffffff;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        .icon-blue {
+            color: #00d4ff;
+        }
+        .icon-green {
+            color: #10b981;
+        }
+        .icon-orange {
+            color: #ff6b35;
+        }
+        .icon-purple {
+            color: #a78bfa;
+        }
+        .icon-yellow {
+            color: #fbbf24;
+        }
+        .icon-pink {
+            color: #ec4899;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-star" style="margin-right: 20px;"></i>IDTF V3.5 技術優勢
+        </div>
+        
+        <div class="grid grid-cols-2 gap-x-12">
+            <div>
+                <div class="advantage-item">
+                    <i class="fas fa-unlock-alt advantage-icon icon-blue"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">開放標準</div>
+                        <div class="advantage-desc">
+                            基於 USD、OPC UA、MQTT 等開放標準，確保跨平台互操作性，避免技術鎖定
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <i class="fas fa-balance-scale advantage-icon icon-green"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">供應商中立</div>
+                        <div class="advantage-desc">
+                            不依賴特定雲平台或硬體供應商，支援多廠商設備整合，降低轉換成本
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <i class="fas fa-link advantage-icon icon-orange"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">設計執行一體化</div>
+                        <div class="advantage-desc">
+                            從 IADL 資產定義、FDL 工廠佈局到 NDH 執行部署的完整自動化流程，消除設計與執行鴻溝
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="advantage-item">
+                    <i class="fas fa-expand-arrows-alt advantage-icon icon-purple"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">高度可擴展</div>
+                        <div class="advantage-desc">
+                            支援從單一工廠到多廠部署，從數百資產到數萬資產的彈性擴展，適應不同規模需求
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <i class="fas fa-eye advantage-icon icon-yellow"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">視覺化優先</div>
+                        <div class="advantage-desc">
+                            提供 IADL Editor 和 Factory Designer 視覺化工具，降低技術門檻，讓領域專家直接建模
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advantage-item">
+                    <i class="fas fa-sync-alt advantage-icon icon-pink"></i>
+                    <div class="advantage-content">
+                        <div class="advantage-title">OT/IT 融合</div>
+                        <div class="advantage-desc">
+                            整合 OT 層設備數據與 IT 層企業系統（MES、ERP、PLM），實現端到端數據互通
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 25px; padding: 18px; background: rgba(0, 212, 255, 0.08); text-align: center;">
+            <div style="font-size: 20px; color: #ffffff; line-height: 1.8;">
+                <span style="color: #00d4ff; font-weight: 700;">開源貢獻：</span>
+                IDTF V3.5 採用 MIT License 開源授權，推動工業數位分身技術的民主化和標準化
+            </div>
+        </div>
+    </div>
+</body>
+</html>

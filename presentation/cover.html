@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDTF V3.5 封面</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            position: relative;
+            overflow: hidden;
+        }
+        .title-main {
+            font-size: 72px;
+            font-weight: 900;
+            color: #00d4ff;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .title-sub {
+            font-size: 36px;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 40px;
+        }
+        .version-badge {
+            display: inline-block;
+            background: #ff6b35;
+            color: #ffffff;
+            padding: 12px 30px;
+            font-size: 24px;
+            font-weight: 700;
+            border-radius: 8px;
+        }
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background: #00d4ff;
+            top: -100px;
+            right: -100px;
+        }
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background: #ff6b35;
+            bottom: -80px;
+            right: 200px;
+        }
+        .circle-3 {
+            width: 200px;
+            height: 200px;
+            background: #00d4ff;
+            top: 300px;
+            right: 100px;
+        }
+        .line-accent {
+            position: absolute;
+            width: 6px;
+            height: 200px;
+            background: linear-gradient(to bottom, #00d4ff, transparent);
+            left: 80px;
+            top: 180px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container flex items-center justify-start px-24">
+        <div class="decorative-circle circle-1"></div>
+        <div class="decorative-circle circle-2"></div>
+        <div class="decorative-circle circle-3"></div>
+        <div class="line-accent"></div>
+        
+        <div class="relative z-10" style="max-width: 800px;">
+            <div class="title-main">
+                IDTF V3.5
+            </div>
+            <div class="title-sub">
+                工業數位分身框架<br>技術介紹
+            </div>
+            <div class="version-badge">
+                Version 3.5.0 | 2025
+            </div>
+            <div style="margin-top: 60px; color: #ffffff; font-size: 20px; opacity: 0.7;">
+                Industrial Digital Twin Framework
+            </div>
+        </div>
+    </div>
+</body>
+</html>

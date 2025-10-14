@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分散式部署架構</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .slide-container {
+            width: 1280px;
+            min-height: 720px;
+            background: #1a2332;
+            padding: 60px 80px;
+        }
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 20px;
+        }
+        .deployment-table {
+            width: 100%;
+            margin-bottom: 40px;
+        }
+        .deployment-table th {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 15px 20px;
+            text-align: left;
+        }
+        .deployment-table td {
+            background: rgba(255, 255, 255, 0.03);
+            color: #ffffff;
+            font-size: 16px;
+            padding: 15px 20px;
+            vertical-align: top;
+        }
+        .strategy-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        .strategy-number {
+            background: #ff6b35;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 700;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .strategy-content {
+            flex: 1;
+        }
+        .strategy-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .strategy-desc {
+            font-size: 16px;
+            color: #ffffff;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="page-title">
+            <i class="fas fa-network-wired" style="margin-right: 20px;"></i>分散式部署架構
+        </div>
+        
+        <div class="section-title">兩種部署模式</div>
+        <table class="deployment-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">部署模式</th>
+                    <th style="width: 35%;">適用場景</th>
+                    <th style="width: 35%;">核心特性</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: 700; color: #00d4ff;">集中式 NDH 群集<br>+ 分散式 Servants</td>
+                    <td>單一廠區<br>5,000-50,000 資產</td>
+                    <td>統一管理、簡化運維<br>Worker 節點按區域或類型分組</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: 700; color: #00d4ff;">混合邊緣架構<br>(Edge + Central NDH)</td>
+                    <td>多廠區、跨地域<br>50,000+ 資產</td>
+                    <td>低延遲、地理位置感知<br>邊緣處理 + 中央聚合</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="section-title">三種 Worker 分配策略</div>
+        <div class="grid grid-cols-3 gap-x-8">
+            <div class="strategy-item">
+                <div class="strategy-number">1</div>
+                <div class="strategy-content">
+                    <div class="strategy-title">地理位置分配</div>
+                    <div class="strategy-desc">根據資產的 region、building、floor 提示，將 Servants 分配到對應的邊緣節點，降低網路延遲</div>
+                </div>
+            </div>
+            
+            <div class="strategy-item">
+                <div class="strategy-number">2</div>
+                <div class="strategy-content">
+                    <div class="strategy-title">資產類型分配</div>
+                    <div class="strategy-desc">根據 worker_group 提示，將相同類型的資產（如 MEP、生產設備）分配到專用 Worker 群組</div>
+                </div>
+            </div>
+            
+            <div class="strategy-item">
+                <div class="strategy-number">3</div>
+                <div class="strategy-content">
+                    <div class="strategy-title">負載均衡分配</div>
+                    <div class="strategy-desc">當沒有明確提示時，調度器根據 Worker 節點的 CPU、記憶體使用率動態分配</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 20px; background: rgba(0, 212, 255, 0.08);">
+            <div style="font-size: 18px; color: #ffffff; line-height: 1.6;">
+                <i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i>
+                <strong style="color: #00d4ff;">故障轉移機制：</strong>
+                當 Worker 節點故障時，調度器自動將受影響的 Asset Servants 遷移到健康節點，確保系統高可用性
+            </div>
+        </div>
+    </div>
+</body>
+</html>
