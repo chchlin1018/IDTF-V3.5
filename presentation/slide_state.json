@@ -2,8 +2,8 @@
   "project_info": {
     "main_title": "IDTF V3.5 工業數位分身框架技術介紹",
     "created": 1760439492.177457,
-    "last_updated": 1760439734.3577747,
-    "total_slides": 16
+    "last_updated": 1760441607.9815133,
+    "total_slides": 18
   },
   "slides": {
     "cover": "edited",
@@ -14,6 +14,8 @@
     "core_components": "edited",
     "iadl_details": "edited",
     "fdl_details": "edited",
+    "high_availability": "edited",
+    "system_update": "edited",
     "ndh_architecture": "edited",
     "distributed_architecture": "edited",
     "omniverse_integration": "edited",
@@ -77,6 +79,20 @@
       "id": "fdl_details",
       "title": "FDL - 工廠設計語言",
       "summary": "介紹 FDL 的聲明式語法、工廠佈局定義、資產實例化、關係定義，以及 Worker 分配提示機制。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "high_availability",
+      "title": "NDH 高可用性與災難復原",
+      "summary": "介紹 NDH 的高可用性架構、鏡像備援機制、系統快照與復原機制、停電保護機制，以及 99.9%+ 的系統可用性保證。",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "system_update",
+      "title": "NDH 系統更新機制",
+      "summary": "說明 NDH 的零停機更新策略：滾動更新、藍綠部署、金絲雀部署，以及快速回滾機制和自動化驗證測試。",
       "image_plan": "",
       "slide_template_key": ""
     },

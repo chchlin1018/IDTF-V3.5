@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDH 高可用性與災難復原</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #1a2332 0%, #2d3e50 100%);
+            color: #ffffff;
+            min-height: 720px;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full max-w-7xl">
+        <!-- 標題 -->
+        <h1 class="text-5xl font-bold mb-8" style="color: #00d4ff;">NDH 高可用性與災難復原</h1>
+        <p class="text-2xl mb-10" style="color: #a0aec0;">安全、穩健、可靠的工業級數位分身平台</p>
+
+        <!-- 主要內容：左右分欄 -->
+        <div class="grid grid-cols-2 gap-8 mb-8">
+            <!-- 左側：核心機制 -->
+            <div>
+                <h2 class="text-3xl font-bold mb-6" style="color: #ff6b35;">核心機制</h2>
+                
+                <div class="space-y-4">
+                    <!-- 鏡像備援機制 -->
+                    <div class="bg-white bg-opacity-10 p-5 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2" style="color: #00d4ff;">🔄 鏡像備援機制</h3>
+                        <ul class="text-lg space-y-1" style="color: #e2e8f0;">
+                            <li>• Master 節點：Active-Standby 主備模式</li>
+                            <li>• Worker 節點：Active-Active 多活模式</li>
+                            <li>• 數據庫層：Streaming Replication (3 副本)</li>
+                        </ul>
+                    </div>
+
+                    <!-- 系統快照與復原 -->
+                    <div class="bg-white bg-opacity-10 p-5 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2" style="color: #00d4ff;">📸 系統快照與復原</h3>
+                        <ul class="text-lg space-y-1" style="color: #e2e8f0;">
+                            <li>• 一致性快照：不停機建立（暫停寫入 < 5 秒）</li>
+                            <li>• 自動定期快照：每 6 小時</li>
+                            <li>• 增量復原：< 2 分鐘（短時間故障）</li>
+                        </ul>
+                    </div>
+
+                    <!-- 停電保護 -->
+                    <div class="bg-white bg-opacity-10 p-5 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2" style="color: #00d4ff;">⚡ 停電保護機制</h3>
+                        <ul class="text-lg space-y-1" style="color: #e2e8f0;">
+                            <li>• UPS 整合：自動檢測電池狀態</li>
+                            <li>• 優雅關機：建立緊急快照 → 同步數據</li>
+                            <li>• 快速啟動：從停電到完全可用 < 5 分鐘</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側：關鍵指標 -->
+            <div>
+                <h2 class="text-3xl font-bold mb-6" style="color: #ff6b35;">關鍵指標</h2>
+                
+                <!-- 系統可用性 -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 p-6 rounded-lg mb-6 text-center">
+                    <div class="text-6xl font-bold mb-2" style="color: #ffd700;">99.95%</div>
+                    <div class="text-2xl" style="color: #e2e8f0;">系統可用性</div>
+                    <div class="text-lg mt-2" style="color: #cbd5e0;">年度停機時間 < 4.38 小時</div>
+                </div>
+
+                <!-- 指標表格 -->
+                <div class="bg-white bg-opacity-10 p-5 rounded-lg">
+                    <table class="w-full text-lg">
+                        <thead>
+                            <tr style="color: #00d4ff;">
+                                <th class="text-left pb-3 border-b border-gray-600">指標</th>
+                                <th class="text-right pb-3 border-b border-gray-600">實際達成</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: #e2e8f0;">
+                            <tr>
+                                <td class="py-2 border-b border-gray-700">故障檢測時間</td>
+                                <td class="text-right py-2 border-b border-gray-700"><span style="color: #48bb78;">3-5 秒</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 border-b border-gray-700">Master 故障轉移</td>
+                                <td class="text-right py-2 border-b border-gray-700"><span style="color: #48bb78;">8 秒</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 border-b border-gray-700">Worker 故障轉移</td>
+                                <td class="text-right py-2 border-b border-gray-700"><span style="color: #48bb78;">45 秒</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 border-b border-gray-700">快照建立時間</td>
+                                <td class="text-right py-2 border-b border-gray-700"><span style="color: #48bb78;">3 分鐘</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 border-b border-gray-700">系統復原時間 (RTO)</td>
+                                <td class="text-right py-2 border-b border-gray-700"><span style="color: #48bb78;">10 分鐘</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">數據丟失 (RPO)</td>
+                                <td class="text-right py-2"><span style="color: #48bb78;">< 1 分鐘</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部核心價值 -->
+        <div class="bg-gradient-to-r from-orange-600 to-red-600 p-6 rounded-lg">
+            <div class="grid grid-cols-3 gap-6 text-center">
+                <div>
+                    <div class="text-3xl font-bold mb-2">✅ 無單點故障</div>
+                    <div class="text-lg">所有關鍵組件冗餘部署</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold mb-2">✅ 秒級檢測</div>
+                    <div class="text-lg">3-5 秒內檢測並觸發故障轉移</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold mb-2">✅ 數據零丟失</div>
+                    <div class="text-lg">透過 WAL 重放和增量復原</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
