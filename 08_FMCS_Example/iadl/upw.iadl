@@ -1,0 +1,72 @@
+/*
+ * IADL Definition for UPW System
+ * Version: 1.0
+ * Author: Manus AI
+ */
+
+// ========================================
+// UPW System Root
+// ========================================
+
+System UPW_System {
+    description: "Ultra-Pure Water System"
+    
+    // ========================================
+    // RO Subsystem
+    // ========================================
+    
+    Subsystem RO_Subsystem {
+        description: "Reverse Osmosis Subsystem"
+        
+        // RO Unit
+        Equipment RO_Unit-01 {
+            type: "Reverse Osmosis Unit"
+            manufacturer: "Evoqua"
+            model: "MODULAB-HF"
+            capacity: 50 // m³/h
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "feed_pressure", source: { type: "opc_ua", node_id: "ns=2;s=RO01.FeedP" } },
+                { tag_id: "permeate_flow", source: { type: "opc_ua", node_id: "ns=2;s=RO01.PermF" } },
+                { tag_id: "permeate_conductivity", source: { type: "opc_ua", node_id: "ns=2;s=RO01.PermC" } },
+                { tag_id: "recovery_rate", source: { type: "opc_ua", node_id: "ns=2;s=RO01.RecRate" } }
+            ]
+        }
+    }
+    
+    // ========================================
+    // EDI Subsystem
+    // ========================================
+    
+    Subsystem EDI_Subsystem {
+        description: "Electrodeionization Subsystem"
+        
+        // EDI Unit
+        Equipment EDI_Unit-01 {
+            type: "Electrodeionization Unit"
+            manufacturer: "Suez"
+            model: "E-Cell MK-7"
+            capacity: 45 // m³/h
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "product_resistivity", source: { type: "opc_ua", node_id: "ns=2;s=EDI01.Res" } },
+                { tag_id: "product_toc", source: { type: "opc_ua", node_id: "ns=2;s=EDI01.TOC" } },
+                { tag_id: "voltage", source: { type: "modbus", address: 40201 } },
+                { tag_id: "current", source: { type: "modbus", address: 40202 } }
+            ]
+            
+            // Behaviors
+            behaviors: [
+                {
+                    type: "alarm_rule",
+                    name: "low_resistivity_alarm",
+                    condition: "product_resistivity < 18.0",
+                    severity: "critical",
+                    message: "UPW product water resistivity is too low"
+                }
+            ]
+        }
+    }
+}

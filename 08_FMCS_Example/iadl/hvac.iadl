@@ -1,0 +1,138 @@
+/*
+ * IADL Definition for HVAC System
+ * Version: 1.0
+ * Author: Manus AI
+ */
+
+// ========================================
+// HVAC System Root
+// ========================================
+
+System HVAC_System {
+    description: "Heating, Ventilation, and Air Conditioning System"
+    
+    // ========================================
+    // Chiller Subsystem
+    // ========================================
+    
+    Subsystem Chiller_Subsystem {
+        description: "Chilled Water Subsystem"
+        
+        // Chiller Equipment
+        Equipment Chiller-01 {
+            type: "Centrifugal Chiller"
+            manufacturer: "Trane"
+            model: "CVHF1250"
+            capacity: 1250 // tons
+            power: 750 // kW
+            refrigerant: "R-123"
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "chw_supply_temp", source: { type: "opc_ua", node_id: "ns=2;s=CH01.CHWST" } },
+                { tag_id: "chw_return_temp", source: { type: "opc_ua", node_id: "ns=2;s=CH01.CHWRT" } },
+                { tag_id: "cw_supply_temp", source: { type: "opc_ua", node_id: "ns=2;s=CH01.CWST" } },
+                { tag_id: "cw_return_temp", source: { type: "opc_ua", node_id: "ns=2;s=CH01.CWRT" } },
+                { tag_id: "power_consumption", source: { type: "modbus", address: 40001 } },
+                { tag_id: "running_status", source: { type: "modbus", address: 10001 } },
+                { tag_id: "alarm_status", source: { type: "modbus", address: 10002 } }
+            ]
+            
+            // Behaviors
+            behaviors: [
+                {
+                    type: "alarm_rule",
+                    name: "high_chw_supply_temp_alarm",
+                    condition: "chw_supply_temp > 7.0",
+                    severity: "high",
+                    message: "Chilled water supply temperature is too high"
+                }
+            ]
+        }
+        
+        // Chilled Water Pump
+        Equipment Chiller_Pump-01 {
+            type: "Centrifugal Pump"
+            manufacturer: "Grundfos"
+            model: "TP 200-390/4"
+            flow_rate: 800 // m³/h
+            power: 90 // kW
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "running_status", source: { type: "modbus", address: 10011 } },
+                { tag_id: "flow_rate", source: { type: "opc_ua", node_id: "ns=2;s=CHWP01.Flow" } },
+                { tag_id: "pressure_diff", source: { type: "opc_ua", node_id: "ns=2;s=CHWP01.DP" } }
+            ]
+        }
+    }
+    
+    // ========================================
+    // MAU Subsystem
+    // ========================================
+    
+    Subsystem MAU_Subsystem {
+        description: "Make-up Air Unit Subsystem"
+        
+        // MAU Equipment
+        Equipment MAU-01 {
+            type: "Make-up Air Unit"
+            manufacturer: "Daikin"
+            model: "D-AHU Professional"
+            airflow: 100000 // CMH
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "supply_air_temp", source: { type: "opc_ua", node_id: "ns=2;s=MAU01.SAT" } },
+                { tag_id: "return_air_temp", source: { type: "opc_ua", node_id: "ns=2;s=MAU01.RAT" } },
+                { tag_id: "outdoor_air_temp", source: { type: "opc_ua", node_id: "ns=2;s=MAU01.OAT" } },
+                { tag_id: "outdoor_air_humidity", source: { type: "opc_ua", node_id: "ns=2;s=MAU01.OAH" } },
+                { tag_id: "filter_pressure_diff", source: { type: "opc_ua", node_id: "ns=2;s=MAU01.FilterDP" } }
+            ]
+        }
+    }
+    
+    // ========================================
+    // FFU Subsystem
+    // ========================================
+    
+    Subsystem FFU_Subsystem {
+        description: "Fan Filter Unit Subsystem for Cleanroom"
+        
+        // FFU Equipment
+        Equipment FFU-ZoneA-001 {
+            type: "Fan Filter Unit"
+            manufacturer: "American Air Filter"
+            model: "AstroFan FFU"
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "fan_speed", source: { type: "bacnet", object_id: "AV:101" } },
+                { tag_id: "running_status", source: { type: "bacnet", object_id: "BV:101" } }
+            ]
+        }
+        
+        // Cleanroom Sensors
+        Sensor Cleanroom_Pressure-ZoneA {
+            type: "Differential Pressure Sensor"
+            manufacturer: "Setra"
+            model: "267"
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "pressure", source: { type: "bacnet", object_id: "AI:201" } }
+            ]
+        }
+        
+        Sensor Cleanroom_Particle_Count-ZoneA {
+            type: "Particle Counter"
+            manufacturer: "TSI"
+            model: "AeroTrak 9306"
+            
+            // Data Tags
+            data_tags: [
+                { tag_id: "particle_count_0_5um", source: { type: "modbus", address: 40101 } }
+            ]
+        }
+    }
+}

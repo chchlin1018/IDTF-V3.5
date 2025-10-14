@@ -1,0 +1,66 @@
+factory_design:
+  metadata:
+    name: "Semiconductor Fab 1"
+    version: "1.0"
+    author: "Manus AI"
+    date: "2025-10-14"
+    description: "Facility layout for a 12-inch semiconductor fab"
+
+  buildings:
+    - building_id: "FAB1"
+      name: "Main Fab Building"
+      location: "Hsinchu Science Park"
+      floors:
+        - floor_id: "L1"
+          name: "Level 1 - Utility"
+        - floor_id: "L2"
+          name: "Level 2 - Cleanroom"
+
+  layout:
+    - area: "Utility_Area"
+      building: "FAB1"
+      floor: "L1"
+      zone_type: "Utility"
+      instances:
+        - iadl_ref: "hvac.iadl#Chiller-01"
+          instance_id: "CH-01"
+          count: 2
+          position: { x: 10, y: 20, z: 0 }
+        - iadl_ref: "hvac.iadl#Chiller_Pump-01"
+          instance_id: "CHWP-01"
+          count: 2
+          position: { x: 12, y: 22, z: 0 }
+        - iadl_ref: "upw.iadl#RO_Unit-01"
+          instance_id: "RO-01"
+          count: 1
+          position: { x: 30, y: 20, z: 0 }
+        - iadl_ref: "upw.iadl#EDI_Unit-01"
+          instance_id: "EDI-01"
+          count: 1
+          position: { x: 32, y: 22, z: 0 }
+
+    - area: "Cleanroom_ZoneA"
+      building: "FAB1"
+      floor: "L2"
+      zone_type: "ISO_5"
+      instances:
+        - iadl_ref: "hvac.iadl#FFU-ZoneA-001"
+          instance_id: "FFU-A"
+          count: 500
+          distribution: "grid"
+          grid_params: { rows: 20, cols: 25, spacing: 2.4 }
+        - iadl_ref: "hvac.iadl#Cleanroom_Pressure-ZoneA"
+          instance_id: "DP-A"
+          count: 4
+          position: [ { x: 10, y: 10, z: 3 }, { x: 10, y: 90, z: 3 }, { x: 90, y: 10, z: 3 }, { x: 90, y: 90, z: 3 } ]
+
+  relationships:
+    - from: "CHWP-01"
+      to: "CH-01"
+      type: "feeds"
+      description: "Chilled water pump feeds chiller"
+    - from: "RO-01"
+      to: "EDI-01"
+      type: "feeds"
+      description: "RO water feeds EDI unit"
+
