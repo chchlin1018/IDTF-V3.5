@@ -267,3 +267,30 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 - FDL 整合：從 3D 模型生成工廠佈局（資產實例）
 - 兩者結合實現完整的自動化工作流
 
+
+### 從 Omniverse 建立 FDL 模型
+
+**文件**: [FDL_Generation_from_Omniverse.md](04_FDL_Spec/docs/FDL_Generation_from_Omniverse.md)
+
+**內容**:
+- 從 Omniverse 生成 FDL 的必要性
+- Omniverse USD 場景結構分析
+- FDL 生成架構（Scene Traverser、Semantic Extractor、Mapper、Generator）
+- USD 到 FDL 的映射策略
+- Omniverse 擴展實作
+- 完整的雙向工作流（Omniverse ↔ FDL ↔ NDH）
+- 使用場景與實作路線圖
+
+**核心價值**:
+- 補充現有整合方案，提供視覺化優先的設計流程
+- 支援雙向工作流（Omniverse ↔ FDL）
+- 利用 Omniverse 的協作功能，支援多人協作設計
+- 提供快速原型設計能力
+- 完善 IDTF 生態系統，打通設計、執行、視覺化的完整閉環
+
+**與其他整合的關係**:
+- 工廠設計軟體 → IADL + FDL（傳統 CAD 工作流）
+- Omniverse → FDL（視覺化優先工作流）
+- FDL → NDH → Omniverse（執行與視覺化）
+- 三者結合實現完整的閉環
+
