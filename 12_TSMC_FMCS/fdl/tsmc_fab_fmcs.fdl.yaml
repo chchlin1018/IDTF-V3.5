@@ -1,0 +1,1662 @@
+# TSMC Fab FMCS (Facility Management and Control System) FDL
+# FDL Version: 3.3
+# Date: 2025-10-14
+# Author: IDTF Technical Team
+
+metadata:
+  name: "TSMC Fab FMCS"
+  name_zh: "台積電廠房設施管理與控制系統"
+  version: "1.0.0"
+  description: "Complete FMCS design for TSMC advanced semiconductor fabrication facility"
+  author: "IDTF Technical Team"
+  created_date: "2025-10-14"
+  last_modified_date: "2025-10-14"
+  location:
+    address: "Hsinchu Science Park, Taiwan"
+    coordinates:
+      latitude: 24.7967
+      longitude: 120.9969
+  facility_type: "semiconductor_fab"
+  process_node: "5nm"
+  cleanroom_class: "ISO 3-5"
+  monthly_wafer_capacity: 50000  # 300mm wafers
+
+# ============================================================================
+# Buildings Definition
+# ============================================================================
+
+buildings:
+  - id: fab_main
+    name: "Main Fabrication Building"
+    name_zh: "主製造廠房"
+    type: cleanroom_facility
+    
+    dimensions:
+      length: 400  # m
+      width: 300  # m
+      height: 45  # m
+      
+    floors:
+      - id: floor_b2
+        name: "Basement 2"
+        name_zh: "地下二樓"
+        level: -2
+        height: 6  # m
+        area: 120000  # m²
+        purpose: "Utilities and Infrastructure"
+        zones:
+          - id: zone_b2_chiller
+            name: "Chiller Plant"
+            area: 30000  # m²
+            purpose: "Central chiller plant"
+          - id: zone_b2_electrical
+            name: "Electrical Room"
+            area: 20000  # m²
+            purpose: "Main electrical distribution"
+          - id: zone_b2_water
+            name: "Water Treatment"
+            area: 25000  # m²
+            purpose: "UPW and wastewater treatment"
+          - id: zone_b2_gas
+            name: "Bulk Gas Storage"
+            area: 15000  # m²
+            purpose: "Bulk gas storage and distribution"
+          - id: zone_b2_chemical
+            name: "Chemical Storage"
+            area: 15000  # m²
+            purpose: "Chemical storage and distribution"
+          - id: zone_b2_exhaust
+            name: "Exhaust Treatment"
+            area: 15000  # m²
+            purpose: "Exhaust gas treatment"
+            
+      - id: floor_b1
+        name: "Basement 1"
+        name_zh: "地下一樓"
+        level: -1
+        height: 6  # m
+        area: 120000  # m²
+        purpose: "Sub-Fab and Distribution"
+        zones:
+          - id: zone_b1_subfab
+            name: "Sub-Fab"
+            area: 80000  # m²
+            purpose: "Equipment support and utilities distribution"
+          - id: zone_b1_corridor
+            name: "Service Corridor"
+            area: 40000  # m²
+            purpose: "Material and personnel transport"
+            
+      - id: floor_1f
+        name: "1st Floor - Cleanroom"
+        name_zh: "一樓 - 潔淨室"
+        level: 1
+        height: 5  # m
+        area: 120000  # m²
+        purpose: "Main Cleanroom"
+        cleanroom_class: "ISO 3-5"
+        zones:
+          - id: zone_1f_litho
+            name: "Lithography Bay"
+            area: 30000  # m²
+            cleanroom_class: "ISO 3"
+            purpose: "Photolithography"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.1  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 1.0  # %RH
+            pressure_diff: 15.0  # Pa
+            air_changes_per_hour: 300
+            
+          - id: zone_1f_etch
+            name: "Etch Bay"
+            area: 25000  # m²
+            cleanroom_class: "ISO 4"
+            purpose: "Dry and wet etch"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.5  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 2.0  # %RH
+            pressure_diff: 12.0  # Pa
+            air_changes_per_hour: 250
+            
+          - id: zone_1f_implant
+            name: "Ion Implant Bay"
+            area: 15000  # m²
+            cleanroom_class: "ISO 4"
+            purpose: "Ion implantation"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.5  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 2.0  # %RH
+            pressure_diff: 12.0  # Pa
+            air_changes_per_hour: 250
+            
+          - id: zone_1f_diffusion
+            name: "Diffusion Bay"
+            area: 20000  # m²
+            cleanroom_class: "ISO 5"
+            purpose: "Thermal processing"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.5  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 2.0  # %RH
+            pressure_diff: 10.0  # Pa
+            air_changes_per_hour: 200
+            
+          - id: zone_1f_metrology
+            name: "Metrology Bay"
+            area: 10000  # m²
+            cleanroom_class: "ISO 3"
+            purpose: "Measurement and inspection"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.1  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 1.0  # %RH
+            pressure_diff: 15.0  # Pa
+            air_changes_per_hour: 300
+            
+          - id: zone_1f_wet
+            name: "Wet Process Bay"
+            area: 20000  # m²
+            cleanroom_class: "ISO 5"
+            purpose: "Wet cleaning and processing"
+            temp_setpoint: 22.0  # °C
+            temp_tolerance: 0.5  # °C
+            humidity_setpoint: 45.0  # %RH
+            humidity_tolerance: 2.0  # %RH
+            pressure_diff: 10.0  # Pa
+            air_changes_per_hour: 200
+            
+      - id: floor_2f
+        name: "2nd Floor - Fan Deck"
+        name_zh: "二樓 - 風機層"
+        level: 2
+        height: 8  # m
+        area: 120000  # m²
+        purpose: "Air Handling and Distribution"
+        zones:
+          - id: zone_2f_ahu
+            name: "AHU Area"
+            area: 80000  # m²
+            purpose: "Air handling units"
+          - id: zone_2f_ffu
+            name: "FFU Area"
+            area: 40000  # m²
+            purpose: "Fan filter units"
+            
+      - id: floor_3f
+        name: "3rd Floor - Office"
+        name_zh: "三樓 - 辦公區"
+        level: 3
+        height: 4  # m
+        area: 60000  # m²
+        purpose: "Office and Administration"
+        zones:
+          - id: zone_3f_office
+            name: "Office Area"
+            area: 40000  # m²
+            purpose: "Engineering and administration"
+          - id: zone_3f_control
+            name: "Control Room"
+            area: 5000  # m²
+            purpose: "FMCS central control"
+          - id: zone_3f_meeting
+            name: "Meeting Rooms"
+            area: 5000  # m²
+            purpose: "Meetings and training"
+          - id: zone_3f_lab
+            name: "Lab"
+            area: 10000  # m²
+            purpose: "R&D and failure analysis"
+            
+      - id: floor_rf
+        name: "Roof"
+        name_zh: "屋頂"
+        level: 4
+        height: 0  # m
+        area: 120000  # m²
+        purpose: "Cooling Towers and Exhaust"
+        zones:
+          - id: zone_rf_cooling_tower
+            name: "Cooling Tower Area"
+            area: 40000  # m²
+            purpose: "Cooling towers"
+          - id: zone_rf_exhaust
+            name: "Exhaust Stack Area"
+            area: 20000  # m²
+            purpose: "Exhaust stacks"
+          - id: zone_rf_solar
+            name: "Solar Panel Area"
+            area: 30000  # m²
+            purpose: "Solar power generation"
+          - id: zone_rf_maintenance
+            name: "Maintenance Area"
+            area: 30000  # m²
+            purpose: "Equipment maintenance access"
+
+# ============================================================================
+# Layout Definition - HVAC System
+# ============================================================================
+
+layout:
+  # Air Handling Units (AHU)
+  - asset_id: ahu_litho_01
+    asset_type: ahu
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 50, y: 50, z: 2}
+    instance_params:
+      manufacturer: "Carrier"
+      model: "AquaEdge 19DV"
+      serial_number: "AHU-LITHO-001"
+      installation_date: "2024-01-15"
+      cleanroom_class: "ISO 3"
+      airflow_capacity: 100000.0  # m³/hr
+      cooling_capacity: 500.0  # kW
+      heating_capacity: 200.0  # kW
+      static_pressure: 1500.0  # Pa
+      filter_type: "ULPA U15"
+      filter_efficiency: 99.9995  # %
+      voltage: 380.0
+      maintenance_interval: 8760  # hours
+      mtbf: 50000  # hours
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+      
+  - asset_id: ahu_litho_02
+    asset_type: ahu
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 150, y: 50, z: 2}
+    instance_params:
+      manufacturer: "Carrier"
+      model: "AquaEdge 19DV"
+      serial_number: "AHU-LITHO-002"
+      installation_date: "2024-01-15"
+      cleanroom_class: "ISO 3"
+      airflow_capacity: 100000.0
+      cooling_capacity: 500.0
+      heating_capacity: 200.0
+      static_pressure: 1500.0
+      filter_type: "ULPA U15"
+      filter_efficiency: 99.9995
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+      
+  - asset_id: ahu_etch_01
+    asset_type: ahu
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 250, y: 50, z: 2}
+    instance_params:
+      manufacturer: "Carrier"
+      model: "AquaEdge 19DV"
+      serial_number: "AHU-ETCH-001"
+      installation_date: "2024-01-20"
+      cleanroom_class: "ISO 4"
+      airflow_capacity: 80000.0
+      cooling_capacity: 400.0
+      heating_capacity: 150.0
+      static_pressure: 1200.0
+      filter_type: "HEPA H14"
+      filter_efficiency: 99.995
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+      
+  # Make-up Air Units (MAU)
+  - asset_id: mau_01
+    asset_type: mau
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 50, y: 150, z: 2}
+    instance_params:
+      manufacturer: "Trane"
+      model: "RTAC"
+      serial_number: "MAU-001"
+      installation_date: "2024-01-10"
+      airflow_capacity: 50000.0
+      cooling_capacity: 300.0
+      heating_capacity: 150.0
+      fresh_air_ratio: 100.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+      
+  - asset_id: mau_02
+    asset_type: mau
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 150, y: 150, z: 2}
+    instance_params:
+      manufacturer: "Trane"
+      model: "RTAC"
+      serial_number: "MAU-002"
+      installation_date: "2024-01-10"
+      airflow_capacity: 50000.0
+      cooling_capacity: 300.0
+      heating_capacity: 150.0
+      fresh_air_ratio: 100.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+      
+  # Fan Filter Units (FFU) - Lithography Bay
+  - asset_id: ffu_litho_001
+    asset_type: ffu
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ffu
+      position: {x: 60, y: 60, z: 2}
+    instance_params:
+      manufacturer: "Nicotra Gebhardt"
+      model: "FFU-1200"
+      serial_number: "FFU-LITHO-001"
+      installation_date: "2024-02-01"
+      cleanroom_class: "ISO 3"
+      airflow_capacity: 1800.0
+      filter_type: "ULPA U15"
+      filter_efficiency: 99.9995
+      filter_size: "4'x4'"
+      noise_level: 55.0
+      voltage: 220.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ffu"
+      
+  # Dry Cooling Coils
+  - asset_id: dcc_litho_01
+    asset_type: dry_cooling_coil
+    location:
+      building: fab_main
+      floor: floor_2f
+      zone: zone_2f_ahu
+      position: {x: 70, y: 50, z: 2}
+    instance_params:
+      manufacturer: "Baltimore Aircoil"
+      model: "DCC-500"
+      serial_number: "DCC-LITHO-001"
+      installation_date: "2024-01-15"
+      cooling_capacity: 500.0
+      chilled_water_flow: 100.0
+      chilled_water_temp_in: 7.0
+      chilled_water_temp_out: 12.0
+      air_flow: 100000.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_2f"
+      zone: "zone_2f_ahu"
+
+# ============================================================================
+# Layout Definition - Cleanroom Sensors
+# ============================================================================
+
+  # Cleanroom Environmental Sensors - Lithography Bay
+  - asset_id: sensor_litho_001
+    asset_type: cleanroom_sensor
+    location:
+      building: fab_main
+      floor: floor_1f
+      zone: zone_1f_litho
+      position: {x: 50, y: 50, z: 1}
+    instance_params:
+      manufacturer: "Vaisala"
+      model: "HMT370"
+      serial_number: "SENSOR-LITHO-001"
+      installation_date: "2024-02-15"
+      cleanroom_class: "ISO 3"
+      temp_accuracy: 0.1
+      humidity_accuracy: 1.0
+      pressure_accuracy: 0.5
+      particle_size_range: "0.1-10 µm"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_1f"
+      zone: "zone_1f_litho"
+      
+  - asset_id: sensor_litho_002
+    asset_type: cleanroom_sensor
+    location:
+      building: fab_main
+      floor: floor_1f
+      zone: zone_1f_litho
+      position: {x: 100, y: 50, z: 1}
+    instance_params:
+      manufacturer: "Vaisala"
+      model: "HMT370"
+      serial_number: "SENSOR-LITHO-002"
+      installation_date: "2024-02-15"
+      cleanroom_class: "ISO 3"
+      temp_accuracy: 0.1
+      humidity_accuracy: 1.0
+      pressure_accuracy: 0.5
+      particle_size_range: "0.1-10 µm"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_1f"
+      zone: "zone_1f_litho"
+
+# ============================================================================
+# Layout Definition - Pure Water System
+# ============================================================================
+
+  # RO Systems
+  - asset_id: ro_system_01
+    asset_type: ro_system
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "DuPont"
+      model: "FilmTec RO"
+      serial_number: "RO-001"
+      installation_date: "2023-12-01"
+      capacity: 100.0
+      recovery_rate: 75.0
+      membrane_type: "Polyamide TFC"
+      membrane_count: 120
+      operating_pressure: 15.0
+      voltage: 380.0
+      maintenance_interval: 4380  # hours
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  - asset_id: ro_system_02
+    asset_type: ro_system
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 100, y: 50, z: -2}
+    instance_params:
+      manufacturer: "DuPont"
+      model: "FilmTec RO"
+      serial_number: "RO-002"
+      installation_date: "2023-12-01"
+      capacity: 100.0
+      recovery_rate: 75.0
+      membrane_type: "Polyamide TFC"
+      membrane_count: 120
+      operating_pressure: 15.0
+      voltage: 380.0
+      maintenance_interval: 4380
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  # EDI Systems
+  - asset_id: edi_system_01
+    asset_type: edi_system
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 50, y: 100, z: -2}
+    instance_params:
+      manufacturer: "Evoqua"
+      model: "E-Cell MK-3"
+      serial_number: "EDI-001"
+      installation_date: "2023-12-01"
+      capacity: 50.0
+      resistivity_output: 18.2
+      module_count: 20
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  - asset_id: edi_system_02
+    asset_type: edi_system
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 100, y: 100, z: -2}
+    instance_params:
+      manufacturer: "Evoqua"
+      model: "E-Cell MK-3"
+      serial_number: "EDI-002"
+      installation_date: "2023-12-01"
+      capacity: 50.0
+      resistivity_output: 18.2
+      module_count: 20
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  # UPW Distribution Pumps
+  - asset_id: upw_pump_01
+    asset_type: upw_distribution_pump
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 50, y: 150, z: -2}
+    instance_params:
+      manufacturer: "Grundfos"
+      model: "CR 64-2"
+      serial_number: "UPW-PUMP-001"
+      installation_date: "2023-12-01"
+      pump_type: "centrifugal"
+      flow_capacity: 200.0
+      head: 50.0
+      rated_power: 45.0
+      speed: 2950.0
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  - asset_id: upw_pump_02
+    asset_type: upw_distribution_pump
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 100, y: 150, z: -2}
+    instance_params:
+      manufacturer: "Grundfos"
+      model: "CR 64-2"
+      serial_number: "UPW-PUMP-002"
+      installation_date: "2023-12-01"
+      pump_type: "centrifugal"
+      flow_capacity: 200.0
+      head: 50.0
+      rated_power: 45.0
+      speed: 2950.0
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+
+# ============================================================================
+# Layout Definition - Process Gas System
+# ============================================================================
+
+  # Bulk Gas Storage Tanks
+  - asset_id: n2_storage_01
+    asset_type: bulk_gas_storage
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_gas
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Chart Industries"
+      model: "VHP-5000"
+      serial_number: "N2-TANK-001"
+      installation_date: "2023-11-01"
+      gas_type: "N2"
+      capacity: 5000.0
+      design_pressure: 18.0
+      design_temp: -196.0
+      insulation_type: "Vacuum Insulated"
+      pressure_relief_valve_setpoint: 17.0
+      low_level_alarm: 20.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_gas"
+      
+  - asset_id: o2_storage_01
+    asset_type: bulk_gas_storage
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_gas
+      position: {x: 100, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Chart Industries"
+      model: "VHP-3000"
+      serial_number: "O2-TANK-001"
+      installation_date: "2023-11-01"
+      gas_type: "O2"
+      capacity: 3000.0
+      design_pressure: 18.0
+      design_temp: -183.0
+      insulation_type: "Vacuum Insulated"
+      pressure_relief_valve_setpoint: 17.0
+      low_level_alarm: 20.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_gas"
+      
+  - asset_id: ar_storage_01
+    asset_type: bulk_gas_storage
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_gas
+      position: {x: 150, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Chart Industries"
+      model: "VHP-2000"
+      serial_number: "AR-TANK-001"
+      installation_date: "2023-11-01"
+      gas_type: "Ar"
+      capacity: 2000.0
+      design_pressure: 18.0
+      design_temp: -186.0
+      insulation_type: "Vacuum Insulated"
+      pressure_relief_valve_setpoint: 17.0
+      low_level_alarm: 20.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_gas"
+      
+  # Gas Cabinets
+  - asset_id: gas_cabinet_sih4_01
+    asset_type: gas_cabinet
+    location:
+      building: fab_main
+      floor: floor_b1
+      zone: zone_b1_subfab
+      position: {x: 50, y: 50, z: -1}
+    instance_params:
+      manufacturer: "Applied Energy Systems"
+      model: "GC-4000"
+      serial_number: "GC-SIH4-001"
+      installation_date: "2024-01-05"
+      gas_type: "SiH4"
+      hazard_class: "Pyrophoric"
+      cylinder_count: 4
+      max_flow_rate: 1000.0
+      purge_gas: "N2"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b1"
+      zone: "zone_b1_subfab"
+      
+  - asset_id: gas_cabinet_nh3_01
+    asset_type: gas_cabinet
+    location:
+      building: fab_main
+      floor: floor_b1
+      zone: zone_b1_subfab
+      position: {x: 100, y: 50, z: -1}
+    instance_params:
+      manufacturer: "Applied Energy Systems"
+      model: "GC-4000"
+      serial_number: "GC-NH3-001"
+      installation_date: "2024-01-05"
+      gas_type: "NH3"
+      hazard_class: "Toxic"
+      cylinder_count: 4
+      max_flow_rate: 1000.0
+      purge_gas: "N2"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b1"
+      zone: "zone_b1_subfab"
+
+# ============================================================================
+# Layout Definition - Chemical Supply System
+# ============================================================================
+
+  # Chemical Storage Tanks
+  - asset_id: h2so4_tank_01
+    asset_type: chemical_storage_tank
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chemical
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Entegris"
+      model: "ChemStor-5000"
+      serial_number: "H2SO4-TANK-001"
+      installation_date: "2023-11-15"
+      chemical_type: "H2SO4"
+      concentration: 98.0
+      capacity: 5000.0
+      material: "PVDF"
+      design_pressure: 2.0
+      design_temp: 50.0
+      low_level_alarm: 10.0
+      high_level_alarm: 90.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chemical"
+      
+  - asset_id: hf_tank_01
+    asset_type: chemical_storage_tank
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chemical
+      position: {x: 100, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Entegris"
+      model: "ChemStor-3000"
+      serial_number: "HF-TANK-001"
+      installation_date: "2023-11-15"
+      chemical_type: "HF"
+      concentration: 49.0
+      capacity: 3000.0
+      material: "PTFE"
+      design_pressure: 2.0
+      design_temp: 50.0
+      low_level_alarm: 10.0
+      high_level_alarm: 90.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chemical"
+      
+  # Chemical Distribution Pumps
+  - asset_id: h2so4_pump_01
+    asset_type: chemical_distribution_pump
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chemical
+      position: {x: 50, y: 100, z: -2}
+    instance_params:
+      manufacturer: "Iwaki"
+      model: "MD-70"
+      serial_number: "H2SO4-PUMP-001"
+      installation_date: "2023-11-15"
+      chemical_type: "H2SO4"
+      pump_type: "diaphragm"
+      flow_capacity: 70.0
+      max_pressure: 7.0
+      material: "PVDF"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chemical"
+
+# ============================================================================
+# Layout Definition - Exhaust System
+# ============================================================================
+
+  # Wet Scrubbers
+  - asset_id: scrubber_acid_01
+    asset_type: scrubber
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_exhaust
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "DAS Environmental"
+      model: "Packed Bed Scrubber"
+      serial_number: "SCRUBBER-ACID-001"
+      installation_date: "2023-12-15"
+      scrubber_type: "acid"
+      airflow_capacity: 10000.0
+      removal_efficiency: 99.0
+      scrubbing_liquid: "NaOH"
+      liquid_flow_rate: 500.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_exhaust"
+      
+  - asset_id: scrubber_base_01
+    asset_type: scrubber
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_exhaust
+      position: {x: 100, y: 50, z: -2}
+    instance_params:
+      manufacturer: "DAS Environmental"
+      model: "Packed Bed Scrubber"
+      serial_number: "SCRUBBER-BASE-001"
+      installation_date: "2023-12-15"
+      scrubber_type: "base"
+      airflow_capacity: 10000.0
+      removal_efficiency: 99.0
+      scrubbing_liquid: "H2SO4"
+      liquid_flow_rate: 500.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_exhaust"
+      
+  # Thermal Oxidizers
+  - asset_id: thermal_oxidizer_01
+    asset_type: thermal_oxidizer
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_exhaust
+      position: {x: 150, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Anguil Environmental"
+      model: "Recuperative Thermal Oxidizer"
+      serial_number: "TO-001"
+      installation_date: "2023-12-15"
+      airflow_capacity: 5000.0
+      combustion_temp: 850.0
+      destruction_efficiency: 99.99
+      residence_time: 1.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_exhaust"
+
+# ============================================================================
+# Layout Definition - Wastewater Treatment System
+# ============================================================================
+
+  # Wastewater Treatment Tanks
+  - asset_id: ww_tank_acid_01
+    asset_type: wastewater_treatment_tank
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 200, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Veolia"
+      model: "WWT-1000"
+      serial_number: "WW-ACID-001"
+      installation_date: "2023-12-01"
+      treatment_type: "acid"
+      capacity: 100.0
+      treatment_capacity: 50.0
+      material: "PVDF"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  - asset_id: ww_tank_base_01
+    asset_type: wastewater_treatment_tank
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 250, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Veolia"
+      model: "WWT-1000"
+      serial_number: "WW-BASE-001"
+      installation_date: "2023-12-01"
+      treatment_type: "base"
+      capacity: 100.0
+      treatment_capacity: 50.0
+      material: "PVDF"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+      
+  - asset_id: ww_tank_fluoride_01
+    asset_type: wastewater_treatment_tank
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_water
+      position: {x: 300, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Veolia"
+      model: "WWT-500"
+      serial_number: "WW-F-001"
+      installation_date: "2023-12-01"
+      treatment_type: "fluoride"
+      capacity: 50.0
+      treatment_capacity: 25.0
+      material: "PVDF"
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_water"
+
+# ============================================================================
+# Layout Definition - Electrical System
+# ============================================================================
+
+  # UPS Systems
+  - asset_id: ups_main_01
+    asset_type: ups
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_electrical
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Schneider Electric"
+      model: "Galaxy VX"
+      serial_number: "UPS-MAIN-001"
+      installation_date: "2023-11-01"
+      topology: "online"
+      rated_power: 1000.0
+      rated_voltage: 380.0
+      rated_frequency: 60.0
+      battery_capacity: 500.0
+      backup_time: 30.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_electrical"
+      
+  - asset_id: ups_main_02
+    asset_type: ups
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_electrical
+      position: {x: 100, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Schneider Electric"
+      model: "Galaxy VX"
+      serial_number: "UPS-MAIN-002"
+      installation_date: "2023-11-01"
+      topology: "online"
+      rated_power: 1000.0
+      rated_voltage: 380.0
+      rated_frequency: 60.0
+      battery_capacity: 500.0
+      backup_time: 30.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_electrical"
+      
+  # Power Meters
+  - asset_id: power_meter_main
+    asset_type: power_meter
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_electrical
+      position: {x: 150, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Siemens"
+      model: "SENTRON PAC4200"
+      serial_number: "PM-MAIN-001"
+      installation_date: "2023-11-01"
+      meter_type: "main"
+      rated_voltage: 22000.0
+      rated_current: 2000.0
+      accuracy_class: 0.5
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_electrical"
+
+# ============================================================================
+# Layout Definition - Chilled Water System
+# ============================================================================
+
+  # Chillers
+  - asset_id: chiller_01
+    asset_type: chiller
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chiller
+      position: {x: 50, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Trane"
+      model: "CenTraVac"
+      serial_number: "CHILLER-001"
+      installation_date: "2023-11-01"
+      chiller_type: "centrifugal"
+      refrigerant: "R134a"
+      cooling_capacity: 5000.0
+      chilled_water_flow: 1000.0
+      chilled_water_temp_supply: 7.0
+      chilled_water_temp_return: 12.0
+      condenser_water_flow: 1200.0
+      rated_power: 1500.0
+      cop: 6.0
+      voltage: 6600.0
+      maintenance_interval: 8760
+      mtbf: 80000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chiller"
+      
+  - asset_id: chiller_02
+    asset_type: chiller
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chiller
+      position: {x: 150, y: 50, z: -2}
+    instance_params:
+      manufacturer: "Trane"
+      model: "CenTraVac"
+      serial_number: "CHILLER-002"
+      installation_date: "2023-11-01"
+      chiller_type: "centrifugal"
+      refrigerant: "R134a"
+      cooling_capacity: 5000.0
+      chilled_water_flow: 1000.0
+      chilled_water_temp_supply: 7.0
+      chilled_water_temp_return: 12.0
+      condenser_water_flow: 1200.0
+      rated_power: 1500.0
+      cop: 6.0
+      voltage: 6600.0
+      maintenance_interval: 8760
+      mtbf: 80000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chiller"
+      
+  # Cooling Towers
+  - asset_id: cooling_tower_01
+    asset_type: cooling_tower
+    location:
+      building: fab_main
+      floor: floor_rf
+      zone: zone_rf_cooling_tower
+      position: {x: 50, y: 50, z: 4}
+    instance_params:
+      manufacturer: "Baltimore Aircoil"
+      model: "VTI Series"
+      serial_number: "CT-001"
+      installation_date: "2023-11-01"
+      tower_type: "open"
+      cooling_capacity: 6000.0
+      water_flow_rate: 1200.0
+      fan_power: 150.0
+      approach_temp: 3.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_rf"
+      zone: "zone_rf_cooling_tower"
+      
+  - asset_id: cooling_tower_02
+    asset_type: cooling_tower
+    location:
+      building: fab_main
+      floor: floor_rf
+      zone: zone_rf_cooling_tower
+      position: {x: 150, y: 50, z: 4}
+    instance_params:
+      manufacturer: "Baltimore Aircoil"
+      model: "VTI Series"
+      serial_number: "CT-002"
+      installation_date: "2023-11-01"
+      tower_type: "open"
+      cooling_capacity: 6000.0
+      water_flow_rate: 1200.0
+      fan_power: 150.0
+      approach_temp: 3.0
+      voltage: 380.0
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_rf"
+      zone: "zone_rf_cooling_tower"
+      
+  # Chilled Water Pumps
+  - asset_id: chw_pump_primary_01
+    asset_type: chilled_water_pump
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chiller
+      position: {x: 50, y: 100, z: -2}
+    instance_params:
+      manufacturer: "Grundfos"
+      model: "TP 200-360/4"
+      serial_number: "CHW-PUMP-P1-001"
+      installation_date: "2023-11-01"
+      pump_type: "primary"
+      flow_capacity: 1000.0
+      head: 40.0
+      rated_power: 200.0
+      speed: 1480.0
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chiller"
+      
+  - asset_id: chw_pump_primary_02
+    asset_type: chilled_water_pump
+    location:
+      building: fab_main
+      floor: floor_b2
+      zone: zone_b2_chiller
+      position: {x: 100, y: 100, z: -2}
+    instance_params:
+      manufacturer: "Grundfos"
+      model: "TP 200-360/4"
+      serial_number: "CHW-PUMP-P1-002"
+      installation_date: "2023-11-01"
+      pump_type: "primary"
+      flow_capacity: 1000.0
+      head: 40.0
+      rated_power: 200.0
+      speed: 1480.0
+      voltage: 380.0
+      maintenance_interval: 8760
+      mtbf: 50000
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_b2"
+      zone: "zone_b2_chiller"
+
+# ============================================================================
+# Layout Definition - FMCS Controllers
+# ============================================================================
+
+  # FMCS Controllers
+  - asset_id: fmcs_controller_main
+    asset_type: fmcs_controller
+    location:
+      building: fab_main
+      floor: floor_3f
+      zone: zone_3f_control
+      position: {x: 50, y: 50, z: 3}
+    instance_params:
+      manufacturer: "Johnson Controls"
+      model: "Metasys M4-CGE16100"
+      serial_number: "FMCS-MAIN-001"
+      installation_date: "2024-01-01"
+      controller_type: "DDC"
+      io_points: 10000
+      cpu_type: "Intel Core i7"
+      memory_size: 16384
+      communication_protocols: ["BACnet", "Modbus", "OPC UA"]
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_3f"
+      zone: "zone_3f_control"
+      
+  - asset_id: fmcs_controller_backup
+    asset_type: fmcs_controller
+    location:
+      building: fab_main
+      floor: floor_3f
+      zone: zone_3f_control
+      position: {x: 100, y: 50, z: 3}
+    instance_params:
+      manufacturer: "Johnson Controls"
+      model: "Metasys M4-CGE16100"
+      serial_number: "FMCS-BACKUP-001"
+      installation_date: "2024-01-01"
+      controller_type: "DDC"
+      io_points: 10000
+      cpu_type: "Intel Core i7"
+      memory_size: 16384
+      communication_protocols: ["BACnet", "Modbus", "OPC UA"]
+    worker_assignment_hints:
+      region: "taiwan"
+      building: "fab_main"
+      floor: "floor_3f"
+      zone: "zone_3f_control"
+
+# ============================================================================
+# Relationships Definition
+# ============================================================================
+
+relationships:
+  # HVAC Air Flow
+  - type: air_supply
+    from: ahu_litho_01
+    to: zone_1f_litho
+    description: "AHU supplies conditioned air to lithography bay"
+    
+  - type: air_supply
+    from: ahu_litho_02
+    to: zone_1f_litho
+    description: "AHU supplies conditioned air to lithography bay"
+    
+  - type: air_supply
+    from: ahu_etch_01
+    to: zone_1f_etch
+    description: "AHU supplies conditioned air to etch bay"
+    
+  - type: fresh_air_supply
+    from: mau_01
+    to: ahu_litho_01
+    description: "MAU supplies fresh air to AHU"
+    
+  - type: fresh_air_supply
+    from: mau_02
+    to: ahu_litho_02
+    description: "MAU supplies fresh air to AHU"
+    
+  # Chilled Water Flow
+  - type: chilled_water_supply
+    from: chiller_01
+    to: chw_pump_primary_01
+    description: "Chiller produces chilled water"
+    
+  - type: chilled_water_supply
+    from: chiller_02
+    to: chw_pump_primary_02
+    description: "Chiller produces chilled water"
+    
+  - type: chilled_water_distribution
+    from: chw_pump_primary_01
+    to: dcc_litho_01
+    description: "Pump distributes chilled water to cooling coils"
+    
+  - type: chilled_water_distribution
+    from: chw_pump_primary_02
+    to: dcc_litho_01
+    description: "Pump distributes chilled water to cooling coils"
+    
+  - type: cooling
+    from: dcc_litho_01
+    to: ahu_litho_01
+    description: "Cooling coil provides cooling to AHU"
+    
+  # Condenser Water Flow
+  - type: condenser_water_supply
+    from: cooling_tower_01
+    to: chiller_01
+    description: "Cooling tower provides condenser water to chiller"
+    
+  - type: condenser_water_supply
+    from: cooling_tower_02
+    to: chiller_02
+    description: "Cooling tower provides condenser water to chiller"
+    
+  # Pure Water Flow
+  - type: water_treatment
+    from: ro_system_01
+    to: edi_system_01
+    description: "RO system provides treated water to EDI"
+    
+  - type: water_treatment
+    from: ro_system_02
+    to: edi_system_02
+    description: "RO system provides treated water to EDI"
+    
+  - type: upw_distribution
+    from: edi_system_01
+    to: upw_pump_01
+    description: "EDI produces UPW for distribution"
+    
+  - type: upw_distribution
+    from: edi_system_02
+    to: upw_pump_02
+    description: "EDI produces UPW for distribution"
+    
+  # Process Gas Supply
+  - type: gas_supply
+    from: n2_storage_01
+    to: gas_cabinet_sih4_01
+    description: "N2 tank supplies purge gas to gas cabinet"
+    
+  - type: gas_supply
+    from: n2_storage_01
+    to: gas_cabinet_nh3_01
+    description: "N2 tank supplies purge gas to gas cabinet"
+    
+  # Chemical Supply
+  - type: chemical_supply
+    from: h2so4_tank_01
+    to: h2so4_pump_01
+    description: "Chemical tank supplies pump"
+    
+  # Exhaust Treatment
+  - type: exhaust_treatment
+    from: zone_1f_etch
+    to: scrubber_acid_01
+    description: "Etch bay exhaust treated by acid scrubber"
+    
+  - type: exhaust_treatment
+    from: zone_1f_diffusion
+    to: thermal_oxidizer_01
+    description: "Diffusion bay exhaust treated by thermal oxidizer"
+    
+  # Wastewater Treatment
+  - type: wastewater_treatment
+    from: zone_1f_wet
+    to: ww_tank_acid_01
+    description: "Wet process wastewater treated in acid tank"
+    
+  # Power Supply
+  - type: power_supply
+    from: ups_main_01
+    to: fmcs_controller_main
+    description: "UPS provides backup power to FMCS controller"
+    
+  - type: power_supply
+    from: ups_main_02
+    to: fmcs_controller_backup
+    description: "UPS provides backup power to FMCS controller"
+    
+  # Control
+  - type: control
+    from: fmcs_controller_main
+    to: ahu_litho_01
+    description: "FMCS controls AHU operation"
+    
+  - type: control
+    from: fmcs_controller_main
+    to: chiller_01
+    description: "FMCS controls chiller operation"
+    
+  - type: monitoring
+    from: sensor_litho_001
+    to: fmcs_controller_main
+    description: "Sensor reports to FMCS controller"
+
+# ============================================================================
+# Utility Systems
+# ============================================================================
+
+utility_systems:
+  electrical:
+    main_power:
+      voltage: 22000  # V
+      frequency: 60  # Hz
+      capacity: 100000  # kVA
+      redundancy: "N+1"
+      
+    distribution:
+      - voltage: 6600  # V (for chillers)
+        capacity: 30000  # kVA
+      - voltage: 380  # V (for general equipment)
+        capacity: 50000  # kVA
+      - voltage: 220  # V (for lighting and small equipment)
+        capacity: 10000  # kVA
+        
+    ups:
+      total_capacity: 5000  # kVA
+      backup_time: 30  # minutes
+      redundancy: "2N"
+      
+    emergency_generator:
+      capacity: 10000  # kVA
+      fuel_type: "diesel"
+      fuel_capacity: 50000  # L
+      runtime: 72  # hours
+      
+  water:
+    raw_water:
+      source: "Municipal water supply"
+      capacity: 5000  # m³/hr
+      storage: 50000  # m³
+      
+    upw:
+      production_capacity: 200  # m³/hr
+      distribution_pressure: 5.0  # bar
+      resistivity: 18.2  # MΩ·cm
+      toc: 1.0  # ppb
+      particle_count: 1  # particles/mL
+      
+    process_cooling_water:
+      capacity: 10000  # m³/hr
+      supply_temp: 20.0  # °C
+      return_temp: 25.0  # °C
+      
+    chilled_water:
+      total_capacity: 20000  # kW
+      supply_temp: 7.0  # °C
+      return_temp: 12.0  # °C
+      flow_rate: 4000  # m³/hr
+      
+    condenser_water:
+      capacity: 24000  # kW
+      supply_temp: 32.0  # °C
+      return_temp: 37.0  # °C
+      flow_rate: 5000  # m³/hr
+      
+  process_gases:
+    nitrogen:
+      purity: 99.999  # %
+      capacity: 50000  # Nm³/hr
+      pressure: 7.0  # bar
+      
+    oxygen:
+      purity: 99.999  # %
+      capacity: 10000  # Nm³/hr
+      pressure: 7.0  # bar
+      
+    argon:
+      purity: 99.999  # %
+      capacity: 5000  # Nm³/hr
+      pressure: 7.0  # bar
+      
+    hydrogen:
+      purity: 99.999  # %
+      capacity: 2000  # Nm³/hr
+      pressure: 7.0  # bar
+      
+  specialty_gases:
+    silane:
+      purity: 99.999  # %
+      capacity: 500  # slpm
+      
+    ammonia:
+      purity: 99.999  # %
+      capacity: 1000  # slpm
+      
+  chemicals:
+    sulfuric_acid:
+      concentration: 98.0  # %
+      capacity: 100  # L/min
+      
+    hydrofluoric_acid:
+      concentration: 49.0  # %
+      capacity: 50  # L/min
+      
+    ammonium_hydroxide:
+      concentration: 29.0  # %
+      capacity: 50  # L/min
+      
+  exhaust:
+    process_exhaust:
+      capacity: 50000  # m³/hr
+      treatment: ["wet scrubbing", "thermal oxidation"]
+      
+    general_exhaust:
+      capacity: 100000  # m³/hr
+      treatment: ["filtration"]
+      
+  wastewater:
+    process_wastewater:
+      capacity: 500  # m³/hr
+      treatment: ["neutralization", "precipitation", "filtration"]
+      
+    sanitary_wastewater:
+      capacity: 100  # m³/hr
+      treatment: ["biological treatment"]
+
+# ============================================================================
+# Global Parameters
+# ============================================================================
+
+global_parameters:
+  cleanroom_environment:
+    default_temp: 22.0  # °C
+    default_temp_tolerance: 0.5  # °C
+    default_humidity: 45.0  # %RH
+    default_humidity_tolerance: 2.0  # %RH
+    default_pressure_diff: 10.0  # Pa
+    
+  energy_management:
+    target_pue: 1.3  # Power Usage Effectiveness
+    peak_power_limit: 80000  # kW
+    energy_recovery: true
+    
+  safety:
+    fire_suppression: "FM-200"
+    gas_detection: true
+    chemical_leak_detection: true
+    seismic_design: "Zone 3"
+    
+  environmental:
+    wastewater_discharge_standard: "Taiwan EPA"
+    air_emission_standard: "Taiwan EPA"
+    noise_limit: 65  # dB at boundary
+    
+  maintenance:
+    preventive_maintenance_interval: 2190  # hours (quarterly)
+    predictive_maintenance: true
+    spare_parts_inventory: true
+
+# ============================================================================
+# Deployment Configuration
+# ============================================================================
+
+deployment:
+  ndh:
+    cluster_mode: distributed
+    master_nodes: 3
+    worker_nodes:
+      - region: taiwan
+        building: fab_main
+        floor: floor_b2
+        count: 2
+        resources:
+          cpu: 32
+          memory: 128  # GB
+          storage: 2000  # GB
+      - region: taiwan
+        building: fab_main
+        floor: floor_b1
+        count: 2
+        resources:
+          cpu: 32
+          memory: 128
+          storage: 2000
+      - region: taiwan
+        building: fab_main
+        floor: floor_1f
+        count: 4
+        resources:
+          cpu: 32
+          memory: 128
+          storage: 2000
+    high_availability:
+      enabled: true
+      failover_time: 10  # seconds
+    disaster_recovery:
+      enabled: true
+      snapshot_interval: 21600  # seconds (6 hours)
+      backup_retention: 30  # days
+      
+  omniverse:
+    nucleus_server:
+      location:
+        building: fab_main
+        floor: floor_3f
+        zone: zone_3f_control
+      storage: 100000  # GB
+      concurrent_users: 50
+    real_time_sync: true
+    usd_stage: "/Fab/TSMC_Fab_FMCS.usd"
+    
+  mcp_server:
+    enabled: true
+    port: 8080
+    authentication: "OAuth2"
+    rate_limit: 1000  # requests/minute
+    
+  network:
+    vlans:
+      - id: 10
+        name: "Production"
+        subnet: "10.10.0.0/16"
+      - id: 20
+        name: "Control"
+        subnet: "10.20.0.0/16"
+      - id: 30
+        name: "IT"
+        subnet: "10.30.0.0/16"
+      - id: 40
+        name: "Management"
+        subnet: "10.40.0.0/16"
+    firewall:
+      enabled: true
+      rules: "strict"
+    vpn:
+      enabled: true
+      type: "site-to-site"
+
