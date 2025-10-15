@@ -7,6 +7,52 @@
 
 ---
 
+## 📘 術語表與縮寫
+
+### 核心組件
+
+- **IDTF**: Industrial Digital Twin Framework（工業數位分身框架）
+- **IADL**: Industrial Asset Definition Language（工業資產定義語言）
+- **FDL**: Factory Design Language（工廠設計語言）
+- **NDH**: Neutral Data Hub（中立數據中樞）
+- **MCP**: Model Context Protocol（模型上下文協議）
+- **PME**: Power Monitoring Expert（電力監控專家系統，Schneider Electric 產品）
+
+### 技術術語
+
+- **USD**: Universal Scene Description（通用場景描述，Pixar/NVIDIA Omniverse）
+- **PUE**: Power Usage Effectiveness（電力使用效率）
+- **OEE**: Overall Equipment Effectiveness（整體設備效率）
+- **FMCS**: Facility Management and Control System（設施管理與控制系統）
+- **HVAC**: Heating, Ventilation, and Air Conditioning（暖通空調系統）
+- **UPW**: Ultra-Pure Water（超純水）
+- **LNG**: Liquefied Natural Gas（液化天然氣）
+- **CCPP**: Combined Cycle Power Plant（複循環發電廠）
+- **HRSG**: Heat Recovery Steam Generator（餘熱回收蒸汽發生器）
+- **MES**: Manufacturing Execution System（製造執行系統）
+- **ERP**: Enterprise Resource Planning（企業資源規劃）
+- **SCADA**: Supervisory Control and Data Acquisition（監控與資料擷取系統）
+- **PLC**: Programmable Logic Controller（可程式邏輯控制器）
+- **gRPC**: Google Remote Procedure Call（Google 遠程過程調用）
+- **mDNS**: Multicast DNS（多播域名系統）
+- **RBAC**: Role-Based Access Control（基於角色的訪問控制）
+- **TLS**: Transport Layer Security（傳輸層安全性）
+- **API**: Application Programming Interface（應用程式介面）
+- **REST**: Representational State Transfer（表現層狀態轉換）
+- **GraphQL**: Graph Query Language（圖形查詢語言）
+- **MQTT**: Message Queuing Telemetry Transport（訊息佇列遙測傳輸）
+- **OPC UA**: OPC Unified Architecture（OPC 統一架構）
+- **ROI**: Return on Investment（投資回報率）
+- **IRR**: Internal Rate of Return（內部報酬率）
+- **CAPEX**: Capital Expenditure（資本支出）
+- **OPEX**: Operating Expenditure（營運支出）
+- **RTO**: Recovery Time Objective（復原時間目標）
+- **RPO**: Recovery Point Objective（復原點目標）
+- **MTBF**: Mean Time Between Failures（平均故障間隔時間）
+- **MTTR**: Mean Time To Repair（平均修復時間）
+
+---
+
 ## 📖 專案概述
 
 **IDTF (Industrial Digital Twin Framework)** V3.5 是一個全面的工業數位分身框架，整合了設計、部署、運營、維護的完整生命週期管理。本版本包含了多項重大創新，包括 **MCP Server 整合**、**工廠設計軟體整合**、**高可用性架構**、**系統更新機制**等企業級功能。
