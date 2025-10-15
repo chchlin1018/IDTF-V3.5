@@ -1,0 +1,198 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Industrial Asset Definition Language (IADL) Schema",
+  "description": "Schema for defining industrial asset types and their characteristics.",
+  "type": "object",
+  "properties": {
+    "iadlVersion": {
+      "type": "string",
+      "description": "Version of the IADL specification."
+    },
+    "assetTypes": {
+      "type": "array",
+      "description": "List of industrial asset type definitions.",
+      "items": {
+        "$ref": "#/definitions/AssetType"
+      }
+    }
+  },
+  "required": ["iadlVersion", "assetTypes"],
+  "definitions": {
+    "AssetType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the asset type (e.g., 'Pump_Centrifugal_V1').",
+          "pattern": "^[A-Za-z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the asset type."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the asset type."
+        },
+        "baseType": {
+          "type": "string",
+          "description": "Optional: ID of the base asset type this type inherits from."
+        },
+        "properties": {
+          "type": "array",
+          "description": "List of properties (attributes) for this asset type.",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "components": {
+          "type": "array",
+          "description": "List of component types that make up this asset type.",
+          "items": {
+            "$ref": "#/definitions/ComponentReference"
+          }
+        },
+        "interfaces": {
+          "type": "array",
+          "description": "List of interfaces this asset type exposes.",
+          "items": {
+            "$ref": "#/definitions/Interface"
+          }
+        },
+        "telemetry": {
+          "type": "array",
+          "description": "List of telemetry points for this asset type.",
+          "items": {
+            "$ref": "#/definitions/TelemetryPoint"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "description": "List of commands that can be executed on this asset type.",
+          "items": {
+            "$ref": "#/definitions/Command"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "Property": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the property."
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "integer", "array", "object"],
+          "description": "Data type of the property."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Optional: Unit of measurement for the property (e.g., 'm/s', '°C')."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the property."
+        },
+        "defaultValue": {
+          "description": "Optional: Default value for the property."
+        }
+      },
+      "required": ["name", "dataType"],
+      "additionalProperties": false
+    },
+    "ComponentReference": {
+      "type": "object",
+      "properties": {
+        "componentTypeId": {
+          "type": "string",
+          "description": "ID of the referenced component type."
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of instances of this component type within the asset."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional: Specific name for this component instance within the asset."
+        }
+      },
+      "required": ["componentTypeId"],
+      "additionalProperties": false
+    },
+    "Interface": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the interface."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["OPC_UA", "MQTT", "REST", "Modbus"],
+          "description": "Type of the interface (e.g., OPC_UA, MQTT, REST)."
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "Connection endpoint for the interface."
+        },
+        "mapping": {
+          "type": "object",
+          "description": "Mapping rules for data points to/from the interface."
+        }
+      },
+      "required": ["id", "type", "endpoint"],
+      "additionalProperties": false
+    },
+    "TelemetryPoint": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the telemetry point."
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "integer"],
+          "description": "Data type of the telemetry value."
+        },
+        "unit": {
+          "type": "string",
+          "description": "Optional: Unit of measurement."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the telemetry point."
+        }
+      },
+      "required": ["name", "dataType"],
+      "additionalProperties": false
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the command."
+        },
+        "parameters": {
+          "type": "array",
+          "description": "List of parameters for the command.",
+          "items": {
+            "$ref": "#/definitions/Property"
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the command."
+        }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    }
+  }
+}

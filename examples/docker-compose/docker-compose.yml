@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # NDH Core - Neutral Data Hub
+  ndh-core:
+    image: idtf/ndh-core:latest
+    container_name: idtf-ndh-core
+    ports:
+      - "50051:50051"  # gRPC API
+      - "8080:8080"    # REST API
+    environment:
+      - DATABASE_URL=postgresql://ndh:ndh_password@postgres:5432/ndh_db
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=info
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - idtf-network
+    volumes:
+      - ndh-data:/data
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: idtf-postgres
+    environment:
+      - POSTGRES_USER=ndh
+      - POSTGRES_PASSWORD=ndh_password
+      - POSTGRES_DB=ndh_db
+    ports:
+      - "5432:5432"
+    networks:
+      - idtf-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: idtf-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - idtf-network
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  # NDH Connector Agent - OPC UA
+  connector-opcua:
+    image: idtf/connector-opcua:latest
+    container_name: idtf-connector-opcua
+    environment:
+      - NDH_ENDPOINT=ndh-core:50051
+      - OPCUA_SERVER_URL=opc.tcp://opcua-server:4840
+      - LOG_LEVEL=info
+    depends_on:
+      - ndh-core
+    networks:
+      - idtf-network
+    restart: unless-stopped
+
+  # NDH Connector Agent - MQTT Sparkplug B
+  connector-mqtt:
+    image: idtf/connector-mqtt:latest
+    container_name: idtf-connector-mqtt
+    environment:
+      - NDH_ENDPOINT=ndh-core:50051
+      - MQTT_BROKER_URL=mqtt://mqtt-broker:1883
+      - LOG_LEVEL=info
+    depends_on:
+      - ndh-core
+      - mqtt-broker
+    networks:
+      - idtf-network
+    restart: unless-stopped
+
+  # MQTT Broker (for testing)
+  mqtt-broker:
+    image: eclipse-mosquitto:2
+    container_name: idtf-mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    networks:
+      - idtf-network
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    restart: unless-stopped
+
+  # IADL/FDL Editor (Web UI)
+  iadl-editor:
+    image: idtf/iadl-editor:latest
+    container_name: idtf-iadl-editor
+    ports:
+      - "3000:3000"
+    environment:
+      - NDH_API_URL=http://ndh-core:8080
+    depends_on:
+      - ndh-core
+    networks:
+      - idtf-network
+    restart: unless-stopped
+
+  # Monitoring Dashboard
+  dashboard:
+    image: idtf/dashboard:latest
+    container_name: idtf-dashboard
+    ports:
+      - "3001:3000"
+    environment:
+      - NDH_API_URL=http://ndh-core:8080
+    depends_on:
+      - ndh-core
+    networks:
+      - idtf-network
+    restart: unless-stopped
+
+networks:
+  idtf-network:
+    driver: bridge
+
+volumes:
+  ndh-data:
+  postgres-data:
+  redis-data:
+

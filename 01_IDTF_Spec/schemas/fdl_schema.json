@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Factory Design Language (FDL) Schema",
+  "description": "Schema for defining factory layout and asset instances.",
+  "type": "object",
+  "properties": {
+    "fdlVersion": {
+      "type": "string",
+      "description": "Version of the FDL specification."
+    },
+    "factory": {
+      "$ref": "#/definitions/Factory"
+    }
+  },
+  "required": ["fdlVersion", "factory"],
+  "definitions": {
+    "Factory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the factory."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the factory."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the factory."
+        },
+        "sites": {
+          "type": "array",
+          "description": "List of sites within the factory.",
+          "items": {
+            "$ref": "#/definitions/Site"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "Site": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the site."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the site."
+        },
+        "areas": {
+          "type": "array",
+          "description": "List of areas within the site.",
+          "items": {
+            "$ref": "#/definitions/Area"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "Area": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the area."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the area."
+        },
+        "processCells": {
+          "type": "array",
+          "description": "List of process cells within the area.",
+          "items": {
+            "$ref": "#/definitions/ProcessCell"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "ProcessCell": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the process cell."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the process cell."
+        },
+        "units": {
+          "type": "array",
+          "description": "List of units within the process cell.",
+          "items": {
+            "$ref": "#/definitions/Unit"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "Unit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the unit."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the unit."
+        },
+        "assetInstances": {
+          "type": "array",
+          "description": "List of asset instances within the unit.",
+          "items": {
+            "$ref": "#/definitions/AssetInstance"
+          }
+        }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": false
+    },
+    "AssetInstance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this specific asset instance."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name for this asset instance."
+        },
+        "assetTypeId": {
+          "type": "string",
+          "description": "ID of the IADL AssetType this instance is based on."
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the physical asset."
+        },
+        "location": {
+          "type": "object",
+          "description": "Physical location details.",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "z": {"type": "number"},
+            "room": {"type": "string"}
+          }
+        },
+        "properties": {
+          "type": "object",
+          "description": "Instance-specific property values (overrides or additions to AssetType properties)."
+        },
+        "operationalStatus": {
+          "type": "string",
+          "enum": ["Running", "Stopped", "Idle", "Faulted", "Under_Maintenance", "Commissioning", "Decommissioned"],
+          "description": "Current operational status of the asset instance."
+        },
+        "componentInstances": {
+          "type": "array",
+          "description": "List of component instances within this asset instance.",
+          "items": {
+            "$ref": "#/definitions/ComponentInstance"
+          }
+        }
+      },
+      "required": ["id", "name", "assetTypeId"],
+      "additionalProperties": false
+    },
+    "ComponentInstance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this specific component instance."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name for this component instance."
+        },
+        "componentTypeId": {
+          "type": "string",
+          "description": "ID of the IADL ComponentType this instance is based on."
+        },
+        "serialNumber": {
+          "type": "string",
+          "description": "Serial number of the physical component."
+        }
+      },
+      "required": ["id", "name", "componentTypeId"],
+      "additionalProperties": false
+    }
+  }
+}
