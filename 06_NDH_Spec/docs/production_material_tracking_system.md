@@ -2,7 +2,7 @@
 
 **版本**: 1.0  
 **日期**: 2025-10-14  
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **Email**: chchlin1018@gmail.com
 
 ---
@@ -936,6 +936,6 @@ DIE-SORTER-01 開始處理 LOT-2025101401-0001
 
 **文檔版本**: 1.0  
 **最後更新**: 2025-10-14  
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **Email**: chchlin1018@gmail.com
 

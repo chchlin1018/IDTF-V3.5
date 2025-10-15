@@ -1,5 +1,5 @@
 # NDH 可抽換時序數據庫架構設計
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **日期**: 2025 年 10 月 12 日  
 **版本**: 1.0
 **來源**: https://manus.im/share/file/21612aef-971d-4f96-b698-4cef5f736449

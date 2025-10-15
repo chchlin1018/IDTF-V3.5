@@ -301,7 +301,7 @@ NDH 與各種工業系統的整合方案:
 (總結要點)
 
 ---
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 **版權**: © 2025 版權所有
 **最後更新**: YYYY-MM-DD
 ```

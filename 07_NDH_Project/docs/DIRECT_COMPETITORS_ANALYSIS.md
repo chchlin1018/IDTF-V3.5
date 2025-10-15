@@ -1,6 +1,6 @@
 # IADL+NDH 直接競爭對手分析報告
 
-**作者**: Manus AI
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)
 **日期**: 2025年10月10日
 
 ## 1. 執行摘要

@@ -8,7 +8,7 @@ NDH (Neutral Data Hub) 測試開發框架是一個完整的工業資料整合中
 
 - **專案名稱**: NDH Test Framework
 - **版本**: 1.0.0
-- **作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+- **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 - **授權**: MIT License
 - **建立日期**: 2025-01-09
 - **主要語言**: Python 3.11+
@@ -452,7 +452,7 @@ NDH_SSL_KEY=/path/to/key.pem
 
 ## 聯絡方式
 
-- **作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+- **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 - **Email**: chchlin1018@gmail.com
 - **GitHub**: https://github.com/chchlin1018
 

@@ -2,7 +2,7 @@
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -419,4 +419,4 @@ $ ndh plugin publish my_first_plugin_v0.1.0.zip
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)

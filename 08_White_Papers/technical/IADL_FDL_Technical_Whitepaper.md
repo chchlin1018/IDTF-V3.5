@@ -3,7 +3,7 @@
 
 **版本**: 3.5  
 **發布日期**: 2025-01-14  
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **組織**: MacroVision Systems / IDTF Consortium
 
 ---
@@ -2629,7 +2629,7 @@ factory_design:
 
 **文件版本**: 3.5  
 **最後更新**: 2025-01-14  
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **組織**: MacroVision Systems / IDTF Consortium  
 **授權**: CC BY-SA 4.0
 

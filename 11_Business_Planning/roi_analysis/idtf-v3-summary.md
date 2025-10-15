@@ -1,7 +1,7 @@
 # IDTF V3.1 儲存庫內容摘要
 
 **儲存庫**: https://github.com/chchlin1018/idtf-v3  
-**作者**: Chih Cheng Lin (Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin) (Michael Lin)  
 **版本**: 3.1  
 **授權**: Apache 2.0  
 **分析日期**: 2025-10-12

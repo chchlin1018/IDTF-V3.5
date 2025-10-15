@@ -2,7 +2,7 @@
 
 **版本**: 1.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -889,5 +889,5 @@ ndh:
 
 **文件版本**: 1.0  
 **最後更新**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 

@@ -2,7 +2,7 @@
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -344,4 +344,4 @@ Read response: {'address': 'holding:100', 'value': 456}
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)

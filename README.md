@@ -2,7 +2,7 @@
 
 **版本**: 3.5.2  
 **發布日期**: 2025-10-15  
-**作者**: 林志錚 Michael Lin (Chih Cheng Lin) & Manus AI
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin (Chih Cheng Lin) & Manus AI
 **組織**: IDTF Consortium
 
 ---

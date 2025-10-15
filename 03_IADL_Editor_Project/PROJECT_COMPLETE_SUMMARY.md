@@ -863,7 +863,7 @@ IADL Editor 為工業 4.0 和智慧製造提供了重要的資料整合能力,�
 **下一步**: 社群回饋和功能擴展  
 **文件版本**: 1.0  
 **最後更新**: 2024-10-09  
-**作者**: Manus AI Assistant  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin) Assistant  
 **授權**: MIT License
 
 ---

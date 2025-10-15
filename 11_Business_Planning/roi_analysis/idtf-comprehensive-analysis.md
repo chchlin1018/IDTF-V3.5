@@ -4,7 +4,7 @@
 - https://github.com/chchlin1018/idtf-v3
 - https://github.com/chchlin1018/idtf-documentation
 
-**作者**: Chih Cheng Lin (Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin) (Michael Lin)  
 **分析日期**: 2025-10-12  
 **分析者**: Manus AI
 

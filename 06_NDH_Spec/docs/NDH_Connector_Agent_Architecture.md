@@ -2,7 +2,7 @@
 
 **版本**: V1.0  
 **日期**: 2025-10-15  
-**作者**: 林志錚 Michael Lin (Chih Cheng Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin (Chih Cheng Lin)  
 **狀態**: 設計中
 
 ---

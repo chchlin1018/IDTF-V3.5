@@ -2,7 +2,7 @@
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -715,7 +715,7 @@ IADL 和 NDH 專案已經完成了核心架構設計和主要工業/企業系統
 
 ---
 
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)  
 **日期**: 2025-10-10  
 **版本**: 1.0.0  
 **版權**: © 2025 版權所有

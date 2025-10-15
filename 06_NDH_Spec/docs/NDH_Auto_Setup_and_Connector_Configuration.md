@@ -2,7 +2,7 @@
 
 **文件版本**: 1.0  
 **最後更新**: 2025-10-15  
-**作者**: 林志錚 Michael Lin (Chih Cheng Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin (Chih Cheng Lin)
 
 ---
 

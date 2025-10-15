@@ -1,6 +1,6 @@
 # IDTF V3.3: 具備即時協作設計與部署能力的工業數位分身完整框架
 
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)¹  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)¹  
 **單位**: ¹IDTF 聯盟,台灣  
 **通訊作者**: chchlin1018@gmail.com
 

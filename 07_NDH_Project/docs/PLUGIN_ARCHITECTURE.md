@@ -2,7 +2,7 @@
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -687,5 +687,5 @@ NDH 插件架構提供了一個強大、靈活和安全的擴展機制,使 NDH �
 
 **版本**: 1.0.0  
 **日期**: 2025-10-10  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 

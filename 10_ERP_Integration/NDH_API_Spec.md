@@ -1,6 +1,6 @@
 # NDH API 規格書 (ERP 整合擴展)
 
-**作者**: Manus AI  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
 **版本**: 1.0
 

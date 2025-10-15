@@ -3,7 +3,7 @@
 **文件編號**: IDTF-V3.5-01  
 **版本**: 3.5  
 **日期**: 2025-10-15  
-**作者**: Manus AI
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)
 
 ---
 

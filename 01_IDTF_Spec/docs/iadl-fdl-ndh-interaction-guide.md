@@ -2,7 +2,7 @@
 
 **文件版本**: 1.0  
 **發布日期**: 2025-10-12  
-**作者**: Manus AI
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)
 
 ---
 

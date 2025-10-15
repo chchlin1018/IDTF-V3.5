@@ -5,7 +5,7 @@
 **文件名稱**: IADL Editor 與 NDH 整合架構  
 **版本**: 1.1  
 **日期**: 2024-10-09  
-**作者**: Manus AI Assistant  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin) Assistant  
 **狀態**: 規劃階段
 
 ---
@@ -2571,7 +2571,7 @@ volumes:
 
 **文件版本**: 1.0  
 **最後更新**: 2024-10-09  
-**作者**: Manus AI Assistant  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin) Assistant  
 **狀態**: 規劃階段  
 **下次審查**: 待 NDH 專案啟動後
 

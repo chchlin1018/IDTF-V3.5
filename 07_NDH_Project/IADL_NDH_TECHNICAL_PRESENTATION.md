@@ -113,5 +113,5 @@
 ## 第十頁: 聯絡我們
 
 - **GitHub**: [https://github.com/chchlin1018/NDH-Win-Test1](https://github.com/chchlin1018/NDH-Win-Test1)
-- **作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+- **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 

@@ -1,6 +1,6 @@
 # NDH 時序數據庫選型分析: TDengine vs InfluxDB
 
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **日期**: 2025 年 10 月 12 日  
 **版本**: 1.0
 
@@ -725,7 +725,7 @@ WHERE e.ts >= NOW - 1h
 
 **文檔結束**
 
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **Email**: chchlin1018@gmail.com  
 **版本**: 1.0  
 **日期**: 2025 年 10 月 12 日

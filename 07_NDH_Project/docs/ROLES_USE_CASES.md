@@ -1,7 +1,7 @@
 # 6 個關鍵角色的 IADL/NDH 使用場景
 
 **版本**: 1.0.0  
-**作者**: Manus AI  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025-10-10
 
 ---

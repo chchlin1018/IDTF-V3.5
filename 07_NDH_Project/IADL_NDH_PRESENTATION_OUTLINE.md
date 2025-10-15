@@ -8,7 +8,7 @@
 
 - **標題**: IADL & NDH: 新一代工業資料中樞
 - **副標題**: 開源、中立、可擴展的工業 4.0 基礎設施
-- **作者**: Manus AI
+- **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)
 - **日期**: 2025年10月10日
 
 ---

@@ -2,7 +2,7 @@
 
 **日期**: 2025-10-10  
 **專案**: NDH (Neutral Data Hub)  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 
 ---
 
@@ -312,7 +312,7 @@ NDH 現在擁有完整的工業系統整合能力,從重量級的 OPC UA 到輕�
 
 **完成日期**: 2025-10-10  
 **專案**: NDH (Neutral Data Hub)  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)  
 **GitHub**: https://github.com/chchlin1018/NDH-Win-Test1  
 **版本**: 1.0
 

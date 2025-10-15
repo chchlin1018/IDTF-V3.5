@@ -309,5 +309,5 @@ IADL/NDH 專案現在擁有:
 
 **報告完成日期**: 2025-10-10  
 **GitHub 倉庫**: https://github.com/chchlin1018/NDH-Win-Test1  
-**作者**: 林志錚 (Chih-Cheng Lin, Michael Lin)
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih-Cheng Lin, Michael Lin)
 

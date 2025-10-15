@@ -1,6 +1,6 @@
 # NDH 可抽換時序數據庫架構設計
 
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **日期**: 2025 年 10 月 12 日  
 **版本**: 1.0
 
@@ -1729,7 +1729,7 @@ async def benchmark_query(adapter: ITSDBAdapter):
 
 **文檔結束**
 
-**作者**: 林志錚 (Chih Cheng Lin, Michael Lin)  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) (Chih Cheng Lin, Michael Lin)  
 **Email**: chchlin1018@gmail.com  
 **版本**: 1.0  
 **日期**: 2025 年 10 月 12 日

@@ -1,7 +1,7 @@
 # 工業數位分身生命週期角色分析報告
 
 **版本**: 1.0.0  
-**作者**: Manus AI  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025-10-10
 
 ---
