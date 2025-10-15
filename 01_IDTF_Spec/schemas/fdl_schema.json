@@ -172,6 +172,10 @@
           "items": {
             "$ref": "#/definitions/ComponentInstance"
           }
+        },
+        "usdModelReference": {
+          "type": "string",
+          "description": "Optional: Reference to a USD 3D model (path or UUID) associated with this asset instance."
         }
       },
       "required": ["id", "name", "assetTypeId"],

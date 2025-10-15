@@ -1,22 +1,33 @@
-# IDTF V3.5 - Industrial Digital Twin Framework
+# IDTF V3.6 - Industrial Digital Twin Framework
 
-**版本**: 3.5.2  
-**發布日期**: 2025-10-15  
-**作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin (Chih Cheng Lin) & Manus AI
+**版本**: 3.6.0  
+**發布日期**: 2025-10-16  
+**作者**: 林志錚 Michael Lin(Chih Cheng Lin)
 **組織**: IDTF Consortium
 
 ---
 
 ## 📖 專案概述
 
-**IDTF (Industrial Digital Twin Framework)** V3.5 是一個全面的工業數位分身框架，整合了設計、部署、運營、維護的完整生命週期管理。本版本 (V3.5.2) 進行了重大的架構性修正與精煉，旨在深化 **ISA-95 標準符合性**、**提升數據模型的豐富性與靈活性**，並**強化資產生命週期的管理能力**。這些更新是基於資深架構師的全面分析以及對核心規範 (IADL/FDL) 的修正建議，為實現更精準、更具互操作性的工業數位分身奠定了堅實的基礎。
+**IDTF (Industrial Digital Twin Framework)** V3.6 是一個全面的工業數位分身框架，整合了設計、部署、運營、維護的完整生命週期管理。本版本 (V3.6.0) 在 V3.5.2 的基礎上，引入了 **MCP (Multi-Agent Control Plane)** 與 **Agent SDK**，旨在構建一個開放、可擴展的 AI Agent 生態系統，讓多個 AI Agent 和基於規則的 Agent 能夠訂閱實時事件、執行決策並向工業設備或系統下達指令，從而實現更智能、更自主的工廠運營。這些更新是基於資深架構師的全面分析以及對核心規範 (IADL/FDL) 的修正建議，為實現更精準、更具互操作性的工業數位分身奠定了堅實的基礎。
 
 ### 核心理念
 
 > **Build Once, Use Everywhere**  
 > 一次建立工業資產的數位分身，即可在設計、建造、營運、維護等全生命週期中重複使用。
 
-### V3.5.2 最新亮點 (架構精煉) 🆕
+### V3.6.0 最新亮點 (MCP / AI Agent 擴充) 🆕
+
+- ✨ **MCP (Multi-Agent Control Plane)**: 在 NDH 之上引入 MCP，負責 Agent 的註冊、發現、事件分發、狀態管理、ACL 和審計，實現多 Agent 協作。
+- ✨ **Agent SDK**: 提供標準化的 Agent SDK，簡化 AI Agent 的開發、部署和管理，支援多種語言和開源 Agent orchestration SDK (如 LangGraph, AutoGen, CrewAI)。
+- ✨ **供應商中立**: 保持以 MQTT (含 SparkplugB 命名風格)、REST/GraphQL 為主要介面，IADL/FDL 為語意底座的供應商中立原則。
+    - ✨ **Reference Agents**: 實作三個可驗證價值的參考 Agent：
+    - ✨ **IADL-USD 整合**: 實現 IADL 語義數據與 USD 3D 物理模型的深度整合，支援實時視覺化、模擬和互動。
+  - **Energy-Optimizer Agent**: 監控能源消耗，優化能源使用。
+  - **Maintenance-Advisor Agent**: 監控設備狀態，預測潛在故障，提供維護建議。
+  - **Safety-Sentinel Agent**: 監控工廠環境和設備安全，預警危險情況，觸發安全響應。
+
+### V3.5.2 主要亮點 (架構精煉) ✨
 
 - ✨ **深度 ISA-95 整合**: 將 ISA-95 設備階層模型深度整合到 IADL/FDL 規範與核心架構中，確保數據的標準化與互操作性。
 - ✨ **多維度資產視圖**: 引入「次要階層」(Logical Groups) 概念，允許從不同維度（如學科、維護、安全）組織和檢視資產。
@@ -31,11 +42,14 @@
 本專案採用清晰的模組化結構，將所有內容分為 **13 個主要類別**。以下是更新後的文檔結構：
 
 ### 01. IDTF Spec（IDTF 規範）
-- **內容**: IDTF 框架總覽、核心概念、架構設計、Omniverse 整合
+- **內容**: IDTF 框架總覽、核心概念、架構設計、Omniverse 整合，以及 MCP / AI Agent 擴充設計藍圖。
 - **文檔**: 
   - `IDTF_Overview_v1.1.md` 🆕
+  - `IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md` 🆕
   - `Omniverse_Integration.md`
   - `IADL_FDL_Omniverse_Connector.md`
+  - `IADL_USD_Integration_Analysis_Report.md` 🆕
+  - `IADL_USD_Integration_Proposal.md` 🆕
 
 ### 02. IADL Spec（IADL 規範）
 - **內容**: Industrial Asset Definition Language 完整規範與修正建議
@@ -68,8 +82,15 @@
 - **內容**: Factory Designer 工具專案（預留結構）
 
 ### 06. NDH Spec（NDH 規範）
-- **內容**: Neutral Data Hub 架構規範
-- **文檔**: 包含 NDH 架構、API、高可用性、MCP Server 整合、Connector Agent 架構等。
+- **內容**: Neutral Data Hub 架構規範，包含 MCP Control Plane 和 Agent Runtimes 層次，以及 Reference Agents 的設計。
+- **文檔**: 
+  - `NDH_Architecture.md` 🆕
+  - `MCP_Layer_Design.md` 🆕
+  - `EnergyOptimizerAgent_Implementation.md` 🆕
+  - `MaintenanceAdvisorAgent_Design.md` 🆕
+  - `SafetySentinelAgent_Design.md` 🆕
+  - `USD_Integration_Service_Design.md` 🆕
+  - 其他 NDH 架構、API、高可用性、Connector Agent 架構等文件。
 
 ### 07. NDH Project（NDH 專案）
 - **內容**: NDH 實作專案源碼
@@ -91,6 +112,40 @@
 
 ### 13. GB300 Data Center（GB300 AI 數據中心）
 - **內容**: 完整的 IADL/FDL 設計案例。
+
+---
+
+## 🎯 V3.6.0 主要特色 (MCP / AI Agent 擴充詳解)
+
+IDTF V3.6 的核心在於引入了 **MCP (Multi-Agent Control Plane)** 與 **Agent SDK**，旨在構建一個開放、可擴展的 AI Agent 生態系統，實現更智能、更自主的工廠運營。
+
+### 1. MCP (Multi-Agent Control Plane) 與 Agent SDK
+
+MCP 作為 NDH 之上的獨立服務層，負責 Agent 的註冊、發現、事件分發、狀態管理、ACL 和審計。Agent SDK 則提供標準化的介面和工具，簡化 Agent 的開發、部署和管理。
+
+**核心變更**:
+- ✅ **MCP Control Plane**: 負責 Agent 的生命週期管理和通訊協調，確保多 Agent 協作的順暢進行。
+- ✅ **Agent SDK**: 提供跨語言支援 (Python, Go, Node.js)，並整合開源 Agent orchestration SDK (LangGraph, AutoGen, CrewAI)，加速 Agent 開發。
+- ✅ **供應商中立通訊**: 透過 MQTT (含 SparkplugB 命名風格) 和 REST/GraphQL 作為主要介面，IADL/FDL 作為語意底座，確保開放性和互操作性。
+
+**價值**:
+- **提升智能化水平**: 實現更複雜的 AI 應用，如能源優化、預測性維護和安全監控。
+- **加速開發**: 簡化 Agent 開發流程，降低開發門檻。
+- **靈活擴展**: 支援多種 Agent 類型和協作模式，易於擴展新的智能應用。
+
+詳見：
+- `01_IDTF_Spec/docs/IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md`
+- `06_NDH_Spec/docs/MCP_Layer_Design.md`
+
+---
+
+### 2. Reference Agents
+
+為驗證 IDTF V3.6 的價值和可行性，實作了三個可驗證價值的 Reference Agents：
+
+- ✅ **Energy-Optimizer Agent**: 監控能源消耗，並根據生產計畫和能源價格進行優化，以降低能耗。詳見：`06_NDH_Spec/docs/EnergyOptimizerAgent_Implementation.md`
+- ✅ **Maintenance-Advisor Agent**: 監控設備狀態，預測潛在故障，並提供維護建議。詳見：`06_NDH_Spec/docs/MaintenanceAdvisorAgent_Design.md`
+- ✅ **Safety-Sentinel Agent**: 監控工廠環境和設備安全，預警危險情況，並觸發安全響應。詳見：`06_NDH_Spec/docs/SafetySentinelAgent_Design.md`
 
 ---
 
@@ -158,19 +213,18 @@ IDTF V3.5.2 大幅擴展了 IADL 的數據模型，並引入了詳細的生命�
 
 ---
 
-## 🚀 快速開始
+#### 🚀 快速開始
 
 ### 1. 了解 IDTF 框架
-從 `IDTF_V3.5_Technical_Documentation_Overview.md` 和 `08_White_Papers/IDTF_V3.5_Architectural_Analysis_Report.md` 開始，全面了解框架的設計理念與最新架構。
-
+從 `01_IDTF_Spec/docs/01_IDTF_Overview.md` 和 `08_White_Papers/IDTF_V3.5_Architectural_Analysis_Report.md` 開始，全面了解框架的設計理念與最新架構。
 ### 2. 學習 IADL 語言
-閱讀 `02_IADL_Spec/docs/IADL_Specification_V3.1.md`，並參考 `IADL_Spec_Revision_Suggestions.md` 了解最新的設計思想。
-
+閱讀 `02_IADL_Spec/docs/IADL_Specification_V3.1.md`，並參考 `02_IADL_Spec/docs/IADL_Spec_Revision_Suggestions.md` 了解最新的設計思想。
 ### 3. 學習 FDL 語言
-閱讀 `04_FDL_Spec/docs/11_FDL_Specification_Whitepaper.md`，並參考 `FDL_Spec_Revision_Suggestions.md`。
-
+閱讀 `04_FDL_Spec/docs/FDL_Specification.md`，並參考 `04_FDL_Spec/docs/FDL_Spec_Revision_Suggestions.md`。
 ### 4. 瀏覽核心架構文檔
-深入研究 `03_IADL_Editor_Project/docs/` 目錄下的最新架構文檔 (v1.1)，理解各個組件的詳細設計。
+深入研究 `01_IDTF_Spec/docs/` 和 `06_NDH_Spec/docs/` 目錄下的最新架構文檔，特別是 `06_NDH_Spec/docs/NDH_Architecture.md`、`06_NDH_Spec/docs/MCP_Layer_Design.md` 和 `01_IDTF_Spec/docs/IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md`，理解各個組件的詳細設計。
+### 5. 體驗 AI Agent
+參考 `06_NDH_Spec/docs/EnergyOptimizerAgent_Implementation.md`、`06_NDH_Spec/docs/MaintenanceAdvisorAgent_Design.md` 和 `06_NDH_Spec/docs/SafetySentinelAgent_Design.md`，了解如何實作和部署 AI Agent。。
 
 ---
 

@@ -53,23 +53,23 @@ IDTF 採用清晰的分層架構,每一層都有明確的職責:
 │     應用層 (Applications)                │
 │  Dashboard | Analytics | Control        │
 ├─────────────────────────────────────────┤
-│     視覺化層 (Visualization)             │
-│  Omniverse | Web3D | AR/VR              │
+│     服務層 (Service Layer)               │
+│  REST / GraphQL / WS                    │
 ├─────────────────────────────────────────┤
-│     服務層 (Services)                    │
-│  API Gateway | Auth | Notification      │
+│     處理層 (Processing Layer)            │
+│  Stream / Batch / AI                    │
 ├─────────────────────────────────────────┤
-│     數據處理層 (Data Processing)         │
-│  Stream Processing | Analytics | ML     │
+│     數據中樞層 (NDH Data Hub)            │
+│  Kafka / TSDB / Postgres / Redis + Event Bus │
 ├─────────────────────────────────────────┤
-│     數據中樞層 (Data Hub)                │
-│  NDH - Kafka | InfluxDB | PostgreSQL    │
+│     數據採集層 (Data Acquisition)        │
+│  OPC UA / MQTT / ...                    │
 ├─────────────────────────────────────────┤
-│     數據採集層 (Data Collection)         │
-│  OPC UA | MQTT | Modbus | BACnet        │
+│     MCP 控制平面 (MCP Control Plane)     │
+│  (registry, ACL, scheduler, audit)      │
 ├─────────────────────────────────────────┤
-│     資產層 (Assets)                      │
-│  Physical Assets | Sensors | Actuators  │
+│     Agent 運行時 (Agent Runtimes)        │
+│  (py/go/node) SDK + policies            │
 └─────────────────────────────────────────┘
 ```
 
@@ -266,6 +266,17 @@ IDTF V3.5 的完整生態系統架構如下:
 │  │    Omniverse     │                                       │
 │  │  (3D 視覺化)      │                                       │
 │  └──────────────────┘                                       │
+│                                                              │
+│                                                              │
+│            ▲                         ▲                       │
+│            │                         │                       │
+│            │ agents/#                │ ndh/#                 │
+│            │  (MQTT Topics)          │ telemetry / events / cmds │
+│  ┌────────────────────┐        ┌────────────────────┐      │
+│  │  MCP Control Plane │ <----> │  Agent Runtimes    │      │
+│  │  (registry, ACL,   │        │  (py/go/node)      │      │
+│  │   scheduler, audit)│        │  SDK + policies    │      │
+│  └────────────────────┘        └────────────────────┘      │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```

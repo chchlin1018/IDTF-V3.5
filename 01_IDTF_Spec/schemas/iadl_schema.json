@@ -72,6 +72,10 @@
           "items": {
             "$ref": "#/definitions/Command"
           }
+        },
+        "usdModelReference": {
+          "type": "string",
+          "description": "Optional: Reference to a USD 3D model (path or UUID) associated with this asset type."
         }
       },
       "required": ["id", "name"],
