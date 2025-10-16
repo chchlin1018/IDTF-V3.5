@@ -77,6 +77,15 @@ NDH 可以透過以下標準協議暴露其整合後的資產數據，供 SCADA 
 *   **挑戰**: 高度依賴 SCADA 平台的輸出檔案格式，格式變化可能導致解析器失效；導出的檔案可能不包含所有必要的元數據；需要手動導出步驟。
 *   **實作概要**: 識別 SCADA HMI 可以導出的包含 Tag 定義的檔案（例如 Aveva 的 `Galaxy` 匯出檔案或 Ignition 的 Tag 匯出 JSON/XML），開發解析腳本提取關鍵資訊，然後映射到 IADL 結構並生成 IADL 文件。
 
+### 5.4. Asset Instance Hierarchy 與 SCADA HMI 的整合
+
+NDH 中的 Asset Instance Hierarchy (資產實例階層) 是透過 FDL (Factory Design Language) 定義的，它反映了工廠的物理和邏輯組織結構（例如 ISA-95 階層）。這個階層對於 SCADA HMI 系統的整合至關重要：
+
+*   **上下文感知導航**：SCADA HMI 可以利用 NDH 提供的 Asset Instance Hierarchy，實現基於工廠區域、生產線或設備組的上下文感知導航。操作員可以從高層次的工廠概覽鑽取到特定的設備，並查看其相關數據和控制介面。
+*   **統一的資產視圖**：無論底層數據來自何種設備或系統，NDH 都將其整合到統一的 Asset Instance Hierarchy 中。SCADA HMI 系統只需連接到 NDH，即可獲得一個完整且一致的資產視圖，簡化了 HMI 的開發和維護。
+*   **分散式物件管理**：NDH 採用類似 CORBA 的分散式物件管理架構來管理數百萬個 Asset Instance。這意味著 SCADA HMI 系統可以透過標準化的介面與這些分散式 Asset Instance 互動，而無需關心它們實際運行在哪個伺服器節點上。這種透明性確保了 HMI 系統在高併發和大規模部署下的穩定性和可擴展性。
+*   **FDL 與 Layout Mapping**：FDL 作為中立的工廠佈局描述語言，可以對映不同工廠 Layout 設計軟體所產生的佈局。這使得 SCADA HMI 系統能夠基於 FDL 定義的 Asset Instance Hierarchy，在 HMI 畫面中精確地呈現資產的物理位置和相互關係，實現數位分身在操作層面的視覺化。
+
 ## 6. 結論
 
 無論是 Aveva Development Studio 還是 Ignition SCADA，都提供了足夠的 SDK/API 和開發工具來實現與 IDTF/NDH 架構的深度整合。其中，**開發插件直接從 SCADA 平台導出 IADL Tag Design 是最推薦的方法**，它能提供最緊密的整合和最高的數據一致性。對於 Aveva，GRAccess API 是實現此功能的關鍵；對於 Ignition，其 Module SDK 或強大的 Python Scripting API 和 REST API 提供了多種靈活的實作途徑。透過這些自動化工具，可以有效地將 SCADA HMI 的操作層數據與數位分身的數據模型進行同步，為工業數位化轉型提供堅實的基礎。

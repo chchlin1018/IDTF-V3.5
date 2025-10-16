@@ -113,7 +113,24 @@ Enterprise (FDL factory_design)
                 └── Asset Tag Instance (映射 DB_2F_A_001 的數據點)
 ```
 
-### 3.3. 動態更新與生命週期管理
+### 3.3. 分散式物件管理與 FDL 對映
+
+#### 3.3.1. 分散式物件管理：類似 CORBA 架構
+
+NDH 將每個 Asset Instance 視為一個獨立的、具有狀態和行為的物件，並採用類似 CORBA (Common Object Request Broker Architecture) 的架構來管理這些分散式物件。這意味著：
+
+*   **物件導向的抽象**：每個 Asset Instance 都是一個獨立的、具有狀態和行為的物件，可以透過統一的介面進行遠端呼叫和互動。
+*   **位置透明性**：應用程式無需知道 Asset Instance 實際運行在哪個伺服器節點上，即可對其進行操作。NDH 的底層叢集會負責路由請求到正確的 Asset Instance 實例。
+*   **高可用性和容錯**：透過在叢集中的多個節點上部署和複製 Asset Instance，可以實現高可用性和容錯能力，確保即使部分節點失效，Asset Instance 服務也能持續運行。
+
+#### 3.3.2. FDL 與工廠 Layout 設計軟體的對映
+
+FDL 不僅僅是 NDH 內部使用的語言，它更是一個中立的、標準化的工廠佈局描述語言。這意味著：
+
+*   **互操作性**：FDL 可以作為不同工廠 Layout 設計軟體（例如 CAD 軟體、MES 系統的佈局工具、甚至 Omniverse Composer 等 3D 設計工具）之間的橋樑。這些軟體可以匯出其佈局資訊為 FDL 格式，或從 FDL 匯入佈局資訊。
+*   **統一的 Layout Mapping**：FDL 提供了一個統一的語義層次來描述工廠的物理和邏輯結構，無論原始設計軟體是什麼，最終都能對映到 FDL 定義的 Asset Instance Hierarchy。
+
+### 3.4. 動態更新與生命週期管理
 
 NDH 的資產層次結構是動態的，能夠響應工廠環境的變化：
 
@@ -121,29 +138,14 @@ NDH 的資產層次結構是動態的，能夠響應工廠環境的變化：
 *   **實時數據更新**: Asset Tag Instance 持續監聽來自數據採集層的實時數據流，並更新其內部緩存或直接從時序數據庫中獲取最新值，確保層次結構中的數據始終是最新的。
 *   **資產生命週期事件**: NDH 可以整合資產的生命週期事件 (例如安裝、維護、退役)，並更新層次結構中資產的狀態，這與 ISA-95 的狀態轉換模型相符。
 
+### 3.5. NDH 的叢集架構以應對大規模部署
 
+在大型工業場景中，Asset Instance 和 Asset Tag Instance 的數量可能達到百萬級別。為了處理如此龐大的數據量和高併發的數據流，NDH 採用了**分散式叢集架構**。這包括：
 
-
-
-
-
-****
-
-```
-Enterprise (FDL Factory)
-└── Site (FDL Building: MainBuilding)
-    └── Area (FDL Floor: 2F)
-        └── Process Cell / Area (FDL Layout Area: Production_Zone_A)
-            ├── Equipment Module (FDL AssetInstance: DS_2F_A_001)
-            │   ├── Control Module (IADL ComponentType: Sensor_Pressure_01)
-            │   └── Control Module (IADL ComponentType: Actuator_Valve_01)
-            ├── Equipment Module (FDL AssetInstance: DS_2F_A_002)
-            └── Equipment Module (FDL AssetInstance: DB_2F_A_001)
-```
-
-
-
-
+*   **數據採集層的分散式部署**：多個 Data Acquisition 節點並行採集數據。
+*   **NDH Data Hub 的可擴展性**：利用 Kafka、TSDB (如 TDengine)、Postgres 等分散式數據技術，確保數據的吞吐量和儲存能力。
+*   **Asset Tag Instance 的分散式管理**：Asset Tag Instance 可以分散部署在多個節點上，實現負載均衡和高可用性。
+*   **MCP Control Plane 的叢集化**：確保 AI Agent 的管理和排程在高負載下依然穩定可靠。
 
 ## 4. 資產層次結構到 Omniverse USD Scene Graph 的映射機制
 
@@ -202,13 +204,13 @@ NDH 中的 **USD Integration Service** 將作為核心組件，負責將 NDH 內
             xformOp:rotateZ = 0
             custom:manufacturer = "VendorX" (來自 IADL 靜態屬性)
             custom:model = "DS-Pro" (來自 IADL 靜態屬性)
-            custom:discharge_pressure = <realtime_data_from_AssetServant> (動態數據)
-            custom:operational_status = <realtime_data_from_AssetServant> (動態數據)
-            custom:oee = <realtime_data_from_AssetServant> (動態數據)
+            custom:discharge_pressure = <realtime_data_from_AssetTagInstance> (動態數據)
+            custom:operational_status = <realtime_data_from_AssetTagInstance> (動態數據)
+            custom:oee = <realtime_data_from_AssetTagInstance> (動態數據)
             rel material_output = </World/Factory_Harvatek/MainBuilding/Floor_2F/Production_Zone_A/DB_2F_A_001> (FDL relationships)
             /Sensor_Pressure_01 (IADL ComponentType, ISA-95 Control Module)
               component_id = "Sensor_Pressure_01"
-              custom:value = <realtime_data_from_AssetServant>
+              custom:value = <realtime_data_from_AssetTagInstance>
               custom:unit = "bar"
           /DS_2F_A_002
           /DB_2F_A_001
@@ -218,60 +220,23 @@ NDH 中的 **USD Integration Service** 將作為核心組件，負責將 NDH 內
 
 NDH 的 USD Integration Service 將利用 Omniverse Connect SDK 或 USD API，實現 NDH 內部資產數據與 Omniverse USD Scene Graph 之間的實時雙向同步。這包括：
 
-*   **數據推送到 USD**: 當 NDH 中的資產狀態或數據 (透過 Asset Tag Instance) 發生變化時，USD Integration Service 會將這些更新推送到 USD Scene Graph 中的對應自定義屬性。Omniverse 中的應用 (如 Composer, Isaac Sim) 可以訂閱這些屬性變化，並實時更新 3D 視覺化或模擬狀態。
-*   **USD 事件回傳 NDH**: Omniverse 中的用戶交互或模擬結果 (例如，在虛擬環境中操作一個閥門，或模擬資產故障) 可以透過 USD 事件機制回傳到 NDH。USD Integration Service 將捕獲這些事件，並將其轉換為 NDH 可理解的指令或數據更新，進而影響物理世界或觸發 AI Agent 的響應。
-*   **高效數據流**: 透過優化數據傳輸協議和增量更新機制，確保大規模工業場景下的實時數據同步性能。
+1.  **數據推送到 USD**: 當 NDH 內部 Asset Tag Instance 檢測到數據更新時，USD Integration Service 會將這些更新推送到 Omniverse USD Scene Graph 中對應的 USD Prim 屬性上。這確保了 3D 場景中的視覺化和模擬始終反映最新的物理世界狀態。
+2.  **控制指令從 USD**: Omniverse 中的應用 (例如操作員 HMI、AI Agent) 可以透過修改 USD Prim 的特定屬性來發送控制指令。USD Integration Service 會監聽這些變化，並將其轉換為 NDH 內部可理解的控制指令，透過 Asset Tag Instance 路由到實際設備。
+3.  **事件與警報**: NDH 中的事件和警報信息也可以映射到 USD 中的特定 Prim 屬性或事件機制，以便在 3D 環境中進行視覺化警報或觸發相應的行為。
 
-## 5. 結論
+### 4.4. USD Layering 與協同工作
 
-將 NDH 中建構的資產層次結構映射到 Omniverse USD Scene Graph 是實現 3D 視覺化和模擬的關鍵步驟。USD (Universal Scene Description) 提供了一個強大且可擴展的框架來描述 3D 場景，其層次結構與 IDTF 的資產模型具有良好的對應關係。
+USD 的分層覆蓋 (Layering) 機制對於 IDTF 來說至關重要。它允許：
 
-### 4.1. USD Scene Graph 基礎
+*   **數據與表示分離**: NDH 負責管理資產的邏輯和數據層，而 3D 模型和視覺化層則可以由 Omniverse 或其他設計工具獨立管理。USD Layering 允許將這些不同的層疊加在一起，形成一個完整的場景。
+*   **多團隊協同**: 不同的團隊 (例如工廠設計師、設備供應商、數據科學家) 可以在各自的 USD 層上工作，而不會相互干擾。NDH 提供的資產數據層可以作為所有這些團隊的共同基礎。
+*   **版本控制與變更管理**: USD Layering 內建的版本控制能力，使得對資產模型或場景佈局的任何更改都可以被追蹤和管理。
 
-USD Scene Graph 是一個有向無環圖 (DAG)，由 Prims (基本元素) 組成。Prims 可以是模型、材質、燈光、攝影機或任何其他場景元素。Prims 可以嵌套，形成一個階層結構。
+### 4.5. USD Schema 擴展
 
-### 4.2. 映射策略
+為了更好地表示 IDTF 的資產模型和數據，NDH 的 USD Integration Service 可能會利用 USD 的 Schema 擴展機制，定義自定義的 USD Schema。這將允許：
 
-NDH 中的 USD Integration Service 將負責執行以下映射步驟：
+*   **強類型資產屬性**: 定義特定於工業資產的屬性類型，例如 `AssetID`、`AssetType`、`OEE` 等，使其在 USD 中具有更豐富的語義。
+*   **行為定義**: 擴展 USD Schema 以包含資產的行為模型，這對於在 Omniverse 中進行更高級的模擬和 AI Agent 訓練非常有用。
 
-1.  **根節點映射**: FDL 的 `factory_design` (ISA-95 Enterprise) 將映射為 USD Scene Graph 的根節點，例如 `/World/Factory_Harvatek`。
-2.  **物理結構映射**: FDL 中定義的 `buildings` (ISA-95 Site) 和 `floors` 將映射為 USD 中的 Xform Prims，用於組織物理空間。例如 `/World/Factory_Harvatek/MainBuilding/Floor_2F`。
-3.  **邏輯區域映射**: FDL 的 `layout.area` (ISA-95 Area/Process Cell) 也將映射為 USD 中的 Xform Prims，作為邏輯分區。例如 `/World/Factory_Harvatek/MainBuilding/Floor_2F/Production_Zone_A`。
-4.  **資產實例映射**: FDL 中定義的每個資產實例 (例如 `DS_2F_A_001`，對應 ISA-95 Equipment Module) 將映射為一個 USD Model Prim。這個 Model Prim 將引用 IADL 中定義的 3D 模型 (例如 `models/die_sorter.usd`)，並繼承其幾何、材質等信息。
-    *   **IADL 3D 模型引用**: IADL 中指定的 `geometry.model_file` (例如 `.usd` 或 `.gltf` 文件) 將作為 USD Model Prim 的參考 (Reference) 或有效載荷 (Payload) 引入。
-    *   **位置與方向**: FDL 中定義的 `origin` 和 `orientation` 參數將用於設置 USD Model Prim 的 `xformOp` 屬性，精確定位資產在 3D 場景中的位置和方向。
-5.  **組件映射**: IADL 中定義的 `ComponentType` (ISA-95 Control Module) 可以映射為 USD Model Prim 的子 Prim，或者作為屬性附加到其父資產 Prim 上，具體取決於其在 3D 場景中的視覺化需求和交互粒度。
-6.  **屬性與數據綁定**: NDH 中的靜態資產屬性 (來自 IADL) 和實時數據 (透過 Asset Tag Instance 獲取) 將作為 USD Prim 的自定義屬性 (Custom Attributes) 附加到對應的 USD 節點上。這使得 Omniverse 中的應用可以直接訪問這些數據，實現數據驅動的視覺化和交互。
-    *   例如，`DS_2F_A_001` 的 USD Prim 可能會有 `custom:discharge_pressure` 屬性，其值由 Asset Tag Instance 提供。
-7.  **關係映射**: FDL 中定義的 `relationships` (例如 `material_flow`, `data_connection`, `power_supply`) 可以映射為 USD 中的關係 (Relationships) 或自定義屬性，以表示資產之間的邏輯連接。這對於模擬和分析至關重要。
-
-**USD Scene Graph 結構示例 (對應上述 NDH 邏輯層次結構):**
-
-```
-/World
-  /Factory_Harvatek (FDL factory_design)
-    /MainBuilding (FDL building_id: MainBuilding, ISA-95 Site)
-      /Floor_2F (FDL floor_id: 2F)
-        /Production_Zone_A (FDL area: Production_Zone_A, ISA-95 Area/Process Cell)
-          /DS_2F_A_001 (FDL AssetInstance, ISA-95 Equipment Module)
-            asset_id = "DS_2F_A_001"
-            asset_type = "DieSorter_v1.0"
-            custom:discharge_pressure = <realtime_data_from_AssetServant>
-            custom:operational_status = <realtime_data_from_AssetServant>
-            references = @./models/die_sorter.usd@
-            xformOp:translate = (10.0, 20.0, 0.0)
-            xformOp:rotateZ = 0
-            /Sensor_Pressure_01 (IADL ComponentType, ISA-95 Control Module)
-              component_id = "Sensor_Pressure_01"
-              custom:value = <realtime_data_from_AssetServant>
-          /DS_2F_A_002
-          /DB_2F_A_001
-```
-
-### 4.3. 實時數據同步
-
-NDH 的 USD Integration Service 將利用 Omniverse Connect 或 USD API，實現 NDH 內部資產數據與 Omniverse USD Scene Graph 之間的實時雙向同步。當 NDH 中的資產狀態或數據發生變化時，USD Scene Graph 中的對應屬性會自動更新，反之亦然。
-
-## 5. 結論
-
-透過 FDL、IADL 和 ISA-95 標準的緊密結合，IDTF 能夠在 NDH 中構建出一個清晰、可追溯且符合行業標準的資產層次結構。進一步地，透過精心設計的映射機制，這個層次結構可以無縫地轉換為 Omniverse USD Scene Graph，為工業數位分身提供強大的 3D 視覺化、模擬和交互能力。這不僅提升了 IDTF 的互操作性和實用性，也為台灣高科技製造業的數位轉型提供了堅實的基礎，特別是在實現 AI Agent 整合和數據驅動的營運優化方面。
+透過這些詳細的映射策略，NDH 成功地將複雜的工業資產數據和階層結構轉化為 Omniverse USD Scene Graph 中可視化、可模擬和可交互的數位分身，為工業 4.0 應用提供了強大的基礎。
