@@ -76,3 +76,16 @@ FDL 不僅定義了單個資產的部署，更定義了資產之間的物理和�
 ## 7. 結論
 
 NDH 透過 FDL 和 IADL 的精確定義，結合 Asset Instance 和 Asset Tag Instance 的概念，構建了一個強大、靈活且可擴展的數位分身資產管理框架。其與 Omniverse USD Scene Graph 的深度整合，以及為大規模部署設計的叢集架構，共同為實現工業數位化轉型和智能製造提供了堅實的基礎。
+
+
+## 8. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本概述所定義的 NDH 資產管理機制需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+

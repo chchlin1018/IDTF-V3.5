@@ -97,3 +97,16 @@ NDH 支援 MQTT 的通配符訂閱，允許 Agent 或應用程式訂閱多個相
 *   **使用有意義的 ID**: `site_id`, `area_id`, `asset_id`, `tag_id` 應使用在 FDL 和 IADL 中定義的實際 ID。
 
 遵循這些命名規範將有助於構建一個清晰、可管理且高效的 IDTF 生態系統。
+
+
+## 6. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本規範所定義的 Topic 命名規範需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+

@@ -123,3 +123,16 @@ spec:
 *   **Safety-Sentinel Agent**: 能夠訂閱安全相關數據，發佈緊急停機命令，風險等級高，需要人機共治審批且有嚴格的速率限制。
 
 Agent Manifest 規範為 NDH 平台提供了標準化的 Agent 描述方式，確保了 Agent 的安全部署、可管理性和互操作性。
+
+
+## 5. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本規範所定義的 Agent Manifest 需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+

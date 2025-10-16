@@ -171,3 +171,16 @@ scalar JSON # 自定義 JSON 類型
 ```
 
 此草案為 MCP API 提供了初步的結構和功能定義，將作為未來詳細設計和實作的基礎。
+
+
+## 4. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本 API 所定義的 MCP 介面需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+

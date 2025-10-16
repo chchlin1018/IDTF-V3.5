@@ -90,3 +90,16 @@ NDH 中的 Asset Instance Hierarchy (資產實例階層) 是透過 FDL (Factory 
 
 無論是 Aveva Development Studio 還是 Ignition SCADA，都提供了足夠的 SDK/API 和開發工具來實現與 IDTF/NDH 架構的深度整合。其中，**開發插件直接從 SCADA 平台導出 IADL Tag Design 是最推薦的方法**，它能提供最緊密的整合和最高的數據一致性。對於 Aveva，GRAccess API 是實現此功能的關鍵；對於 Ignition，其 Module SDK 或強大的 Python Scripting API 和 REST API 提供了多種靈活的實作途徑。透過這些自動化工具，可以有效地將 SCADA HMI 的操作層數據與數位分身的數據模型進行同步，為工業數位化轉型提供堅實的基礎。
 
+
+
+## 7. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本技術說明文件所定義的 SCADA HMI 整合機制需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+

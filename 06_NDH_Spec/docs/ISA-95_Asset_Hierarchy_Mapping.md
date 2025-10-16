@@ -1,6 +1,6 @@
 # ISA-95 資產層次結構與 IDTF 對映
 
-**版本**: 1.1
+**版本**: 1.2
 **日期**: 2025-10-16
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)
 
@@ -53,7 +53,7 @@ factory_design:
 
 ## 3. NDH 資產層次結構的建構機制
 
-NDH (Neutral Data Hub) 作為 IDTF 的核心數據中樞，其關鍵職能之一是根據 FDL (Factory Design Language) 和 IADL (Industrial Asset Definition Language) 的定義，動態且智慧地建構和維護一個統一的資產層次結構。這個層次結構不僅反映了工廠的物理佈局和邏輯分區，也整合了資產的靜態屬性與實時運行數據，為上層應用、AI Agent 和 Omniverse USD Scene Graph 提供一致且豐富的數據視圖。
+NDH (Neutral Data Hub) 作為 IDTF 的核心數據中樞，其關鍵職能之一是根據 FDL (Factory Design Language) 和 IADL (Industrial Asset Description Language) 的定義，動態且智慧地建構和維護一個統一的資產層次結構。這個層次結構不僅反映了工廠的物理佈局和邏輯分區，也整合了資產的靜態屬性與實時運行數據，為上層應用、AI Agent 和 Omniverse USD Scene Graph 提供一致且豐富的數據視圖。
 
 ### 3.1. NDH 資產層次結構的核心原則
 

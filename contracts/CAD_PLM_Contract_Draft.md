@@ -166,3 +166,16 @@ CAD/PLM 整合應使用標準 HTTP 狀態碼結合自定義錯誤碼，例如：
 3.  **工單到設備狀態/回寫 (Work Order to Equipment Status/Write-back)**: MES/CMMS 系統生成工單，NDH 更新 Asset Instance 狀態，並將維護記錄回寫到 PLM 系統。
 
 本合約草案為 CAD/PLM 與 IDTF 的整合提供了框架，旨在實現設計、製造和運營數據的無縫連接。
+
+
+## 6. 非功能需求 (Non-Functional Requirements, NFR) 與決策門檻
+
+本合約所定義的 CAD/PLM 整合需滿足以下非功能需求：
+
+*   **延遲 (Latency)**：同廠查詢/事件 p95 < 300ms；跨廠/雲邊 p95 < 800ms。
+*   **吞吐 (Throughput)**：≥ 100k tags / 1k EPS（每廠），可線性擴張。
+*   **可用性 (Availability)**：NDH 控制面 99.9%，告警通道 99.99%。
+*   **一致性 (Consistency)**：事件重放恢復狀態一致（需定義 3 條測例）。
+*   **安全 (Security)**：高風險命令「人機共治 + 限幅/限頻 + 全鏈路審計」。
+*   **可維運 (Maintainability)**：SLO 儀表（Latency/Traffic/Errors/Saturation）；事故 Runbook（角色/時限/動作）。
+
