@@ -109,7 +109,7 @@ IADL Editor 將透過標準 API 或專用連接器與以下主流 CAD/PLM 系統
 | 關聯文件 | `asset_type.documents` | 映射為 IADL 的文件連結列表，連結到 NDH Document Server。 |
 | 其他屬性 (例如電壓、功率) | `asset_type.engineering_attributes` 或 `asset_type.parameters` | 映射為 IADL 的工程屬性或參數列表。 |
 | **ISA-95 階層級別** | `asset_type.isa95_hierarchy_level` | 資產在 ISA-95 階層中的級別 (例如 `equipment_type`, `equipment`)。 |
-| **生命週期狀態** | `asset_type.lifecycle_status` | 資產的生命週期狀態 (例如 `design_in_progress`, `released`)。 |
+| **生命週期狀態** | `asset_type.lifecycle_status` | 資產的生命週期狀態 (例如 `design_in_progress`, `released`)。並應考慮狀態機的例外處理機制，允許在特定條件下繞過標準轉換路徑（例如緊急維修），但需記錄審計日誌。 |
 | **次要階層標籤** | `asset_type.logical_groups` | PLM 中可能存在的分類或標籤，可映射為 IADL 的次要階層分組。 |
 
 ## 6. API 介面規範

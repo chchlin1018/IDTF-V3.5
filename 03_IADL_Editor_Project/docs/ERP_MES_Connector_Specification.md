@@ -86,7 +86,7 @@ IADL Editor 將透過標準 API 或專用連接器與以下主流 ERP/MES 系統
 | **採購成本** | `asset_type.financial_attributes.purchase_cost` | 資產的採購成本。 |
 | **折舊資訊** | `asset_type.financial_attributes.depreciation_info` | 資產的折舊相關數據。 |
 | **資產會計編號** | `asset_type.financial_attributes.asset_account_id` | 資產在會計系統中的編號。 |
-| **採購訂單狀態** | `asset_instance.lifecycle_status` (事件觸發) | ERP 中的採購訂單狀態變更可觸發資產實例的生命週期狀態更新（如 `Ordered`, `Received`）。 |
+| **採購訂單狀態** | `asset_instance.lifecycle_status` (事件觸發) | ERP 中的採購訂單狀態變更可觸發資產實例的生命週期狀態更新（如 `Ordered`, `Received`）。此狀態轉換應考慮狀態機的例外處理機制，允許在特定條件下繞過標準轉換路徑，但需記錄審計日誌。 |
 
 ### 5.2 MES 數據映射
 
@@ -98,9 +98,9 @@ IADL Editor 將透過標準 API 或專用連接器與以下主流 ERP/MES 系統
 | 生產配方 (物料、步驟、參數) | `asset_type.recipes` | 映射為 IADL 的生產配方列表。 |
 | 工單號 | `asset_type.operational_attributes.work_order_id` | 關聯的生產工單號。 |
 | 生產狀態 | `asset_type.operational_attributes.production_status` | 資產的生產狀態。 |
-| **設備運營狀態** | `asset_instance.operational_status` | MES 中的設備運營狀態（如 `Running`, `Stopped`, `Standby`, `Faulted`）直接映射到資產實例的運營狀態。 |
+| **設備運營狀態** | `asset_instance.operational_status` | MES 中的設備運營狀態（如 `Running`, `Stopped`, `Standby`, `Faulted`）直接映射到資產實例的運營狀態。對於關鍵設備，其狀態轉換應遵循嚴格的狀態機規則，並提供例外處理機制以應對緊急情況。 |
 | **警報與事件** | `asset_instance.lifecycle_events` | MES 中的警報和事件可記錄為資產實例的生命週期事件。 |
-| **維護工單** | `asset_instance.maintenance_records` (事件觸發) | MES 中生成的維護工單可觸發維護記錄的創建，並更新資產實例的生命週期狀態（如 `Under_Maintenance`）。 |
+| **維護工單** | `asset_instance.maintenance_records` (事件觸發) | MES 中生成的維護工單可觸發維護記錄的創建，並更新資產實例的生命週期狀態（如 `Under_Maintenance`）。此類狀態轉換應納入狀態機例外處理的考量，確保在緊急維護時能靈活處理。 |
 
 ## 6. API 介面規範
 

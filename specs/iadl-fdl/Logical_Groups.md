@@ -6,7 +6,7 @@
 
 ## 2. 資料模型 (Data Model)
 
-Logical Groups 的資料模型設計為靈活且可擴展，能夠表示靜態集合、動態過濾結果以及巢狀群組。
+Logical Groups 的資料模型設計為靈活且可擴展，能夠表示靜態集合、動態過濾結果以及巢狀群組。**SyncOrchestrator** 透過 Event Sourcing 模式，確保了底層 Asset Instance 數據的實時更新和一致性，為 Logical Groups 提供了可靠的數據基礎。
 
 ```json
 {
@@ -71,7 +71,7 @@ NDH 提供強大的查詢引擎來處理 Logical Groups，支援多種查詢模�
     *   允許根據 Asset Instance 的靜態屬性 (`properties`) 或實時 Asset Tag Instance 數據 (`tags`) 進行過濾。
     *   例如：`filter=assetType = 'Motor_v2.0' AND properties.manufacturer = 'Siemens' AND tags.vibration > 5.0`。
 4.  **動態視圖 (Dynamic Views)**:
-    *   動態群組的查詢會在每次請求時實時評估，確保結果始終反映最新的資產狀態和屬性。
+    *   動態群組的查詢會在每次請求時實時評估，確保結果始終反映最新的資產狀態和屬性。這得益於 **SyncOrchestrator** 提供的事件驅動更新機制，保證了數據的即時性和準確性。
 
 ## 4. 權限模型 (Permission Model)
 

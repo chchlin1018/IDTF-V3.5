@@ -44,6 +44,30 @@ FDL 主要負責描述工廠的物理佈局和邏輯組織，因此它與 ISA-95
 | **Equipment Module** | 執行特定控制功能的設備或設備組件。 | **FDL AssetInstance** | FDL 實例化的具體設備，代表一個 Asset Instance。這是 IDTF 中最細粒度的可獨立管理的資產。 |
 | **Control Module** | 執行基本控制功能的設備組件，如感測器、執行器。 | **FDL ComponentInstance** | FDL 實例化的具體組件，通常是 Asset Instance 的組成部分。
 
+### 3.1.1. ISA-95 階層彈性機制
+
+為了應對實際工廠中非標準設備或臨時設施的管理需求，IDTF 引入了以下彈性機制，以在不破壞 ISA-95 標準結構的前提下，提高系統的適應性和靈活性：
+
+1.  **引入 "Unclassified" 虛擬層級**：
+    *   允許暫時性或實驗性設備在初始階段不強制歸屬於標準 ISA-95 階層中的某一級。
+    *   這些資產將被標記為 "Pending Classification"，並歸入一個虛擬的 "Unclassified" 層級。
+    *   系統將建立定期審查機制，要求使用者或 AI Agent 在一定時間內對這些資產進行分類。
+
+2.  **支援客製化擴展**：
+    *   允許企業根據自身業務需求，定義 ISA-95 標準層級之下的客製化子層級（例如：Level 3.5 介於 Site 和 Area 之間）。
+    *   這些客製化層級在內部管理時保持其獨特性，但必須透過明確的映射關係與標準 ISA-95 層級對應，以確保與外部系統的互操作性。
+
+3.  **映射表機制 (Custom Level Mapping)**：
+    *   建立一個可配置的映射表，用於將企業定義的客製化層級（CustomLevel）映射到標準的 ISA-95 層級（Standard Level）。
+    *   例如：將 "Production Zone A" 映射到 ISA-95 Level 3 (Area)。
+    *   此映射表將作為數據轉換和報告的依據，確保數據在不同視圖下的一致性。
+
+| 客製化層級範例 (Custom Level) | ISA-95 標準層級對應 (Standard Level) | 說明 |
+|:---|:---|:---|
+| Production Zone A | Area (Level 3) | 將內部定義的生產區域映射到 ISA-95 的 Area 層級。 |
+| Temporary Test Rig | Unclassified (Virtual) | 臨時測試設備，暫時不歸類到標準階層，等待後續分類。 |
+| Quality Control Bay | Process Cell (Level 2) | 將品質控制區映射到 ISA-95 的 Process Cell 層級。 |
+
 ### 3.2. 資產類型對映 (Asset Type Mapping)
 
 IADL 專注於定義單一資產的藍圖，因此它與 ISA-95 的資產模型有著直接的對應關係。每個 IADL `AssetType` 定義了一個 ISA-95 意義上的資產類型，包含了其所有相關的屬性、數據點、能力和行為。
@@ -111,12 +135,12 @@ IDTF 確保這些事件能夠被 NDH 捕獲，並根據預定義的規則觸發 
 
 ### 4.2. 一致性規則 (Consistency Rules)
 
-一致性規則定義了數位分身在運行時必須滿足的約束條件，特別是關於狀態轉移和數據來源的。
+一致性規則定義了數位分身在運行時必須滿足的約束條件，特別是關於狀態轉移和數據來源的。在 Event Sourcing 和 CQRS 模式下，這些規則由 SyncOrchestrator 強制執行，以確保命令端和查詢端的一致性。
 
 **示例：FDL.Asset.state 的一致性規則**
 
 *   **規則描述**：「FDL.Asset.state (即 Asset Instance 的運行狀態) 只能由 MES 事件（例如生產啟動/停止、批次完成）或 CMMS 工單（例如維護開始/結束）的明確指令觸發關閉或變更，不能由其他隨機事件或直接操作修改。」
-*   **驗證機制**：NDH 內部狀態機將強制執行此規則。任何嘗試透過非授權事件源修改 Asset Instance 狀態的請求將被拒絕或記錄為異常。
+*   **驗證機制**：NDH 內部狀態機（由 SyncOrchestrator 管理）將強制執行此規則。任何嘗試透過非授權事件源修改 Asset Instance 狀態的請求將被拒絕或記錄為異常。SyncOrchestrator 將確保所有狀態變更都經過事件日誌，並根據預定義的業務邏輯進行驗證。
 
 這些一致性規則確保了數位分身行為的預測性和可靠性，特別是在關鍵的生產和維護流程中。
 

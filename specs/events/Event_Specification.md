@@ -29,7 +29,7 @@
 
 *   **`id` (string, UUID)**: 事件的唯一識別符。用於事件的去重和追蹤。
 *   **`source` (string, URI)**: 事件的來源。通常是一個 NDH 內部資產的唯一路徑，或外部系統的識別符。遵循 CloudEvents 規範。
-*   **`type` (string)**: 事件的類型。描述事件發生的動作或狀態變化，例如 `com.ndh.asset.telemetry.update`、`com.ndh.asset.status.changed`、`com.ndh.agent.command.executed`。遵循 CloudEvents 規範。
+*   **`type` (string)**: 事件的類型。描述事件發生的動作或狀態變化，例如 `com.ndh.asset.telemetry.update`、`com.ndh.asset.status.changed`、`com.ndh.agent.command.executed`。特別地，對於資產生命週期狀態機的例外處理，可以定義如 `com.ndh.asset.lifecycle.bypass_transition` 等事件類型，以記錄非標準的狀態轉換。遵循 CloudEvents 規範。
 *   **`specversion` (string)**: CloudEvents 規範版本，目前為 `1.0`。
 *   **`time` (string, ISO 8601)**: 事件發生的時間，UTC 格式。精確到毫秒。
 *   **`datacontenttype` (string)**: `data` 字段的內容類型，例如 `application/json`、`application/xml`。
@@ -40,21 +40,21 @@
 
 ## 3. 一致性策略 (Consistency Strategy)
 
-NDH 採用 **最終一致性 (Eventual Consistency)** 模型，並透過事件日誌和重放機制來確保數據的一致性和可追溯性。
+NDH 採用 **最終一致性 (Eventual Consistency)** 模型，並透過事件日誌和重放機制來確保數據的一致性和可追溯性。在 Event Sourcing 和 CQRS 模式下，SyncOrchestrator 扮演關鍵角色，負責協調命令端和查詢端的一致性。
 
 1.  **事件日誌 (Event Log)**:
-    *   所有進入 NDH 的事件（包括來自設備的遙測數據、來自 Agent 的指令、來自外部系統的狀態更新）都將被寫入一個不可變的、有序的事件日誌（例如基於 Apache Kafka）。
-    *   事件日誌是系統的單一事實來源 (Single Source of Truth)。
+    *   所有進入 NDH 的事件（包括來自設備的遙測數據、來自 Agent 的指令、來自外部系統的狀態更新）都將被寫入一個不可變的、有序的事件日誌（**Event Store**，例如基於 Apache Kafka）。
+    *   事件日誌是系統的單一事實來源 (Single Source of Truth)，也是 Event Sourcing 模式的核心組件。
 
 2.  **事件重放 (Event Replay)**:
-    *   在系統故障恢復、數據校正或新的服務部署時，NDH 能夠從事件日誌中重放歷史事件，以重建系統狀態或初始化新的服務狀態。
+    *   在系統故障恢復、數據校正或新的服務部署時，NDH 能夠從事件日誌（Event Store）中重放歷史事件，以重建系統狀態或初始化新的服務狀態（尤其是 CQRS 模式下的讀取模型）。
     *   這確保了即使在分散式環境中，不同服務也能最終達到一致的狀態。
 
 3.  **冪等性 (Idempotency)**:
-    *   所有事件處理器都應設計為冪等性，即多次處理同一個事件（基於 `id` 字段）應產生相同的結果，避免重複操作導致的錯誤。
+    *   所有事件處理器（特別是 SyncOrchestrator 中的命令處理器和讀取模型更新器）都應設計為冪等性，即多次處理同一個事件（基於 `id` 字段）應產生相同的結果，避免重複操作導致的錯誤。
 
 4.  **因果一致性 (Causal Consistency)**:
-    *   透過 `correlationid` 和 `causationid` 字段，NDH 能夠追蹤事件之間的因果關係，確保事件處理的邏輯順序和正確性，即使在亂序到達的情況下也能重建正確的狀態。
+    *   透過 `correlationid` 和 `causationid` 字段，NDH 能夠追蹤事件之間的因果關係，確保事件處理的邏輯順序和正確性，即使在亂序到達的情況下也能重建正確的狀態。SyncOrchestrator 在處理事件時，會利用這些 ID 來維護事件的上下文和順序。對於狀態機的例外處理，相關的 `bypass_transition` 事件也應包含詳細的 `causationid` 和 `correlationid`，以便於審計和追溯。
 
 ## 4. 時間規範 (Time Specification)
 
