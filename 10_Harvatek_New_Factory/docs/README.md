@@ -405,7 +405,7 @@ ndh-admin enable-mcp-server \
 #### 步驟 9：驗證部署
 
 ```bash
-# 檢查所有 Asset Tag Instances 狀態
+# 檢查所有 Asset Servants 狀態
 ndh-admin list-assets --namespace harvatek-production
 
 # 檢查 Omniverse 同步狀態
@@ -418,7 +418,7 @@ ndh-admin check-mes-connection --namespace harvatek-production
 ### 驗證清單
 
 - [ ] NDH 叢集運行正常 (3 Master + 10 Worker)
-- [ ] 所有 Asset Tag Instances 已建立 (200+ 個)
+- [ ] 所有 Asset Servants 已建立 (200+ 個)
 - [ ] Omniverse 同步正常
 - [ ] MES 連接正常
 - [ ] MCP Server 運行正常

@@ -32,7 +32,7 @@
 
 1. **部署 Message Queue**: 安裝和配置 RabbitMQ 或 Kafka。
 2. **開發 MES Connector**: 實現對 `idtf.equipment.status` 的訂閱和對 `mes.*` 主題的發布。
-3. **擴展 Asset Tag Instance**: 增加對 `mes.*` 主題的訂閱和處理邏輯。
+3. **擴展 Asset Servant**: 增加對 `mes.*` 主題的訂閱和處理邏輯。
 4. **端到端測試**: 模擬工單的創建、執行和完成,驗證數據是否在兩個系統之間正確同步。
 
 ### 階段四: 數位分身整合 (3-4個月)
@@ -58,7 +58,7 @@
 
 ### 3.3 部署與維護
 
-- **使用容器化部署**: 將 MES Connector、Asset Tag Instance 等服務容器化 (Docker),方便部署和管理。
+- **使用容器化部署**: 將 MES Connector、Asset Servant 等服務容器化 (Docker),方便部署和管理。
 - **建立監控和告警機制**: 對整合層的各個組件進行監控,及時發現和處理問題。
 - **制定數據備份和恢復計畫**: 確保關鍵數據的安全性。
 

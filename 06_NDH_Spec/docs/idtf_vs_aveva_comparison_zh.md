@@ -49,7 +49,7 @@
 
 1.  **IADL (Industrial Asset Description Language)**: 一種聲明式的 YAML 語言,用於定義資產的數據模型、3D 幾何、行為邏輯和數據接口。它是創建數位分身的「基因藍圖」。
 2.  **FDL (Factory Design Language)**: 同樣是聲明式的 YAML 語言,用於描述工廠中資產的佈局、數量、位置和相互關係。它是構建虛擬工廠的「施工圖」。
-3.  **NDH (Neutral Data Hub)**: 負責即時數據採集、處理、存儲,並管理 Asset Tag Instances (資產服務實例) 的生命週期。它是數位分身運行的「心臟和神經系統」。
+3.  **NDH (Neutral Data Hub)**: 負責即時數據採集、處理、存儲,並管理 Asset Servants (資產服務實例) 的生命週期。它是數位分身運行的「心臟和神經系統」。
 4.  **Omniverse Connector**: 將 NDH 中的數位分身狀態即時同步到 NVIDIA Omniverse,實現高保真渲染和多用戶協同,提供極致的視覺體驗。
 
 ### 2.2. AVEVA Connect

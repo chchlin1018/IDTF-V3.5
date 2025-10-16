@@ -1,4 +1,4 @@
-# NDH、Asset Tag Instances、Omniverse 與 Digital Twins 整合架構技術白皮書
+# NDH、Asset Servants、Omniverse 與 Digital Twins 整合架構技術白皮書
 
 **版本**：V3.5  
 **作者**：林志錚 (Chih Cheng Lin, Michael Lin)  
@@ -9,7 +9,7 @@
 
 ## 摘要
 
-本白皮書詳細介紹了 **NDH (Neutral Data Hub)**、**Asset Tag Instances**、**NVIDIA Omniverse** 和 **Digital Twins** 之間的整合架構。這四個核心組件共同構成了 IDTF (Industrial Digital Twin Framework) 的執行時環境，實現了從物理世界到虛擬世界的即時雙向同步，為工業數位分身提供了完整的技術解決方案。
+本白皮書詳細介紹了 **NDH (Neutral Data Hub)**、**Asset Servants**、**NVIDIA Omniverse** 和 **Digital Twins** 之間的整合架構。這四個核心組件共同構成了 IDTF (Industrial Digital Twin Framework) 的執行時環境，實現了從物理世界到虛擬世界的即時雙向同步，為工業數位分身提供了完整的技術解決方案。
 
 本白皮書涵蓋：
 - 四個核心組件的定位與職責
@@ -27,8 +27,8 @@
 1. [引言](#1-引言)
 2. [核心組件概述](#2-核心組件概述)
 3. [整合架構設計](#3-整合架構設計)
-4. [Asset Tag Instances 詳細設計](#4-asset-servants-詳細設計)
-5. [NDH 與 Asset Tag Instances 整合](#5-ndh-與-asset-servants-整合)
+4. [Asset Servants 詳細設計](#4-asset-servants-詳細設計)
+5. [NDH 與 Asset Servants 整合](#5-ndh-與-asset-servants-整合)
 6. [Omniverse 連接器架構](#6-omniverse-連接器架構)
 7. [Digital Twins 即時同步機制](#7-digital-twins-即時同步機制)
 8. [數據流與控制流](#8-數據流與控制流)
@@ -58,7 +58,7 @@
 IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數位分身解決方案：
 
 - **NDH (Neutral Data Hub)**：供應商中立的數據整合中樞
-- **Asset Tag Instances**：資產的執行時數位分身模型
+- **Asset Servants**：資產的執行時數位分身模型
 - **NVIDIA Omniverse**：高保真 3D 可視化與物理模擬平台
 - **Digital Twins Runtime**：即時同步與協同引擎
 
@@ -92,7 +92,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 - 與 IT 系統（MES、ERP、PLM）雙向同步
 - 儲存時序數據和資產元數據
 - 提供統一的 API 介面
-- 管理 Asset Tag Instances 的生命週期
+- 管理 Asset Servants 的生命週期
 
 **技術特點**：
 - 微服務架構（可獨立擴展）
@@ -107,7 +107,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 - 並發連接數：10,000+
 - 數據吞吐量：100,000 點/秒
 
-### 2.2 Asset Tag Instances
+### 2.2 Asset Servants
 
 **定位**：工業資產的執行時數位分身模型
 
@@ -146,7 +146,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 
 **與 IDTF 的整合點**：
 - 從 IADL/FDL 自動生成 USD 場景
-- 與 NDH/Asset Tag Instances 即時同步資產狀態
+- 與 NDH/Asset Servants 即時同步資產狀態
 - 支援 AR/VR 沉浸式體驗
 - 提供 Python/C++ API 進行自定義擴展
 
@@ -162,7 +162,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 
 **核心職責**：
 - 管理物理世界 ↔ 虛擬世界的雙向同步
-- 協調 NDH、Asset Tag Instances、Omniverse 之間的數據流
+- 協調 NDH、Asset Servants、Omniverse 之間的數據流
 - 處理衝突解決和一致性保證
 - 提供協同編輯和多用戶管理
 - 監控系統健康和效能
@@ -200,7 +200,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 ┌───────────────────────────────▼──────────────────────────────────┐
 │                    NDH (Neutral Data Hub)                        │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │                  Asset Tag Instances Manager                  │   │
+│  │                  Asset Servants Manager                  │   │
 │  │  ┌────────────┐  ┌────────────┐  ┌────────────┐         │   │
 │  │  │  Servant   │  │  Servant   │  │  Servant   │   ...   │   │
 │  │  │  (Pump)    │  │ (Chiller)  │  │  (AHU)     │         │   │
@@ -271,7 +271,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 - 數據來源：即時測量值、狀態信號、告警事件
 
 #### **Layer 2: NDH (數據中樞)**
-- Asset Tag Instances：資產的數位分身模型
+- Asset Servants：資產的數位分身模型
 - 時序數據庫：儲存歷史數據
 - 元數據庫：儲存資產定義和配置
 - API Gateway：提供統一介面
@@ -298,7 +298,7 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 
 #### **3.3.1 關注點分離 (Separation of Concerns)**
 - **NDH**：專注於數據整合和儲存
-- **Asset Tag Instances**：專注於資產邏輯和行為
+- **Asset Servants**：專注於資產邏輯和行為
 - **Omniverse**：專注於可視化和模擬
 - **Digital Twins Runtime**：專注於同步和協同
 
@@ -319,15 +319,15 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 
 ---
 
-## 4. Asset Tag Instances 詳細設計
+## 4. Asset Servants 詳細設計
 
-### 4.1 Asset Tag Instance 架構
+### 4.1 Asset Servant 架構
 
-每個 Asset Tag Instance 代表一個工業資產的數位分身，包含以下組件：
+每個 Asset Servant 代表一個工業資產的數位分身，包含以下組件：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Asset Tag Instance (資產僕從)                  │
+│                    Asset Servant (資產僕從)                  │
 │                                                              │
 │  ┌────────────────────────────────────────────────────┐     │
 │  │              Metadata (元數據)                     │     │
@@ -405,11 +405,11 @@ IDTF V3.5 通過四個核心組件的深度整合，提供了完整的工業數�
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 Asset Tag Instance 生命週期
+### 4.2 Asset Servant 生命週期
 
 #### **4.2.1 實例化 (Instantiation)**
 
-從 IADL 定義創建 Asset Tag Instance：
+從 IADL 定義創建 Asset Servant：
 
 ```python
 class AssetServant:
@@ -461,7 +461,7 @@ class AssetServant:
 
 ```python
 async def register_to_ndh(self):
-    """註冊 Asset Tag Instance 到 NDH"""
+    """註冊 Asset Servant 到 NDH"""
     registration_data = {
         'asset_id': self.asset_id,
         'asset_type': self.metadata['asset_type'],
@@ -600,9 +600,9 @@ async def sync_to_omniverse(self):
         self.previous_state = self.state.copy()
 ```
 
-### 4.3 Asset Tag Instance API
+### 4.3 Asset Servant API
 
-每個 Asset Tag Instance 提供以下 API：
+每個 Asset Servant 提供以下 API：
 
 #### **4.3.1 狀態查詢**
 
@@ -708,11 +708,11 @@ async def get_history(
 
 ---
 
-## 5. NDH 與 Asset Tag Instances 整合
+## 5. NDH 與 Asset Servants 整合
 
-### 5.1 Asset Tag Instances Manager
+### 5.1 Asset Servants Manager
 
-NDH 包含一個 Asset Tag Instances Manager，負責管理所有 Asset Tag Instances 的生命週期：
+NDH 包含一個 Asset Servants Manager，負責管理所有 Asset Servants 的生命週期：
 
 ```python
 class AssetServantsManager:
@@ -726,7 +726,7 @@ class AssetServantsManager:
         asset_id: str,
         iadl_definition: Dict
     ) -> AssetServant:
-        """從 IADL 定義創建 Asset Tag Instance"""
+        """從 IADL 定義創建 Asset Servant"""
         servant = AssetServant(asset_id, iadl_definition)
         await servant.register_to_ndh()
         await servant.connect_to_physical_asset()
@@ -741,7 +741,7 @@ class AssetServantsManager:
         return servant
     
     async def batch_create_from_fdl(self, fdl_file: str):
-        """從 FDL 文件批量創建 Asset Tag Instances"""
+        """從 FDL 文件批量創建 Asset Servants"""
         with open(fdl_file, 'r') as f:
             fdl = yaml.safe_load(f)
         
@@ -789,13 +789,13 @@ class AssetServantsManager:
         return iadl_copy
     
     async def get_servant(self, asset_id: str) -> AssetServant:
-        """獲取 Asset Tag Instance"""
+        """獲取 Asset Servant"""
         if asset_id not in self.servants:
             raise ValueError(f"Asset {asset_id} not found")
         return self.servants[asset_id]
     
     async def stop_servant(self, asset_id: str):
-        """停止並銷毀 Asset Tag Instance"""
+        """停止並銷毀 Asset Servant"""
         servant = self.servants.get(asset_id)
         if servant:
             servant.state['operational_status'] = 'Stopping'
@@ -819,7 +819,7 @@ class AssetServantsManager:
 
 ### 5.2 事件總線 (Event Bus)
 
-NDH 使用事件總線在 Asset Tag Instances 之間傳遞事件：
+NDH 使用事件總線在 Asset Servants 之間傳遞事件：
 
 ```python
 class EventBus:
@@ -861,7 +861,7 @@ class EventBus:
 
 ### 5.3 命名服務 (Naming Service)
 
-NDH 提供命名服務，允許通過邏輯名稱查找 Asset Tag Instances：
+NDH 提供命名服務，允許通過邏輯名稱查找 Asset Servants：
 
 ```python
 class NamingService:
@@ -903,7 +903,7 @@ class NamingService:
 
 ### 6.1 IADL/FDL 到 USD 的映射關係
 
-正確理解 IADL、FDL、Asset Tag Instances 與 USD 之間的映射關係是整合的關鍵。
+正確理解 IADL、FDL、Asset Servants 與 USD 之間的映射關係是整合的關鍵。
 
 #### **6.1.1 映射層次**
 
@@ -913,12 +913,12 @@ class NamingService:
 - **關係**：一對一映射，USD Model 可被多個 USD Instance 引用
 - **類比**：IADL 是 Class 定義，USD Model 是 Class 的視覺表示
 
-**層次 2：FDL ↔ Asset Tag Instances ↔ USD Instances（實例）**
+**層次 2：FDL ↔ Asset Servants ↔ USD Instances（實例）**
 - **FDL 實例**：定義工廠中的具體資產實例，例如 `compressor_001`, `compressor_002`, `compressor_003`
-- **Asset Tag Instance**：FDL 實例的執行時代理，例如 `AssetServant(compressor_001)`
+- **Asset Servant**：FDL 實例的執行時代理，例如 `AssetServant(compressor_001)`
 - **USD Instance**：Omniverse 場景中的 3D 實例（USD Prim），例如 `/World/Factory/compressor_001`
 - **關係**：三者一一對應，數量完全一致
-- **類比**：FDL 是 Object 實例化，Asset Tag Instance 是運行時 Object，USD Instance 是 Object 的 3D 表示
+- **類比**：FDL 是 Object 實例化，Asset Servant 是運行時 Object，USD Instance 是 Object 的 3D 表示
 
 #### **6.1.2 數量關係**
 
@@ -927,7 +927,7 @@ IADL (1個類型)
     ↓ 定義
 USD Model (1個模板)
     ↓ 引用
-FDL (3個實例) ←→ Asset Tag Instances (3個) ←→ USD Instances (3個)
+FDL (3個實例) ←→ Asset Servants (3個) ←→ USD Instances (3個)
 ```
 
 **範例**：
@@ -937,12 +937,12 @@ FDL (3個實例) ←→ Asset Tag Instances (3個) ←→ USD Instances (3個)
   - `compressor_001` (position: [10, 0, 5])
   - `compressor_002` (position: [20, 0, 5])
   - `compressor_003` (position: [30, 0, 5])
-- **Asset Tag Instances**：3個運行時代理
+- **Asset Servants**：3個運行時代理
 - **USD Instances**：3個 USD Prim，都引用同一個 USD Model
 
 #### **6.1.3 USD Instance 的結構**
 
-**重要**：每個 Asset Tag Instance 對應一個 **USD Instance**（不是 USD Model）。USD Instance 的 Transform（位置、旋轉、縮放）在 **FDL 中描述**，每個實例都可以不同。
+**重要**：每個 Asset Servant 對應一個 **USD Instance**（不是 USD Model）。USD Instance 的 Transform（位置、旋轉、縮放）在 **FDL 中描述**，每個實例都可以不同。
 
 **完整的 FDL 範例（包含 Transform）**：
 ```yaml
@@ -988,7 +988,7 @@ factory_design:
     ├─ Instance Parameters:  # 從 FDL 的 instance_params 讀取
     │   ├─ rated_pressure: 8.0
     │   └─ rated_flow: 12.5
-    └─ Runtime Attributes:  # 從 Asset Tag Instance 的即時狀態同步
+    └─ Runtime Attributes:  # 從 Asset Servant 的即時狀態同步
         ├─ temperature: 85.0
         ├─ pressure: 7.8
         ├─ flow_rate: 11.2
@@ -1029,7 +1029,7 @@ factory_design:
 - ✅ **USD Model 是模板**：只有一個 `compressor_ga75.usd`
 - ✅ **USD Instance 是實例**：有 3 個，每個都引用同一個 USD Model
 - ✅ **Transform 在 FDL 中定義**：每個實例的 position、rotation、scale 都在 FDL 中描述
-- ✅ **Asset Tag Instance 讀取 FDL**：創建時從 FDL 讀取 Transform 和其他參數
+- ✅ **Asset Servant 讀取 FDL**：創建時從 FDL 讀取 Transform 和其他參數
 - ✅ **Omniverse Connector 同步**：將 FDL 的 Transform 設定到對應的 USD Instance
 ```
 
@@ -1039,7 +1039,7 @@ factory_design:
 ```
 Physical Device (PLC)
     ↓ OPC UA (溫度 = 85°C)
-Asset Tag Instance (compressor_001)
+Asset Servant (compressor_001)
     ↓ 更新內部狀態
 Omniverse Connector
     ↓ USD Live Sync
@@ -1054,7 +1054,7 @@ IADL 參數變更（管線直徑 100mm → 150mm）
     ↓
 FDL 更新並部署
     ↓
-Asset Tag Instance 重新載入配置
+Asset Servant 重新載入配置
     ↓
 Omniverse Connector 偵測到幾何參數變更
     ↓
@@ -1067,7 +1067,7 @@ USD Model 重新生成（參數化建模）
 ```
 FDL 新增 compressor_004
     ↓
-NDH 創建 Asset Tag Instance (compressor_004)
+NDH 創建 Asset Servant (compressor_004)
     ↓
 Omniverse Connector 創建 USD Instance
     ↓
@@ -1078,7 +1078,7 @@ prim.GetReferences().AddReference("compressor_ga75.usd")
 
 ### 5.6 基於 FDL 的動態創建與銷毀
 
-Asset Tag Instances 的生命週期完全由 FDL 文件控制。當 FDL 文件更新時，NDH 會自動調整 Asset Tag Instances 的實例。
+Asset Servants 的生命週期完全由 FDL 文件控制。當 FDL 文件更新時，NDH 會自動調整 Asset Servants 的實例。
 
 #### 5.6.1 FDL 部署與動態更新
 
@@ -1102,14 +1102,14 @@ factory_design:
 ```
 
 **FDL 動態更新機制**：
-- FDL 新增資產 → NDH 自動創建 Asset Tag Instance
-- FDL 刪除資產 → NDH 自動銷毀 Asset Tag Instance  
-- FDL 修改資產 → NDH 自動更新 Asset Tag Instance 配置
+- FDL 新增資產 → NDH 自動創建 Asset Servant
+- FDL 刪除資產 → NDH 自動銷毀 Asset Servant  
+- FDL 修改資產 → NDH 自動更新 Asset Servant 配置
 
 
 ### 6.1 連接器設計
 
-Omniverse 連接器負責在 NDH/Asset Tag Instances 和 Omniverse 之間同步數據：
+Omniverse 連接器負責在 NDH/Asset Servants 和 Omniverse 之間同步數據：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -1117,7 +1117,7 @@ Omniverse 連接器負責在 NDH/Asset Tag Instances 和 Omniverse 之間同步�
 │                                                              │
 │  ┌────────────────────────────────────────────────────┐     │
 │  │          NDH Integration Layer                     │     │
-│  │  - WebSocket Client (訂閱 Asset Tag Instances 更新)     │     │
+│  │  - WebSocket Client (訂閱 Asset Servants 更新)     │     │
 │  │  - REST Client (查詢資產狀態)                      │     │
 │  │  - Event Handler (處理事件)                        │     │
 │  └────────────┬───────────────────────────────────────┘     │
@@ -1251,7 +1251,7 @@ class IADLToUSDMapper:
 
 ### 6.3 狀態同步
 
-連接器即時同步 Asset Tag Instances 的狀態到 USD 屬性：
+連接器即時同步 Asset Servants 的狀態到 USD 屬性：
 
 ```python
 class OmniverseStateSynchronizer:
@@ -1655,7 +1655,7 @@ class MultiUserCollaboration:
        │ 標準化數據格式
        │
 ┌──────▼───────┐
-│Asset Tag Instance │  (數位分身模型)
+│Asset Servant │  (數位分身模型)
 │  - 數據驗證   │
 │  - 單位轉換   │
 │  - 告警檢查   │
@@ -1684,8 +1684,8 @@ class MultiUserCollaboration:
 
 **延遲分析**：
 - PLC → OT Connector: 10-50ms
-- OT Connector → Asset Tag Instance: 5-10ms
-- Asset Tag Instance → Event Stream: 1-5ms
+- OT Connector → Asset Servant: 5-10ms
+- Asset Servant → Event Stream: 1-5ms
 - Event Stream → DT Runtime: 5-10ms
 - DT Runtime → Omniverse: 10-30ms
 - **總延遲**: 31-105ms (平均 ~60ms)
@@ -1715,7 +1715,7 @@ class MultiUserCollaboration:
        │ 命令事件
        │
 ┌──────▼───────┐
-│Asset Tag Instance │  (數位分身模型)
+│Asset Servant │  (數位分身模型)
 │  - 命令執行   │
 │  - 安全檢查   │
 └──────┬───────┘
@@ -1759,7 +1759,7 @@ class MultiUserCollaboration:
        │ 關聯到資產
        │
 ┌──────▼───────┐
-│Asset Tag Instance │  (數位分身模型)
+│Asset Servant │  (數位分身模型)
 │  - 上下文整合  │
 └──────┬───────┘
        │ 完整數據
@@ -2158,7 +2158,7 @@ class ConnectionPoolManager:
          │              │              │              │
 ┌────────▼────────┐ ┌──▼──────────┐ ┌─▼──────────┐ ┌─▼──────────┐
 │  NDH Instance 1 │ │NDH Instance2│ │NDH Instance3│ │NDH Instance4│
-│  (Asset Tag Instances│ │(Asset Tag Instances│ │(Asset Tag Instances│ │(Asset Tag Instances│
+│  (Asset Servants│ │(Asset Servants│ │(Asset Servants│ │(Asset Servants│
 │   1-250)        │ │  251-500)   │ │  501-750)   │ │  751-1000) │
 └────────┬────────┘ └──┬──────────┘ └─┬──────────┘ └─┬──────────┘
          │              │              │              │
@@ -2180,7 +2180,7 @@ class ConnectionPoolManager:
 ```
 
 **擴展策略**：
-1. **按資產分片**: 每個 NDH 實例管理一部分 Asset Tag Instances
+1. **按資產分片**: 每個 NDH 實例管理一部分 Asset Servants
 2. **無狀態設計**: NDH 實例可以隨時增減
 3. **共享快取**: 使用 Redis 共享狀態
 4. **共享數據庫**: 使用 PostgreSQL 和時序數據庫集群
@@ -2194,7 +2194,7 @@ class ConnectionPoolManager:
 | 並發連接數 | 10,000+ | 15,000 |
 | 數據吞吐量 | 100,000 點/秒 | 120,000 點/秒 |
 | 端到端延遲 (物理→虛擬) | < 100ms | 60ms (平均) |
-| Asset Tag Instances 數量 | 10,000+ | 測試至 20,000 |
+| Asset Servants 數量 | 10,000+ | 測試至 20,000 |
 | Omniverse 同步頻率 | 10 Hz | 10 Hz |
 | 記憶體使用 (每個 Servant) | < 10MB | 8MB |
 
@@ -2230,8 +2230,8 @@ NDH 作為工業數位分身框架的核心執行時組件，必須確保在各�
 #### **11.3.2 NDH Worker 節點備援**
 
 - **部署模式**: Active-Active (多活模式)
-- **故障處理**: 當 Worker 節點故障時，Scheduler 自動將其管理的 Asset Tag Instances 遷移到健康節點
-- **負載均衡**: 根據 CPU、記憶體和網路負載動態分配新的 Asset Tag Instances
+- **故障處理**: 當 Worker 節點故障時，Scheduler 自動將其管理的 Asset Servants 遷移到健康節點
+- **負載均衡**: 根據 CPU、記憶體和網路負載動態分配新的 Asset Servants
 
 #### **11.3.3 數據庫層鏡像**
 
@@ -2246,7 +2246,7 @@ NDH 作為工業數位分身框架的核心執行時組件，必須確保在各�
 NDH 提供 **一致性系統快照 (Consistent System Snapshot)** 功能，可在不停機的情況下建立整個系統的狀態快照。
 
 **快照內容**：
-1. **etcd 快照**: 包含所有服務發現、配置和 Asset Tag Instance 狀態
+1. **etcd 快照**: 包含所有服務發現、配置和 Asset Servant 狀態
 2. **PostgreSQL 快照**: 包含元數據、事件日誌、使用者配置
 3. **時序數據庫快照**: 包含指定時間範圍內的所有時間序列數據
 4. **配置文件快照**: IADL、FDL、Helm values 等配置文件
@@ -2381,7 +2381,7 @@ Physical World:
 
 NDH Layer:
 - 3 個 NDH 實例 (Kubernetes)
-- 300 個 Asset Tag Instances
+- 300 個 Asset Servants
 - TDengine 時序數據庫 (3 節點集群)
 - PostgreSQL (主從複製)
 
@@ -2435,7 +2435,7 @@ Integration:
 ### 13.1 AI 驅動的數位分身
 
 **自主優化**：
-- Asset Tag Instances 內建 AI 模型
+- Asset Servants 內建 AI 模型
 - 自動調整運行參數
 - 自我學習和適應
 
@@ -2484,7 +2484,7 @@ Integration:
 
 ## 14. 結論
 
-本白皮書詳細介紹了 NDH、Asset Tag Instances、Omniverse 和 Digital Twins Runtime 四個核心組件的整合架構。這個架構實現了：
+本白皮書詳細介紹了 NDH、Asset Servants、Omniverse 和 Digital Twins Runtime 四個核心組件的整合架構。這個架構實現了：
 
 ### 13.1 核心價值
 
@@ -2497,7 +2497,7 @@ Integration:
 
 ### 13.2 技術創新
 
-1. **Asset Tag Instances**: 輕量級、事件驅動的資產數位分身模型
+1. **Asset Servants**: 輕量級、事件驅動的資產數位分身模型
 2. **可抽換時序數據庫**: 避免供應商鎖定，靈活選擇
 3. **CRDT 衝突解決**: 保證最終一致性
 4. **IADL/FDL 映射**: 自動生成 USD 場景
@@ -2513,7 +2513,7 @@ Integration:
 
 ### 13.4 未來展望
 
-IDTF V3.5 的 NDH + Asset Tag Instances + Omniverse 整合架構為工業數位分身提供了一個完整、開放、高效的解決方案。隨著 AI、邊緣計算、XR 和區塊鏈技術的整合，這個架構將持續演進，為工業 4.0 和智慧製造提供更強大的技術支撐。
+IDTF V3.5 的 NDH + Asset Servants + Omniverse 整合架構為工業數位分身提供了一個完整、開放、高效的解決方案。隨著 AI、邊緣計算、XR 和區塊鏈技術的整合，這個架構將持續演進，為工業 4.0 和智慧製造提供更強大的技術支撐。
 
 我們相信，這個架構將成為下一代工業數位分身的標準參考架構，推動全球工業數位化轉型。
 
@@ -2548,11 +2548,11 @@ IDTF V3.5 的 NDH + Asset Tag Instances + Omniverse 整合架構為工業數位�
 
 ### 10.3 分散式部署與群集架構
 
-對於大型工廠（10,000+ 資產）和多廠房場景，NDH 需要支援群集架構和分散式 Asset Tag Instance 部署，以實現高可用性、水平擴展和低延遲。
+對於大型工廠（10,000+ 資產）和多廠房場景，NDH 需要支援群集架構和分散式 Asset Servant 部署，以實現高可用性、水平擴展和低延遲。
 
 #### 10.3.1 架構模式
 
-##### **模式 1：集中式 NDH 群集 + 分散式 Asset Tag Instances**
+##### **模式 1：集中式 NDH 群集 + 分散式 Asset Servants**
 
 **適用場景**：單一廠區，多個廠房，資產數量 5,000-50,000
 
@@ -2642,7 +2642,7 @@ IDTF V3.5 的 NDH + Asset Tag Instances + Omniverse 整合架構為工業數位�
 - ✅ 帶寬優化（僅上傳聚合數據）
 - ⚠️ 運維複雜度較高
 
-#### 10.3.2 Asset Tag Instance 分配策略
+#### 10.3.2 Asset Servant 分配策略
 
 ##### **策略 1：基於地理位置的分配**
 
@@ -2729,7 +2729,7 @@ class LoadBalancingAssignmentStrategy:
 
 #### 10.3.3 服務發現與註冊 (etcd)
 
-使用 **etcd** 或 **Consul** 作為服務註冊中心，實現分散式環境下的 Asset Tag Instance 發現。
+使用 **etcd** 或 **Consul** 作為服務註冊中心，實現分散式環境下的 Asset Servant 發現。
 
 ```python
 import etcd3
@@ -2748,7 +2748,7 @@ class ServiceRegistry:
         worker_id: str,
         endpoint: str
     ):
-        """註冊 Asset Tag Instance"""
+        """註冊 Asset Servant"""
         # 創建租約（用於心跳）
         if not self.lease_id:
             self.lease_id = self.etcd.lease(self.lease_ttl)
@@ -2769,7 +2769,7 @@ class ServiceRegistry:
 
 #### 10.3.4 跨 Worker 通訊 (gRPC)
 
-使用 **gRPC** 實現高效的跨 Worker Asset Tag Instance 通訊。
+使用 **gRPC** 實現高效的跨 Worker Asset Servant 通訊。
 
 ```protobuf
 // asset_servant.proto
@@ -2786,7 +2786,7 @@ service AssetServantService {
 
 ```python
 class AssetServantFailover:
-    """Asset Tag Instance 故障轉移管理器"""
+    """Asset Servant 故障轉移管理器"""
     
     async def handle_worker_failure(self, failed_worker_id: str):
         """處理 Worker 節點故障"""
@@ -2795,7 +2795,7 @@ class AssetServantFailover:
         # 1. 標記 Worker 為不可用
         await self.mark_worker_unavailable(failed_worker_id)
         
-        # 2. 獲取該 Worker 上的所有 Asset Tag Instances
+        # 2. 獲取該 Worker 上的所有 Asset Servants
         servants = await self.get_servants_on_worker(failed_worker_id)
         
         # 3. 重新分配到其他健康的 Worker

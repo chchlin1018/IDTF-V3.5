@@ -26,7 +26,7 @@
 │                    NDH Broker (ORB)                          │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │            Asset Tag Instances (物件實例)                   │  │
+│  │            Asset Servants (物件實例)                   │  │
 │  │  ┌────────────┐  ┌────────────┐  ┌────────────┐     │  │
 │  │  │  PUMP_001  │  │ MOTOR_001  │  │ SENSOR_001 │     │  │
 │  │  │            │  │            │  │            │     │  │
@@ -62,7 +62,7 @@
 
 ### 核心概念
 
-#### NDH 物件 (Asset Tag Instance)
+#### NDH 物件 (Asset Servant)
 ```python
 class PumpServant:
     asset_id = "PUMP_001"
@@ -757,7 +757,7 @@ class PISystemConnector(Connector):
         註冊資產和 PI Tag 映射
         
         Args:
-            servant: Asset Tag Instance 物件
+            servant: Asset Servant 物件
             mappings: 屬性名稱 -> PITagMapping
         """
         asset_id = servant.asset_id
@@ -929,7 +929,7 @@ async def setup_pump_with_pi_integration():
     
     await pi_connector.connect()
     
-    # 3. 建立 Asset Tag Instance
+    # 3. 建立 Asset Servant
     pump = PumpServant("PUMP_001", "FACTORY_A")
     adapter = orb.get_adapter("RootPOA")
     await adapter.activate_object(pump)
@@ -1098,7 +1098,7 @@ async def main():
     # 載入映射
     pi_connector.mapping_manager.load_from_iadl(iadl_definition)
     
-    # ===== 4. 建立 Asset Tag Instance =====
+    # ===== 4. 建立 Asset Servant =====
     pump = PumpServant("PUMP_001", "FACTORY_A")
     adapter = orb.get_adapter("RootPOA")
     await adapter.activate_object(pump)

@@ -19,8 +19,8 @@
 NDH 叢集採用基於 Kubernetes 的微服務架構，主要包含以下組件：
 
 - **NDH Master 節點**: 負責叢集管理、任務調度、API Gateway 等核心功能，通常以 Active-Standby 模式部署以實現高可用性。
-- **NDH Worker 節點**: 負責執行 Asset Tag Instance 實例，直接與物理資產進行數據交換。Worker 節點可根據負載進行水平擴展。
-- **服務發現 (etcd/Consul)**: 用於 Worker 節點和 Asset Tag Instance 的動態註冊與發現。
+- **NDH Worker 節點**: 負責執行 Asset Servant 實例，直接與物理資產進行數據交換。Worker 節點可根據負載進行水平擴展。
+- **服務發現 (etcd/Consul)**: 用於 Worker 節點和 Asset Servant 的動態註冊與發現。
 - **負載均衡器 (HAProxy/NGINX)**: 將來自客戶端的請求分發到不同的 Master 或 Worker 節點。
 - **數據庫層**: 
     - **時序數據庫 (TSDB)**: 存儲資產的時間序列數據 (例如 InfluxDB, TDengine)。
@@ -127,7 +127,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack
 
 導入預先定義的 Grafana 儀表板 (JSON 文件)，用於監控 NDH 叢集的關鍵指標，例如：
 - 叢集健康狀態
-- Asset Tag Instance 數量與分佈
+- Asset Servant 數量與分佈
 - API 請求延遲與錯誤率
 - 數據庫連接池狀態
 - 消息隊列長度
@@ -140,7 +140,7 @@ helm install prometheus prometheus-community/kube-prometheus-stack
 - **檢查 etcd 連線**: 確保 Master 節點可以正常連接到 etcd 服務。
 - **檢查 Leader 選舉**: `etcdctl endpoint health`
 
-### 6.2 Asset Tag Instance 啟動失敗
+### 6.2 Asset Servant 啟動失敗
 
 - **檢查日誌**: `kubectl logs -l app=ndh-worker`
 - **檢查 FDL/IADL 配置**: 確保資產定義正確無誤。

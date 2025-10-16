@@ -46,7 +46,7 @@ NDH 高可用性架構採用 **Active-Active** 或 **Active-Standby** 模式，�
              │                                │
     ┌────────▼────────┐              ┌────────▼────────┐
     │  NDH Worker 1   │              │  NDH Worker 2   │
-    │  Asset Tag Instances │              │  Asset Tag Instances │
+    │  Asset Servants │              │  Asset Servants │
     └────────┬────────┘              └────────┬────────┘
              │                                │
     ┌────────▼────────────────────────────────▼────────┐
@@ -117,9 +117,9 @@ spec:
 #### **2.2.2 NDH Worker 節點**
 
 - **部署模式**: Active-Active (多活模式)
-- **數量**: 根據資產數量動態擴展（建議每個 Worker 管理 500-1000 個 Asset Tag Instances）
-- **故障處理**: 當 Worker 節點故障時，Scheduler 自動將其管理的 Asset Tag Instances 遷移到健康節點
-- **負載均衡**: 根據 CPU、記憶體和網路負載動態分配新的 Asset Tag Instances
+- **數量**: 根據資產數量動態擴展（建議每個 Worker 管理 500-1000 個 Asset Servants）
+- **故障處理**: 當 Worker 節點故障時，Scheduler 自動將其管理的 Asset Servants 遷移到健康節點
+- **負載均衡**: 根據 CPU、記憶體和網路負載動態分配新的 Asset Servants
 
 #### **2.2.3 服務發現與配置中心 (etcd)**
 
@@ -151,14 +151,14 @@ NDH 採用 **多層次鏡像備援** 策略，確保數據在不同層級都有�
 
 #### **3.1.1 記憶體狀態鏡像**
 
-- **Asset Tag Instance 狀態**: 每個 Asset Tag Instance 的當前狀態（屬性值、連接狀態、最後更新時間）會定期同步到 etcd
+- **Asset Servant 狀態**: 每個 Asset Servant 的當前狀態（屬性值、連接狀態、最後更新時間）會定期同步到 etcd
 - **同步頻率**: 每 5 秒或狀態變化時立即同步
-- **用途**: 當 Worker 節點故障時，新的 Worker 可從 etcd 讀取最後已知狀態並恢復 Asset Tag Instance
+- **用途**: 當 Worker 節點故障時，新的 Worker 可從 etcd 讀取最後已知狀態並恢復 Asset Servant
 
 **狀態同步機制**:
 
 ```python
-# Asset Tag Instance 狀態同步 (偽代碼)
+# Asset Servant 狀態同步 (偽代碼)
 class AssetServant:
     def __init__(self, asset_id, etcd_client):
         self.asset_id = asset_id
@@ -221,7 +221,7 @@ NDH 提供 **一致性系統快照 (Consistent System Snapshot)** 功能，可�
 
 一個完整的系統快照包含：
 
-1. **etcd 快照**: 包含所有服務發現、配置和 Asset Tag Instance 狀態
+1. **etcd 快照**: 包含所有服務發現、配置和 Asset Servant 狀態
 2. **PostgreSQL 快照**: 包含元數據、事件日誌、使用者配置
 3. **時序數據庫快照**: 包含指定時間範圍內的所有時間序列數據
 4. **配置文件快照**: IADL、FDL、Helm values 等配置文件
@@ -311,7 +311,7 @@ ndh-admin snapshot restore --name "snapshot-before-upgrade" --confirm
 
 1. **WAL 重放**: 從最近的快照開始，重放 PostgreSQL 的 WAL (Write-Ahead Log)
 2. **時序數據補齊**: 從備援節點或邊緣節點補齊缺失的時間序列數據
-3. **狀態重建**: 從 etcd 和數據庫重建 Asset Tag Instance 的記憶體狀態
+3. **狀態重建**: 從 etcd 和數據庫重建 Asset Servant 的記憶體狀態
 
 **復原時間**: 通常 < 2 分鐘
 
@@ -395,7 +395,7 @@ readinessProbe:
 #### **5.1.2 服務級健康檢查**
 
 - **API Gateway**: 每秒檢查 API 回應時間和錯誤率
-- **Asset Tag Instance**: 每 30 秒檢查與物理設備的連接狀態
+- **Asset Servant**: 每 30 秒檢查與物理設備的連接狀態
 - **數據庫**: 每分鐘檢查連接池狀態和查詢延遲
 
 #### **5.1.3 業務級健康檢查**
@@ -423,10 +423,10 @@ T0+10s: 系統完全恢復正常
 時間軸:
 T0: Worker 1 停止回應心跳
 T0+10s: Master 檢測到 Worker 1 故障
-T0+15s: Master 從 etcd 讀取 Worker 1 管理的 Asset Tag Instances 列表
-T0+20s: Master 將這些 Asset Tag Instances 重新分配到 Worker 2 和 Worker 3
-T0+30s: 新的 Worker 從 etcd 恢復 Asset Tag Instance 狀態
-T0+45s: Asset Tag Instances 重新連接到物理設備
+T0+15s: Master 從 etcd 讀取 Worker 1 管理的 Asset Servants 列表
+T0+20s: Master 將這些 Asset Servants 重新分配到 Worker 2 和 Worker 3
+T0+30s: 新的 Worker 從 etcd 恢復 Asset Servant 狀態
+T0+45s: Asset Servants 重新連接到物理設備
 T0+60s: 系統完全恢復正常
 ```
 
@@ -482,10 +482,10 @@ alerting:
       severity: "critical"
       message: "數據庫連接失敗次數過多"
     
-    - name: "Asset Tag Instance Offline"
+    - name: "Asset Servant Offline"
       condition: "ndh_asset_servant_offline_count > 50"
       severity: "high"
-      message: "超過 50 個 Asset Tag Instances 離線"
+      message: "超過 50 個 Asset Servants 離線"
 ```
 
 ---
@@ -567,8 +567,8 @@ metrics:
   # 效能指標
   - ndh_api_request_duration_seconds  # API 請求延遲
   - ndh_api_request_total             # API 請求總數
-  - ndh_asset_servant_count           # Asset Tag Instance 總數
-  - ndh_asset_servant_active_count    # 活躍的 Asset Tag Instance 數量
+  - ndh_asset_servant_count           # Asset Servant 總數
+  - ndh_asset_servant_active_count    # 活躍的 Asset Servant 數量
   
   # 資源使用
   - ndh_cpu_usage_percent             # CPU 使用率
@@ -670,18 +670,18 @@ ndh-admin recovery --mode wal-replay --from <snapshot-name>
 ndh-admin sync --source replica-node --target primary-node
 ```
 
-#### **問題 3: Worker 節點故障後 Asset Tag Instances 無法遷移**
+#### **問題 3: Worker 節點故障後 Asset Servants 無法遷移**
 
-**症狀**: Worker 故障後，Asset Tag Instances 未在其他節點上啟動
+**症狀**: Worker 故障後，Asset Servants 未在其他節點上啟動
 
 **可能原因**:
-- etcd 中缺少 Asset Tag Instance 狀態
+- etcd 中缺少 Asset Servant 狀態
 - 其他 Worker 節點資源不足
 - 網路連接問題
 
 **解決方案**:
 ```bash
-# 檢查 etcd 中的 Asset Tag Instance 狀態
+# 檢查 etcd 中的 Asset Servant 狀態
 etcdctl get --prefix /ndh/assets/
 
 # 檢查 Worker 節點資源

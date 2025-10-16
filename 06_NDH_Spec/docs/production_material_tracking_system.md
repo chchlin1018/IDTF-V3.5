@@ -60,7 +60,7 @@
 └─────────────────────────────────────────────────────────────┘
                               ↕
 ┌─────────────────────────────────────────────────────────────┐
-│                  Asset Tag Instance Layer (資產服務層)            │
+│                  Asset Servant Layer (資產服務層)            │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
 │  │ Equipment│  │ Barcode  │  │ RFID     │  │ Weight   │   │
 │  │ Servant  │  │ Scanner  │  │ Reader   │  │ Scale    │   │
@@ -86,7 +86,7 @@ MES/ERP 系統
     ↓ (1. 生產訂單下達)
 NDH Material Tracking Service
     ↓ (2. 建立批次追蹤)
-Asset Tag Instances (Barcode Scanner, RFID Reader)
+Asset Servants (Barcode Scanner, RFID Reader)
     ↓ (3. 掃描物料/產品)
 NDH Material Tracking Service
     ↓ (4. 記錄消耗/生產)
@@ -166,7 +166,7 @@ material_consumption:
       quantity_expected: 0.50
       unit: "KG"
       location: "WAREHOUSE-B-TANK-03"
-  recorded_by: "BARCODE-SCANNER-01"  # Asset Tag Instance
+  recorded_by: "BARCODE-SCANNER-01"  # Asset Servant
   verification_method: "BARCODE_SCAN"  # BARCODE_SCAN, RFID, MANUAL, WEIGHT
 ```
 
@@ -202,7 +202,7 @@ wip_tracking:
 
 ---
 
-## 4. Asset Tag Instances 設計
+## 4. Asset Servants 設計
 
 ### 4.1 Equipment Servant (設備服務)
 
@@ -210,7 +210,7 @@ wip_tracking:
 
 ```python
 class EquipmentServant:
-    """設備 Asset Tag Instance - 收集生產設備數據"""
+    """設備 Asset Servant - 收集生產設備數據"""
     
     def __init__(self, equipment_id, equipment_type, connection_config):
         self.equipment_id = equipment_id
@@ -250,7 +250,7 @@ class EquipmentServant:
 
 ```python
 class BarcodeScannerServant:
-    """條碼掃描器 Asset Tag Instance - 追蹤物料移動"""
+    """條碼掃描器 Asset Servant - 追蹤物料移動"""
     
     def __init__(self, scanner_id, location):
         self.scanner_id = scanner_id
@@ -323,7 +323,7 @@ class BarcodeScannerServant:
 
 ```python
 class RFIDReaderServant:
-    """RFID 讀寫器 Asset Tag Instance - 自動追蹤物料"""
+    """RFID 讀寫器 Asset Servant - 自動追蹤物料"""
     
     def __init__(self, reader_id, location, read_zone):
         self.reader_id = reader_id
@@ -386,7 +386,7 @@ class RFIDReaderServant:
 
 ```python
 class WeightScaleServant:
-    """電子秤 Asset Tag Instance - 測量物料消耗"""
+    """電子秤 Asset Servant - 測量物料消耗"""
     
     def __init__(self, scale_id, location, material_id):
         self.scale_id = scale_id
@@ -726,7 +726,7 @@ Harvatek LED 封裝廠生產 LED 5050 RGB 產品,需要追蹤:
 ### 7.2 部署配置
 
 ```yaml
-# Asset Tag Instances 配置
+# Asset Servants 配置
 asset_servants:
   # 條碼掃描器 (每個工序入口)
   - type: barcode_scanner
@@ -925,7 +925,7 @@ DIE-SORTER-01 開始處理 LOT-2025101401-0001
 
 本設計提供了一個完整的生產物品與物料追蹤解決方案,透過:
 
-1. **Asset Tag Instances** 在物理層自動收集數據
+1. **Asset Servants** 在物理層自動收集數據
 2. **NDH Material Tracking Service** 處理和整合數據
 3. **MES/ERP Integration** 實現端到端的系統整合
 4. **即時可視化** 提供生產和物料狀態透明度

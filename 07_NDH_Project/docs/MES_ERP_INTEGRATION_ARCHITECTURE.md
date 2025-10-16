@@ -49,7 +49,7 @@
 │  ┌────────▼───────────────▼───────────────▼────────────────┐  │
 │  │              NDH Broker (ORB)                            │  │
 │  │  ┌──────────────────────────────────────────────────┐   │  │
-│  │  │         Asset Tag Instances (IADL Objects)            │   │  │
+│  │  │         Asset Servants (IADL Objects)            │   │  │
 │  │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐          │   │  │
 │  │  │  │ Machine │  │ Product │  │ Material│          │   │  │
 │  │  │  │ Assets  │  │ Assets  │  │ Assets  │          │   │  │
@@ -75,7 +75,7 @@
 | **MES Connector** | MES 系統連接器 | 與 MES 系統通訊,處理生產執行資料 |
 | **Enterprise Integration Bus** | 企業整合匯流排 | 協調各連接器,管理資料流 |
 | **NDH Broker (ORB)** | NDH 核心代理 | 管理資產物件,提供統一介面 |
-| **Asset Tag Instances** | 資產物件實例 | 表示實體資產的數位分身 |
+| **Asset Servants** | 資產物件實例 | 表示實體資產的數位分身 |
 | **Kafka Producer/Consumer** | 事件流處理 | 發布和訂閱事件,實現事件溯源 |
 
 ## 分層架構設計

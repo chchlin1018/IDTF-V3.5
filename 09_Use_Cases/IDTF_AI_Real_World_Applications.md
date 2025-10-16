@@ -45,7 +45,7 @@
                       │
 ┌─────────────────────┴───────────────────────────────────────┐
 │                    NDH (Neutral Data Hub)                    │
-│  - Asset Tag Instances (設備數位分身)                             │
+│  - Asset Servants (設備數位分身)                             │
 │  - Time-Series Database (InfluxDB)                          │
 │  - Message Queue (Kafka)                                    │
 │  - Workflow Engine                                          │

@@ -78,7 +78,7 @@
   - 生成唯一的實例 ID (例如 Area1_Pump_001)
   - 建立實例之間的關係
 
-**Asset Tag Instances (資產僕人 - 活躍實例)**
+**Asset Servants (資產僕人 - 活躍實例)**
 - **本質**: 記憶體中的 Python/Node.js 物件
 - **功能**:
   - 儲存資產的當前狀態和屬性值
@@ -103,7 +103,7 @@
 - **互動**:
   - NDH 透過 OPC UA、Modbus、MQTT 等協議與實體設備通訊
   - 即時控制與監控
-  - 回饋資料到 NDH 的 Asset Tag Instances
+  - 回饋資料到 NDH 的 Asset Servants
 
 ---
 
@@ -197,7 +197,7 @@ ndhref://http@ndh.factory.com:8000/Area1/Pump_001?uuid=xxx
 
 ### 步驟 8：即時運行與監控
 
-Asset Tag Instances 與實體工廠的設備進行即時通訊，執行控制邏輯並收集回饋資料。
+Asset Servants 與實體工廠的設備進行即時通訊，執行控制邏輯並收集回饋資料。
 
 **資料流**:
 - **NDH → 實體工廠**: 控制指令 (例如 start_pump())
@@ -215,7 +215,7 @@ Asset Tag Instances 與實體工廠的設備進行即時通訊，執行控制邏
 
 ### 4.2. 工廠模式 (Factory Pattern)
 
-Instantiation Engine 作為工廠，根據 IADL 類型創建對應的 Asset Tag Instance 實例。
+Instantiation Engine 作為工廠，根據 IADL 類型創建對應的 Asset Servant 實例。
 
 ### 4.3. 適配器模式 (Adapter Pattern)
 
@@ -246,11 +246,11 @@ Naming Service 提供全域的物件查找功能，實現位置透明性。
     ↓ (Instantiate)
 [Instantiation Engine] 
     ↓ (Create)
-[Asset Tag Instances] 
+[Asset Servants] 
     ↓ (Control & Monitor)
 [Physical Factory]
     ↓ (Feedback)
-[Asset Tag Instances]
+[Asset Servants]
 ```
 
 ---

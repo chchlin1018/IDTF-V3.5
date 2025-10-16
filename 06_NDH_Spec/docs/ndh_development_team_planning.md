@@ -18,7 +18,7 @@
 | **總代碼量** | ~150,000 行 (Python + TypeScript + YAML) |
 | **核心模組數** | 12 個 |
 | **API 端點數** | 80+ 個 |
-| **Asset Tag Instance 類型** | 10+ 種 |
+| **Asset Servant 類型** | 10+ 種 |
 | **開發週期** | 12-18 個月 |
 | **總人月** | 120-180 人月 |
 | **團隊規模** | 10-15 人 |
@@ -174,7 +174,7 @@
 
 **職責**:
 - 核心服務開發 (Material Tracking, MES/ERP Integration)
-- Asset Tag Instance 框架開發
+- Asset Servant 框架開發
 - API 設計和實現
 - 性能優化
 
@@ -202,7 +202,7 @@
 
 **職責**:
 - 一般服務開發
-- Asset Tag Instance 實現
+- Asset Servant 實現
 - 單元測試和集成測試
 - Bug 修復
 
@@ -430,7 +430,7 @@
 
 **職責**:
 - 工業協議指導 (OPC UA, SECS/GEM, Modbus)
-- Asset Tag Instance 設計諮詢
+- Asset Servant 設計諮詢
 - 設備連接測試
 - 技術文檔審查
 
@@ -523,7 +523,7 @@
 | 架構師 | 1 | 技術指導 | 6 |
 | 後端技術主管 | 1 | 核心服務開發 | 6 |
 | 資深後端工程師 | 2 | Material Tracking, MES/ERP Integration | 12 |
-| 後端工程師 | 2 | Asset Tag Instances, Connectors | 12 |
+| 後端工程師 | 2 | Asset Servants, Connectors | 12 |
 | DevOps 工程師 | 1 | CI/CD, K8s 環境 | 6 |
 | 系統管理員 | 1 | 開發環境維護 | 6 |
 | OT 系統專家 | 1 | 協議實現指導 | 3 |
@@ -533,7 +533,7 @@
 - NDH Core 服務
 - Material Tracking Service
 - MES/ERP Integration Service
-- 10+ Asset Tag Instances
+- 10+ Asset Servants
 - CI/CD 管道
 
 #### 階段 3: 整合與測試 (Month 9-12)

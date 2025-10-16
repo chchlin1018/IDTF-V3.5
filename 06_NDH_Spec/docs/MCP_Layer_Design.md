@@ -134,4 +134,3 @@ agent_memory:
 ## 5. 結論
 
 MCP 層的設計，特別是 MCP Broker 的引入，將顯著提升 IDTF 在 AI Agent 協作和智慧應用方面的能力。透過標準化的通訊機制 (NDH MQTT Topics) 和統一的狀態記憶模型 (IADL Schema)，IDTF 將能夠支持構建更智能、更靈活的工業數位分身解決方案，為工業 4.0 的發展奠定堅實基礎。
-

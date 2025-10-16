@@ -55,19 +55,19 @@
 
 ---
 
-### 3. Asset Tag Instance 核心概念
+### 3. Asset Servant 核心概念
 
-- **[NDH_Asset_Servant_Correct_Definition.md](NDH_Asset_Servant_Correct_Definition.md)** ⭐⭐⭐ - Asset Tag Instance 正確定義 (最新版)
+- **[NDH_Asset_Servant_Correct_Definition.md](NDH_Asset_Servant_Correct_Definition.md)** ⭐⭐⭐ - Asset Servant 正確定義 (最新版)
   - **連結層**: 連結 3D Model Transformation 與即時 IOT Tag 資訊
   - **狀態容器**: 儲存 Asset 狀態和計算值
   - **Behavior 引擎**: 執行告警規則、狀態機、自動化邏輯
   - 完整程式碼實現範例
 
-- **[NDH_Asset_Servant_Clarification.md](NDH_Asset_Servant_Clarification.md)** - Asset Tag Instance 概念澄清
+- **[NDH_Asset_Servant_Clarification.md](NDH_Asset_Servant_Clarification.md)** - Asset Servant 概念澄清
   - Tag 映射功能
   - 與 IADL 的關係
 
-- **[NDH_Asset_Servant_Storage_Clarification.md](NDH_Asset_Servant_Storage_Clarification.md)** - Asset Tag Instance 儲存職責澄清
+- **[NDH_Asset_Servant_Storage_Clarification.md](NDH_Asset_Servant_Storage_Clarification.md)** - Asset Servant 儲存職責澄清
   - 不儲存 USD 3D Model
   - 不儲存時序數據
   - 只儲存運行時狀態
@@ -152,7 +152,7 @@
 - **總文件數**: 19 個 Markdown 文件
 - **核心架構文件**: 4 個
 - **整合方案文件**: 2 個
-- **Asset Tag Instance 文件**: 3 個
+- **Asset Servant 文件**: 3 個
 - **比較分析文件**: 4 個
 - **系統管理文件**: 2 個
 - **應用案例文件**: 1 個
@@ -162,11 +162,11 @@
 
 ## 🔑 核心概念速查
 
-### Asset Tag Instance
+### Asset Servant
 **定義**: 連結 3D Model Transformation 與時序資料庫即時 IOT Tag 資訊,並儲存具有 Asset 狀態和 Behavior 的虛擬分身物件。
 
 **三大職責**:
-1. **連結層**: 3D Model ↔ Asset Tag Instance ↔ 時序資料庫
+1. **連結層**: 3D Model ↔ Asset Servant ↔ 時序資料庫
 2. **狀態容器**: 儲存即時狀態、計算值、告警狀態
 3. **Behavior 引擎**: 執行告警規則、狀態機、自動化
 

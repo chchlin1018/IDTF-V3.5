@@ -29,7 +29,7 @@
 ### 階段三: 業務流程整合 (ERP → NDH) (2-3個月)
 
 1. **擴展 ERP Connector**: 增加從 ERP 獲取生產工單的功能 (如讀取 SAP 的 IDoc)。
-2. **擴展 Asset Tag Instance**: 讓 Asset Tag Instance 能夠接收生產工單,並將其與 MES 的工單進行關聯。
+2. **擴展 Asset Servant**: 讓 Asset Servant 能夠接收生產工單,並將其與 MES 的工單進行關聯。
 
 ## 3. 最佳實踐
 

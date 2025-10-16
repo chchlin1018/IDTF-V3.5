@@ -1,4 +1,4 @@
-# Asset Tag Instance 儲存職責澄清
+# Asset Servant 儲存職責澄清
 
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
@@ -8,16 +8,16 @@
 
 ## 核心原則
 
-### Asset Tag Instance 不儲存任何資料
+### Asset Servant 不儲存任何資料
 
-**Asset Tag Instance 是一個無狀態的映射服務,它不儲存:**
+**Asset Servant 是一個無狀態的映射服務,它不儲存:**
 - ❌ USD 3D Model
 - ❌ 時序數據
 - ❌ 資產屬性
 - ❌ 文檔檔案
 - ❌ 任何持久化數據
 
-**Asset Tag Instance 只儲存:**
+**Asset Servant 只儲存:**
 - ✅ Tag 映射表 (從 IADL 解析而來,運行時記憶體中)
 
 ---
@@ -54,7 +54,7 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 2. Asset Tag Instance 在架構中的位置
+### 2. Asset Servant 在架構中的位置
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -70,7 +70,7 @@
 └───────┬─────────────────────┬───────────────────────────────┘
         ↓                     ↓
 ┌───────────────────┐  ┌──────────────────────────────────────┐
-│ Asset Tag Instance     │  │  其他服務                             │
+│ Asset Servant     │  │  其他服務                             │
 │ (映射層)          │  │  - Model Service (3D 模型服務)       │
 │                   │  │  - Metadata Service (元數據服務)     │
 │ 只負責:           │  │  - Document Service (文檔服務)       │
@@ -101,7 +101,7 @@
 
 ## 詳細說明
 
-### IADL 定義 vs. Asset Tag Instance 儲存
+### IADL 定義 vs. Asset Servant 儲存
 
 **IADL 檔案內容**:
 ```yaml
@@ -136,7 +136,7 @@ asset:
       # ↑ 這只是一個 S3 路徑,實際 PDF 在 MinIO/S3
 ```
 
-**Asset Tag Instance 在記憶體中的狀態**:
+**Asset Servant 在記憶體中的狀態**:
 ```python
 class AssetServant:
     def __init__(self, asset_id: str, iadl_definition: dict):
@@ -167,7 +167,7 @@ class AssetServant:
   GET /api/v1/assets/PUMP-001/model
 
 NDH API 層:
-  ↓ (路由到 Model Service,不經過 Asset Tag Instance)
+  ↓ (路由到 Model Service,不經過 Asset Servant)
   
 Model Service:
   1. 查詢 PostgreSQL 獲取資產元數據
@@ -175,7 +175,7 @@ Model Service:
   3. 從 Omniverse Nucleus 獲取 USD 檔案
   4. 返回 USD 模型 URL 或串流
 
-Asset Tag Instance: 完全不參與此流程 ❌
+Asset Servant: 完全不參與此流程 ❌
 ```
 
 ### 場景 2: 獲取時序數據
@@ -185,9 +185,9 @@ Asset Tag Instance: 完全不參與此流程 ❌
   GET /api/v1/assets/PUMP-001/telemetry/discharge_pressure
 
 NDH API 層:
-  ↓ (路由到 Asset Tag Instance)
+  ↓ (路由到 Asset Servant)
   
-Asset Tag Instance:
+Asset Servant:
   1. 查找 Tag 映射: "discharge_pressure" -> TDengine.pump001_pressure
   2. 調用 TSDB 抽象層
   ↓
@@ -198,8 +198,8 @@ TSDB 抽象層:
 TDengine:
   返回實際時序數據
 
-Asset Tag Instance: 只負責映射和路由 ✅
-Asset Tag Instance: 不儲存時序數據 ❌
+Asset Servant: 只負責映射和路由 ✅
+Asset Servant: 不儲存時序數據 ❌
 ```
 
 ### 場景 3: 獲取資產元數據
@@ -215,7 +215,7 @@ Metadata Service:
   1. 查詢 PostgreSQL
   2. 返回資產屬性 (manufacturer, rated_power, etc.)
 
-Asset Tag Instance: 完全不參與此流程 ❌
+Asset Servant: 完全不參與此流程 ❌
 ```
 
 ### 場景 4: 獲取文檔
@@ -232,7 +232,7 @@ Document Service:
   2. 從 MinIO/S3 獲取實際檔案
   3. 返回下載 URL 或串流
 
-Asset Tag Instance: 完全不參與此流程 ❌
+Asset Servant: 完全不參與此流程 ❌
 ```
 
 ---
@@ -244,7 +244,7 @@ Asset Tag Instance: 完全不參與此流程 ❌
 │                   NDH 微服務架構                             │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  🔧 Asset Tag Instance Service                                   │
+│  🔧 Asset Servant Service                                   │
 │     職責: Tag 映射和路由                                     │
 │     儲存: 無 (無狀態服務)                                    │
 │     依賴: IADL 定義 (從檔案系統讀取)                         │
@@ -296,11 +296,11 @@ const modelUrl = await fetch('/api/v1/assets/PUMP-001/model');
 // 3. 在 Omniverse 中載入模型
 omniverse.loadModel(modelUrl);
 
-// 4. 獲取即時數據 (透過 Asset Tag Instance)
+// 4. 獲取即時數據 (透過 Asset Servant)
 const pressure = await fetch(
   '/api/v1/assets/PUMP-001/telemetry/discharge_pressure?latest=true'
 );
-// Asset Tag Instance 映射 -> TDengine 查詢 -> 返回數據
+// Asset Servant 映射 -> TDengine 查詢 -> 返回數據
 
 // 5. 獲取文檔清單 (Document Service)
 const docs = await fetch('/api/v1/assets/PUMP-001/documents');
@@ -311,30 +311,30 @@ const docs = await fetch('/api/v1/assets/PUMP-001/documents');
 - 步驟 1: Metadata Service → PostgreSQL
 - 步驟 2: Model Service → Omniverse Nucleus
 - 步驟 3: 前端直接連接 Omniverse
-- 步驟 4: Asset Tag Instance (映射) → Telemetry Service → TDengine
+- 步驟 4: Asset Servant (映射) → Telemetry Service → TDengine
 - 步驟 5: Document Service → MinIO/S3
 
-**Asset Tag Instance 只參與步驟 4**,且只負責映射,不儲存任何數據。
+**Asset Servant 只參與步驟 4**,且只負責映射,不儲存任何數據。
 
 ---
 
-## 為什麼 Asset Tag Instance 不儲存資料?
+## 為什麼 Asset Servant 不儲存資料?
 
 ### 設計原則: 單一職責
 
-**Asset Tag Instance 的唯一職責**:
+**Asset Servant 的唯一職責**:
 > 將抽象的、語義化的 Tag ID 映射到實際的、技術性的資料點名稱
 
-**如果 Asset Tag Instance 儲存資料會導致**:
+**如果 Asset Servant 儲存資料會導致**:
 1. ❌ 職責不清晰 (既做映射又做儲存)
 2. ❌ 數據冗餘 (3D 模型、時序數據都有專門的儲存系統)
-3. ❌ 擴展性差 (Asset Tag Instance 需要處理各種資料類型)
+3. ❌ 擴展性差 (Asset Servant 需要處理各種資料類型)
 4. ❌ 維護困難 (一個服務承擔太多責任)
 
 ### 設計原則: 關注點分離
 
 ```
-Asset Tag Instance:  專注於 Tag 映射和路由
+Asset Servant:  專注於 Tag 映射和路由
 Model Service:  專注於 3D 模型管理
 Telemetry Service: 專注於時序數據查詢
 Metadata Service: 專注於元數據管理
@@ -345,7 +345,7 @@ Document Service: 專注於文檔管理
 
 ---
 
-## Asset Tag Instance 的完整定義
+## Asset Servant 的完整定義
 
 ```python
 class AssetServant:
@@ -368,7 +368,7 @@ class AssetServant:
     
     def __init__(self, asset_id: str, iadl_path: str):
         """
-        初始化 Asset Tag Instance
+        初始化 Asset Servant
         
         Args:
             asset_id: 資產 ID
@@ -376,7 +376,7 @@ class AssetServant:
         """
         self.asset_id = asset_id
         
-        # 從檔案系統讀取 IADL (不儲存在 Asset Tag Instance 中)
+        # 從檔案系統讀取 IADL (不儲存在 Asset Servant 中)
         iadl_definition = self._load_iadl(iadl_path)
         
         # 建立 Tag 映射表 (運行時記憶體,不持久化)
@@ -384,7 +384,7 @@ class AssetServant:
     
     def _load_iadl(self, path: str) -> dict:
         """從檔案系統載入 IADL 定義"""
-        # IADL 儲存在 Git / 檔案系統,不在 Asset Tag Instance
+        # IADL 儲存在 Git / 檔案系統,不在 Asset Servant
         import yaml
         with open(path, 'r') as f:
             return yaml.safe_load(f)
@@ -428,7 +428,7 @@ class AssetServant:
 
 ## 總結
 
-### Asset Tag Instance 的儲存職責
+### Asset Servant 的儲存職責
 
 **儲存 (運行時記憶體)**:
 - ✅ Tag 映射表 (從 IADL 解析而來)
@@ -442,10 +442,10 @@ class AssetServant:
 
 ### 核心設計原則
 
-1. **單一職責**: Asset Tag Instance 只做 Tag 映射和路由
+1. **單一職責**: Asset Servant 只做 Tag 映射和路由
 2. **無狀態**: 不持久化任何資料,可水平擴展
 3. **關注點分離**: 每種資料類型由專門的服務和儲存系統管理
 4. **清晰邊界**: 職責明確,易於維護和擴展
 
-Asset Tag Instance 是一個**純粹的映射和路由服務**,它不是資料儲存層,而是資料訪問的抽象層。
+Asset Servant 是一個**純粹的映射和路由服務**,它不是資料儲存層,而是資料訪問的抽象層。
 

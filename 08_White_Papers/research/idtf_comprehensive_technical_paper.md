@@ -149,11 +149,11 @@ IDTF V3.5 包含以下核心組件：
 
 **FDL Parser（工廠設計語言解析器）**：解析 FDL 配置文件，驗證語法正確性，提取區域、實例、關係等資訊，並將解析結果傳遞給 NDH 的實例化引擎。
 
-**NDH（中立數據中樞）**：執行時數據整合平台，接收 FDL 部署請求，批次創建資產物件實例（Asset Tag Instances），管理資產生命週期，整合 OT/IT 數據源，提供統一的 API 介面。
+**NDH（中立數據中樞）**：執行時數據整合平台，接收 FDL 部署請求，批次創建資產物件實例（Asset Servants），管理資產生命週期，整合 OT/IT 數據源，提供統一的 API 介面。
 
 **Omniverse Connector（雙向連接器）**：實現 IADL/FDL 與 USD 的雙向同步，支援多用戶協作、資源鎖定、衝突解決、變更追蹤等功能。
 
-**Asset Tag Instances（資產僕人）**：NDH 中記憶體中的 Python/Node.js 物件，代表單一資產實例，儲存資產的當前狀態和屬性值，提供標準介面（get_attribute, set_attribute, invoke_operation），與實體設備進行即時通訊。
+**Asset Servants（資產僕人）**：NDH 中記憶體中的 Python/Node.js 物件，代表單一資產實例，儲存資產的當前狀態和屬性值，提供標準介面（get_attribute, set_attribute, invoke_operation），與實體設備進行即時通訊。
 
 ### 2.4 數據流與互動流程
 
@@ -178,13 +178,13 @@ IDTF V3.5 的完整數據流如圖 2 所示：
     ↓                                ↓
     ↓                          [Instantiation Engine]
     ↓                                ↓
-    ↓                          [Asset Tag Instances (活躍實例)]
+    ↓                          [Asset Servants (活躍實例)]
     ↓                                ↓
     ↓                          [Naming Service (註冊)]
     ↓                                ↓
 [執行階段 - Runtime (Online)]         ↓
     ↓                                ↓
-[Physical Factory] ←→ [OPC UA/MQTT/Modbus] ←→ [Asset Tag Instances]
+[Physical Factory] ←→ [OPC UA/MQTT/Modbus] ←→ [Asset Servants]
     ↓                                ↓
 [Sensors/Actuators] ←→ [Data Acquisition] ←→ [Kafka/InfluxDB]
     ↓                                ↓
@@ -724,9 +724,9 @@ ndh_config:
       bucket: factory_backup
 ```
 
-### 5.4 Asset Tag Instances 與實例化引擎
+### 5.4 Asset Servants 與實例化引擎
 
-當 NDH 接收到 FDL 部署請求後，Instantiation Engine 會批次創建 Asset Tag Instances（資產僕人）：
+當 NDH 接收到 FDL 部署請求後，Instantiation Engine 會批次創建 Asset Servants（資產僕人）：
 
 ```python
 # 實例化流程
@@ -738,7 +738,7 @@ for instance_def in fdl.instances:
     for i in range(instance_def.count):
         instance_id = f"{instance_def.naming_prefix}{i+1:03d}"
         
-        # 3. 創建 Asset Tag Instance 物件
+        # 3. 創建 Asset Servant 物件
         servant = AssetServant(
             asset_id=instance_id,
             asset_type=instance_def.asset_type,
@@ -763,7 +763,7 @@ for instance_def in fdl.instances:
         naming_service.register(instance_id, servant.get_reference())
 ```
 
-Asset Tag Instance 提供標準介面：
+Asset Servant 提供標準介面：
 
 ```python
 class AssetServant:
@@ -982,7 +982,7 @@ IDTF V3.5 的關鍵技術創新包括：
 - 支援多用戶即時協作和衝突解決
 - 變更追蹤和版本管理
 
-**5. Asset Tag Instances 執行時模型**：
+**5. Asset Servants 執行時模型**：
 - 記憶體中的活躍物件，代表物理資產的數位分身
 - 提供統一的 API 介面（get/set/invoke）
 - 支援狀態機驅動的行為模型

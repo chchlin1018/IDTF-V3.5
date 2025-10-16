@@ -60,7 +60,7 @@
 
 #### `PUT /api/v1/assets/{assetId}/production`
 
-更新特定資產的生產相關資訊 (通常由 Asset Tag Instance 內部使用)。
+更新特定資產的生產相關資訊 (通常由 Asset Servant 內部使用)。
 
 - **Request Body**:
 

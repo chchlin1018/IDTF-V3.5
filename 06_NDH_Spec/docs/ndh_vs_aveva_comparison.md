@@ -15,7 +15,7 @@
 
 | 系統 | 核心定位 | 主要功能 |
 |------|----------|----------|
-| **NDH** | 中立數據中樞 | OT/IT 數據整合、Asset Tag Instances、即時數據處理 |
+| **NDH** | 中立數據中樞 | OT/IT 數據整合、Asset Servants、即時數據處理 |
 | **AVEVA Connect** | 工業智能平台 | 雲端整合平台、應用生態系統、協作環境 |
 | **AVEVA AIM** | 資產資訊管理 | 工程數據聚合、數位分身核心、文檔管理 |
 
@@ -46,10 +46,10 @@ NDH 是 IDTF V3.5 框架中的**中立數據中樞**,專注於工業 OT/IT 數�
 - 支援多種工業協議 (OPC UA, SECS/GEM, Modbus, BACnet)
 - 可抽換時序數據庫 (InfluxDB, TDengine, TimescaleDB, QuestDB)
 
-**2. Asset Tag Instances**
+**2. Asset Servants**
 - 在 Worker 節點上執行的資產服務實例
 - 直接與物理資產進行數據交換
-- 支援 10+ 種 Asset Tag Instance 類型
+- 支援 10+ 種 Asset Servant 類型
 
 **3. 即時數據處理**
 - Kafka 事件驅動架構
@@ -76,7 +76,7 @@ API 層 (RESTful API, GraphQL, WebSocket)
     ↓
 數據採集層 (Connectors: OPC UA, SECS/GEM, Modbus, BACnet)
     ↓
-Asset Tag Instance 層 (Equipment, Barcode, RFID, Weight Scale)
+Asset Servant 層 (Equipment, Barcode, RFID, Weight Scale)
     ↓
 資產層 (Physical Assets)
 ```
@@ -585,7 +585,7 @@ await integration.SyncDataAsync(source, destination);
 3. **即時性**: 專為即時 OT 數據設計
 4. **靈活性**: 可 On-Premise 或雲端部署
 5. **客製化**: 完全可客製化和擴展
-6. **Asset Tag Instances**: 創新的資產服務架構
+6. **Asset Servants**: 創新的資產服務架構
 7. **成本效益**: 5 年 TCO 最低
 
 #### 劣勢 ❌
@@ -779,7 +779,7 @@ await integration.SyncDataAsync(source, destination);
 **NDH 發展方向**:
 1. 增強工程數據支援 (與 AVEVA AIM 互補)
 2. 深化 Omniverse 整合
-3. 擴展 Asset Tag Instance 類型
+3. 擴展 Asset Servant 類型
 4. 建立應用生態系統
 
 **AVEVA 發展方向**:

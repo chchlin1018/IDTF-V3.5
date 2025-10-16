@@ -69,7 +69,7 @@ AVEVA Historian 整合文件涵蓋了以下核心功能:
 
 #### 5. 整合到 NDH ✓
 - HistorianConnector 類別
-- 與 Asset Tag Instance 的整合
+- 與 Asset Servant 的整合
 - 事件發布機制
 - REST API 端點
 
