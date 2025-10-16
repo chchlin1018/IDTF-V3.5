@@ -1,0 +1,5 @@
+SourcePath,TargetPath,TypeMapping,Required,ValidationRegex,Enum,Description
+IADL.AssetType.data_tags[*].tag_id,NDH.AssetInstance.AssetTagInstances[*].tag_id,string,TRUE,^[a-zA-Z0-9_]+$,,IADL 中定義的數據點 ID 必須對應到 NDH 中的 Asset Tag Instance ID
+IADL.AssetType.data_tags[*].data_type,NDH.AssetInstance.AssetTagInstances[*].data_type,string,TRUE,,float|integer|boolean|string,數據類型必須為預定義的類型之一
+FDL.AssetInstance.asset_id,NDH.AssetInstance.id,string,TRUE,^[A-Z0-9_]{3,30}$,,FDL 資產實例 ID 對應到 NDH Asset Instance ID
+FDL.AssetInstance.origin.x,NDH.AssetInstance.spatial.x,number,TRUE,,,
