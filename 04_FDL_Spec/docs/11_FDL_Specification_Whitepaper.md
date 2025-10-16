@@ -1,9 +1,2401 @@
 # FDL (Factory Design Language) 規範設計白皮書
 
-**版本**: 1.0  
-**發布日期**: 2025-10-12  
-**作者**: C.C. Lin  
+**版本**: 3.2  
+**發布日期**: 2025-10-16  
+**作者**: Manus AI  
 **組織**: IDTF Consortium
+
+---
+
+## 2. FDL 概述
+
+### 設計理念
+
+FDL 的設計基於以下核心理念:
+
+1. **聲明式語法**: 描述「是什麼」而非「怎麼做」
+2. **階層結構**: 支援建築物、樓層、區域的階層組織
+3. **Asset Instance 引用**: 引用 IADL 定義的資產藍圖，並實例化為 Asset Instance。
+4. **關係定義**: 明確定義 Asset Instance 之間的連接和依賴。
+5. **參數化**: 支援參數化配置,提高重用性
+
+### FDL 在 IDTF 生態系統中的角色
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    IDTF V3.2 生態系統                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  IADL (Asset Blueprint)                                  │
+│    ↓                                                     │
+│  FDL (Factory Layout) ← 本白皮書的焦點                   │
+│    ↓                                                     │
+│  NDH (Deployment Execution)                              │
+│    ↓                                                     │
+│  Omniverse (Visualization)                               │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### FDL 與 IADL 的關係
+
+| 維度 | IADL | FDL |
+|------|------|-----|
+| **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
+| **重用性** | 跨專案重用 | 跨工廠複製 |
+| **生命週期** | 設計階段 | 設計到部署 |
+
+---
+
+## 3. FDL 語法規範
+
+### 基本結構
+
+FDL 採用 YAML 格式,具有清晰的階層結構:
+
+```yaml
+# FDL 基本結構
+factory_design:
+  metadata:
+    name: <工廠名稱>
+    version: <版本號>
+    author: <作者>
+    date: <日期>
+    description: <描述>
+  
+  buildings:
+    - building_id: <建築物 ID>
+      name: <建築物名稱>
+      location: <地理位置>
+      floors: <樓層列表>
+  
+  layout:
+    - area: <區域名稱>
+      building: <所屬建築物>
+      floor: <所屬樓層>
+      zone_type: <區域類型>
+      instances: <Asset Instance 列表>
+      relationships: <關係列表>
+  
+  utilities:
+    - type: <公用系統類型>
+      specifications: <規格>
+      distribution: <分配方式>
+  
+  parameters:
+    <全域參數定義>
+```
+
+### 元數據 (Metadata)
+
+定義工廠的基本資訊:
+
+```yaml
+metadata:
+  name: "Harvatek LED Packaging Factory"
+  version: "1.0.0"
+  author: "C.C. Lin"
+  date: "2025-10-12"
+  description: "LED封裝廠完整佈局設計"
+  tags:
+    - "LED"
+    - "Semiconductor"
+    - "High-Tech"
+  industry: "Electronics Manufacturing"
+  location:
+    country: "Taiwan"
+    city: "Hsinchu"
+    address: "No. 123, Tech Road"
+    coordinates:
+      latitude: 24.8138
+      longitude: 120.9675
+```
+
+### 建築物定義 (Buildings)
+
+定義工廠的建築結構:
+
+```yaml
+buildings:
+  - building_id: "MainBuilding"
+    name: "主廠房"
+    type: "Production"
+    construction_year: 2020
+    total_area: 50000  # 平方米
+    floors:
+      - floor_id: "B1"
+        level: -1
+        height: 4.5
+        area: 10000
+        purpose: "Utility & Storage"
+      - floor_id: "1F"
+        level: 1
+        height: 5.0
+        area: 10000
+        purpose: "Production & Office"
+      - floor_id: "2F"
+        level: 2
+        height: 4.0
+        area: 10000
+        purpose: "Production - Standard LED"
+      - floor_id: "3F"
+        level: 3
+        height: 4.0
+        area: 10000
+        purpose: "Production - High Power LED"
+      - floor_id: "4F"
+        level: 4
+        height: 4.0
+        area: 5000
+        purpose: "R&D & Quality Lab"
+      - floor_id: "5F"
+        level: 5
+        height: 3.5
+        area: 5000
+        purpose: "Office & Meeting"
+```
+
+### 佈局定義 (Layout)
+
+這是 FDL 的核心部分,定義 Asset Instance 的佈局:
+
+```yaml
+layout:
+    - area: "Production_Zone_A"
+      building: "MainBuilding"
+      floor: "2F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_7"
+      temperature: 23  # 攝氏度
+      humidity: 45     # 相對濕度 %
+    
+    instances:
+      # 晶片分選機
+      - type: "DieSorter_v1.0"  # 引用 IADL 資產類型
+        count: 10
+        naming_prefix: "DS_2F_A_"
+        naming_pattern: "{prefix}{index:03d}"  # DS_2F_A_001
+        layout_pattern: "grid"
+        grid_config:
+          rows: 2
+          columns: 5
+          spacing_x: 3.0  # 米
+          spacing_y: 4.0  # 米
+        origin:
+          x: 10.0
+          y: 20.0
+          z: 0.0
+        orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
+        instance_params:
+          sorting_speed: 12000  # UPH
+          bin_count: 8
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/Fab/Lithography"
+        lifecycle_event_configs:
+          - event_name: "PowerOn"
+            initial_state: "Ready"
+          - event_name: "StartProduction"
+            initial_state: "Running"
+      
+      # 固晶機
+      - type: "DieBonder_v1.0"
+        count: 8
+        naming_prefix: "DB_2F_A_"
+        layout_pattern: "linear"
+        linear_config:
+          direction: "horizontal"
+          spacing: 3.5
+        origin:
+          x: 10.0
+          y: 30.0
+          z: 0.0
+        instance_params:
+          bonding_speed: 8000  # UPH
+          accuracy: 0.001  # mm
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/Bonding"
+      
+      # 打線機
+      - type: "WireBonder_v1.0"
+        count: 12
+        naming_prefix: "WB_2F_A_"
+        layout_pattern: "grid"
+        grid_config:
+          rows: 3
+          columns: 4
+          spacing_x: 2.5
+          spacing_y: 3.0
+        origin:
+          x: 10.0
+          y: 40.0
+          z: 0.0
+        instance_params:
+          wire_diameter: 0.025  # mm
+          bonding_speed: 10000  # UPH
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/WireBonding"
+    
+    relationships:
+      # 物料流關係
+      - type: "material_flow"
+        from: "DS_2F_A_001"
+        to: "DB_2F_A_001"
+        properties:
+          transport_method: "AGV"
+          cycle_time: 120  # 秒
+          batch_size: 100
+      
+      - type: "material_flow"
+        from: "DB_2F_A_001"
+        to: "WB_2F_A_001"
+        properties:
+          transport_method: "Conveyor"
+          speed: 0.5  # m/s
+      
+      # 數據連接關係
+      - type: "data_connection"
+        from: "DS_2F_A_*"  # 萬用字元,匹配所有 Die Sorter
+        to: "MES_Server"
+        properties:
+          protocol: "SECS/GEM"
+          update_interval: 1  # 秒
+      
+      # 電力供應關係
+      - type: "power_supply"
+        from: "Transformer_2F_A"
+        to: "DS_2F_A_*"
+        properties:
+          voltage: 220  # V
+          phase: 3
+          capacity: 15  # kW per machine
+```
+
+### 公用系統 (Utilities)
+
+定義工廠的公用系統配置:
+
+```yaml
+utilities:
+  # 電力系統
+  - type: "electrical"
+    specifications:
+      total_capacity: 5000  # kW
+      voltage_levels:
+        - 22000  # V (高壓輸入)
+        - 380   # V (三相)
+        - 220   # V (單相)
+      transformers:
+        - id: "Transformer_Main"
+          capacity: 2000  # kVA
+          location: "B1_Electrical_Room"
+        - id: "Transformer_2F"
+          capacity: 1500  # kVA
+          location: "2F_Electrical_Room"
+    distribution:
+      - floor: "2F"
+        zones: ["Production_Zone_A", "Production_Zone_B"]
+        capacity: 1500  # kW
+      - floor: "3F"
+        zones: ["Production_Zone_C", "Production_Zone_D"]
+        capacity: 1500  # kW
+  
+  # HVAC 系統
+  - type: "hvac"
+    specifications:
+      total_cooling_capacity: 2000  # RT
+      air_handling_units:
+        - id: "AHU_2F_A"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_A"]
+        - id: "AHU_2F_B"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_B"]
+      chillers:
+        - id: "Chiller_01"
+          capacity: 1000  # RT
+          location: "B1_Mechanical_Room"
+          type: "Water-Cooled"
+    distribution:
+      - floor: "2F"
+        temperature_setpoint: 23  # °C
+        humidity_setpoint: 45     # %RH
+        air_changes_per_hour: 20
+  
+  # 純水系統
+  - type: "di_water"
+    specifications:
+      production_capacity: 100  # m³/day
+      resistivity: 18.2  # MΩ·cm
+      storage_tanks:
+        - id: "DI_Tank_01"
+          capacity: 50  # m³
+          location: "B1_Utility_Room"
+    distribution:
+      - floor: "2F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+      - floor: "3F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+  
+  # 氮氣系統
+  - type: "nitrogen"
+    specifications:
+      purity: 99.999  # %
+      production_method: "PSA"
+      capacity: 500  # Nm³/hr
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+  
+  # 壓縮空氣系統
+  - type: "compressed_air"
+    specifications:
+      pressure: 7.0  # bar
+      capacity: 1000  # Nm³/hr
+      dew_point: -40  # °C
+      compressors:
+        - id: "Compressor_01"
+          capacity: 500  # Nm³/hr
+          type: "Screw"
+          location: "B1_Compressor_Room"
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+```
+
+### 參數定義 (Parameters)
+
+定義全域參數和可配置項:
+
+```yaml
+parameters:
+  # 全域設定
+  global:
+    timezone: "Asia/Taipei"
+    working_hours: "24/7"
+    shifts: 3
+    language: "zh-TW"
+  
+  # 生產參數
+  production:
+    target_oee: 85  # %
+    cycle_time_target: 120  # 秒
+    batch_size_standard: 1000
+    quality_target: 99.5  # %
+  
+  # 環境參數
+  environment:
+    cleanroom:
+      temperature_range: [22, 24]  # °C
+      humidity_range: [40, 50]     # %RH
+      pressure_differential: 15    # Pa
+    office:
+      temperature_range: [23, 26]  # °C
+      humidity_range: [40, 60]     # %RH
+  
+  # 安全參數
+  safety:
+    emergency_exits: 8
+    fire_extinguishers: 50
+    smoke_detectors: 200
+    evacuation_time_target: 300  # 秒
+  
+  # 能源參數
+  energy:
+    peak_demand_limit: 4500  # kW
+    power_factor_target: 0.95
+    energy_efficiency_target: 0.85
+```
+
+---
+
+## 廠房類型與設計模式
+
+### 1. 半導體廠房 (Semiconductor Fab)
+
+#### 特徵
+
+- **高度潔淨**: ISO Class 1-5 無塵室
+- **精密環控**: 溫度 ±0.1°C, 濕度 ±1%
+- **複雜 MEP**: 超純水、特殊氣體、化學品供應
+- **高能耗**: 單位面積能耗極高
+- **嚴格 ESD**: 靜電防護要求
+
+#### FDL 設計模式
+
+```yaml
+# 台積電 12 吋晶圓廠範例
+factory_design:
+  metadata:
+    name: "TSMC 12-inch Wafer Fab"
+    facility_type: "Semiconductor"
+    technology_node: "5nm"
+  
+  buildings:
+    - building_id: "Fab_Building"
+      type: "Cleanroom_Facility"
+      total_area: 100000  # m²
+      floors:
+        - floor_id: "B2"
+          purpose: "Utility_Basement"
+        - floor_id: "B1"
+          purpose: "Sub_Fab"  # 設備下層,管線空間
+        - floor_id: "1F"
+          purpose: "Fab_Floor"  # 主要製程區
+        - floor_id: "2F"
+          purpose: "Fan_Filter_Unit"  # FFU 層
+  
+  layout:
+    - area: "Lithography_Bay"
+      building: "Fab_Building"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_2"
+      temperature: 23.0
+      temperature_tolerance: 0.1
+      humidity: 45
+      
+      # FDL 層級可配置 Asset Instance 的次要階層路徑
+      secondary_hierarchy_paths:
+        - type: "ProcessArea"
+          path: "/Fab/Lithography"
+
+      # FDL 層級可配置 Asset Instance 的生命週期事件行為
+      lifecycle_event_configs:
+        - event_name: "StartShift"
+          initial_state: "ReadyForProduction"
+        - event_name: "EndShift"
+          initial_state: "Idle"
+
+---
+
+## 2. FDL 概述
+
+### 設計理念
+
+FDL 的設計基於以下核心理念:
+
+1. **聲明式語法**: 描述「是什麼」而非「怎麼做」
+2. **階層結構**: 支援建築物、樓層、區域的階層組織
+3. **Asset Instance 引用**: 引用 IADL 定義的資產藍圖，並實例化為 Asset Instance。
+4. **關係定義**: 明確定義 Asset Instance 之間的連接和依賴。
+5. **參數化**: 支援參數化配置,提高重用性
+
+### FDL 在 IDTF 生態系統中的角色
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    IDTF V3.2 生態系統                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  IADL (Asset Blueprint)                                  │
+│    ↓                                                     │
+│  FDL (Factory Layout) ← 本白皮書的焦點                   │
+│    ↓                                                     │
+│  NDH (Deployment Execution)                              │
+│    ↓                                                     │
+│  Omniverse (Visualization)                               │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### FDL 與 IADL 的關係
+
+| 維度 | IADL | FDL |
+|------|------|-----|
+| **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
+| **重用性** | 跨專案重用 | 跨工廠複製 |
+| **生命週期** | 設計階段 | 設計到部署 |
+
+---
+
+## 3. FDL 語法規範
+
+### 基本結構
+
+FDL 採用 YAML 格式,具有清晰的階層結構:
+
+```yaml
+# FDL 基本結構
+factory_design:
+  metadata:
+    name: <工廠名稱>
+    version: <版本號>
+    author: <作者>
+    date: <日期>
+    description: <描述>
+  
+  buildings:
+    - building_id: <建築物 ID>
+      name: <建築物名稱>
+      location: <地理位置>
+      floors: <樓層列表>
+  
+  layout:
+    - area: <區域名稱>
+      building: <所屬建築物>
+      floor: <所屬樓層>
+      instances: <Asset Instance 列表>
+      relationships: <關係列表>
+  
+  utilities:
+    - type: <公用系統類型>
+      specifications: <規格>
+      distribution: <分配方式>
+  
+  parameters:
+    <全域參數定義>
+```
+
+### 元數據 (Metadata)
+
+定義工廠的基本資訊:
+
+```yaml
+metadata:
+  name: "Harvatek LED Packaging Factory"
+  version: "1.0.0"
+  author: "C.C. Lin"
+  date: "2025-10-12"
+  description: "LED封裝廠完整佈局設計"
+  tags:
+    - "LED"
+    - "Semiconductor"
+    - "High-Tech"
+  industry: "Electronics Manufacturing"
+  location:
+    country: "Taiwan"
+    city: "Hsinchu"
+    address: "No. 123, Tech Road"
+    coordinates:
+      latitude: 24.8138
+      longitude: 120.9675
+```
+
+### 建築物定義 (Buildings)
+
+定義工廠的建築結構:
+
+```yaml
+buildings:
+  - building_id: "MainBuilding"
+    name: "主廠房"
+    type: "Production"
+    construction_year: 2020
+    total_area: 50000  # 平方米
+    floors:
+      - floor_id: "B1"
+        level: -1
+        height: 4.5
+        area: 10000
+        purpose: "Utility & Storage"
+      - floor_id: "1F"
+        level: 1
+        height: 5.0
+        area: 10000
+        purpose: "Production & Office"
+      - floor_id: "2F"
+        level: 2
+        height: 4.0
+        area: 10000
+        purpose: "Production - Standard LED"
+      - floor_id: "3F"
+        level: 3
+        height: 4.0
+        area: 10000
+        purpose: "Production - High Power LED"
+      - floor_id: "4F"
+        level: 4
+        height: 4.0
+        area: 5000
+        purpose: "R&D & Quality Lab"
+      - floor_id: "5F"
+        level: 5
+        height: 3.5
+        area: 5000
+        purpose: "Office & Meeting"
+```
+
+### 佈局定義 (Layout)
+
+這是 FDL 的核心部分,定義 Asset Instance 的佈局:
+
+```yaml
+layout:
+  - area: "Production_Zone_A"
+    building: "MainBuilding"
+    floor: "2F"
+    zone_type: "CleanRoom"
+    cleanliness_class: "ISO_Class_7"
+    temperature: 23  # 攝氏度
+    humidity: 45     # 相對濕度 %
+    
+    instances:
+      # 晶片分選機
+      - type: "DieSorter_v1.0"  # 引用 IADL 資產類型
+        count: 10
+        naming_prefix: "DS_2F_A_"
+        naming_pattern: "{prefix}{index:03d}"  # DS_2F_A_001
+        layout_pattern: "grid"
+        grid_config:
+          rows: 2
+          columns: 5
+          spacing_x: 3.0  # 米
+          spacing_y: 4.0  # 米
+        origin:
+          x: 10.0
+          y: 20.0
+          z: 0.0
+        orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
+        instance_params:
+          sorting_speed: 12000  # UPH
+          bin_count: 8
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/Sorting"
+        lifecycle_event_configs:
+          - event_name: "PowerOn"
+            initial_state: "Ready"
+          - event_name: "StartProduction"
+            initial_state: "Running"
+      
+      # 固晶機
+      - type: "DieBonder_v1.0"
+        count: 8
+        naming_prefix: "DB_2F_A_"
+        layout_pattern: "linear"
+        linear_config:
+          direction: "horizontal"
+          spacing: 3.5
+        origin:
+          x: 10.0
+          y: 30.0
+          z: 0.0
+        instance_params:
+          bonding_speed: 8000  # UPH
+          accuracy: 0.001  # mm
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/Bonding"
+      
+      # 打線機
+      - type: "WireBonder_v1.0"
+        count: 12
+        naming_prefix: "WB_2F_A_"
+        layout_pattern: "grid"
+        grid_config:
+          rows: 3
+          columns: 4
+          spacing_x: 2.5
+          spacing_y: 3.0
+        origin:
+          x: 10.0
+          y: 40.0
+          z: 0.0
+        instance_params:
+          wire_diameter: 0.025  # mm
+          bonding_speed: 10000  # UPH
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessArea"
+            path: "/WireBonding"
+    
+    relationships:
+      # 物料流關係
+      - type: "material_flow"
+        from: "DS_2F_A_001"
+        to: "DB_2F_A_001"
+        properties:
+          transport_method: "AGV"
+          cycle_time: 120  # 秒
+          batch_size: 100
+      
+      - type: "material_flow"
+        from: "DB_2F_A_001"
+        to: "WB_2F_A_001"
+        properties:
+          transport_method: "Conveyor"
+          speed: 0.5  # m/s
+      
+      # 數據連接關係
+      - type: "data_connection"
+        from: "DS_2F_A_*"  # 萬用字元,匹配所有 Die Sorter
+        to: "MES_Server"
+        properties:
+          protocol: "SECS/GEM"
+          update_interval: 1  # 秒
+      
+      # 電力供應關係
+      - type: "power_supply"
+        from: "Transformer_2F_A"
+        to: "DS_2F_A_*"
+        properties:
+          voltage: 220  # V
+          phase: 3
+          capacity: 15  # kW per machine
+```
+
+### 公用系統 (Utilities)
+
+定義工廠的公用系統配置:
+
+```yaml
+utilities:
+  # 電力系統
+  - type: "electrical"
+    specifications:
+      total_capacity: 5000  # kW
+      voltage_levels:
+        - 22000  # V (高壓輸入)
+        - 380   # V (三相)
+        - 220   # V (單相)
+      transformers:
+        - id: "Transformer_Main"
+          capacity: 2000  # kVA
+          location: "B1_Electrical_Room"
+        - id: "Transformer_2F"
+          capacity: 1500  # kVA
+          location: "2F_Electrical_Room"
+    distribution:
+      - floor: "2F"
+        zones: ["Production_Zone_A", "Production_Zone_B"]
+        capacity: 1500  # kW
+      - floor: "3F"
+        zones: ["Production_Zone_C", "Production_Zone_D"]
+        capacity: 1500  # kW
+  
+  # HVAC 系統
+  - type: "hvac"
+    specifications:
+      total_cooling_capacity: 2000  # RT
+      air_handling_units:
+        - id: "AHU_2F_A"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_A"]
+        - id: "AHU_2F_B"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_B"]
+      chillers:
+        - id: "Chiller_01"
+          capacity: 1000  # RT
+          location: "B1_Mechanical_Room"
+          type: "Water-Cooled"
+    distribution:
+      - floor: "2F"
+        temperature_setpoint: 23  # °C
+        humidity_setpoint: 45     # %RH
+        air_changes_per_hour: 20
+  
+  # 純水系統
+  - type: "di_water"
+    specifications:
+      production_capacity: 100  # m³/day
+      resistivity: 18.2  # MΩ·cm
+      storage_tanks:
+        - id: "DI_Tank_01"
+          capacity: 50  # m³
+          location: "B1_Utility_Room"
+    distribution:
+      - floor: "2F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+      - floor: "3F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+  
+  # 氮氣系統
+  - type: "nitrogen"
+    specifications:
+      purity: 99.999  # %
+      production_method: "PSA"
+      capacity: 500  # Nm³/hr
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+  
+  # 壓縮空氣系統
+  - type: "compressed_air"
+    specifications:
+      pressure: 7.0  # bar
+      capacity: 1000  # Nm³/hr
+      dew_point: -40  # °C
+      compressors:
+        - id: "Compressor_01"
+          capacity: 500  # Nm³/hr
+          type: "Screw"
+          location: "B1_Compressor_Room"
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+```
+
+### 參數定義 (Parameters)
+
+定義全域參數和可配置項:
+
+```yaml
+parameters:
+  # 全域設定
+  global:
+    timezone: "Asia/Taipei"
+    working_hours: "24/7"
+    shifts: 3
+    language: "zh-TW"
+  
+  # 生產參數
+  production:
+    target_oee: 85  # %
+    cycle_time_target: 120  # 秒
+    batch_size_standard: 1000
+    quality_target: 99.5  # %
+  
+  # 環境參數
+  environment:
+    cleanroom:
+      temperature_range: [22, 24]  # °C
+      humidity_range: [40, 50]     # %RH
+      pressure_differential: 15    # Pa
+    office:
+      temperature_range: [23, 26]  # °C
+      humidity_range: [40, 60]     # %RH
+  
+  # 安全參數
+  safety:
+    emergency_exits: 8
+    fire_extinguishers: 50
+    smoke_detectors: 200
+    evacuation_time_target: 300  # 秒
+  
+  # 能源參數
+  energy:
+    peak_demand_limit: 4500  # kW
+    power_factor_target: 0.95
+    energy_efficiency_target: 0.85
+```
+
+---
+
+## 廠房類型與設計模式
+
+### 1. 半導體廠房 (Semiconductor Fab)
+
+#### 特徵
+
+- **高度潔淨**: ISO Class 1-5 無塵室
+- **精密環控**: 溫度 ±0.1°C, 濕度 ±1%
+- **複雜 MEP**: 超純水、特殊氣體、化學品供應
+- **高能耗**: 單位面積能耗極高
+- **嚴格 ESD**: 靜電防護要求
+
+#### FDL 設計模式
+
+```yaml
+# 台積電 12 吋晶圓廠範例
+factory_design:
+  metadata:
+    name: "TSMC 12-inch Wafer Fab"
+    facility_type: "Semiconductor"
+    technology_node: "5nm"
+  
+  buildings:
+    - building_id: "Fab_Building"
+      type: "Cleanroom_Facility"
+      total_area: 100000  # m²
+      floors:
+        - floor_id: "B2"
+          purpose: "Utility_Basement"
+        - floor_id: "B1"
+          purpose: "Sub_Fab"  # 設備下層,管線空間
+        - floor_id: "1F"
+          purpose: "Fab_Floor"  # 主要製程區
+        - floor_id: "2F"
+          purpose: "Fan_Filter_Unit"  # FFU 層
+  
+  layout:
+    - area: "Lithography_Bay"
+      building: "Fab_Building"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_2"
+      temperature: 23.0
+      temperature_tolerance: 0.1
+      humidity: 45
+      
+      # FDL 層級可配置 Asset Instance 的次要階層路徑
+      secondary_hierarchy_paths:
+        - type: "ProcessArea"
+            path: "/Fab/Lithography"
+
+      # FDL 層級可配置 Asset Instance 的生命週期事件行為
+      lifecycle_event_configs:
+        - event_name: "StartShift"
+          initial_state: "ReadyForProduction"
+        - event_name: "EndShift"
+          initial_state: "Idle"
+
+---
+
+## 2. FDL 概述
+
+### 設計理念
+
+FDL 的設計基於以下核心理念:
+
+1. **聲明式語法**: 描述「是什麼」而非「怎麼做」
+2. **階層結構**: 支援建築物、樓層、區域的階層組織
+3. **Asset Instance 引用**: 引用 IADL 定義的資產藍圖，並實例化為 Asset Instance。
+4. **關係定義**: 明確定義 Asset Instance 之間的連接和依賴。
+5. **參數化**: 支援參數化配置,提高重用性
+
+### FDL 在 IDTF 生態系統中的角色
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    IDTF V3.2 生態系統                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  IADL (資產藍圖)                                         │
+│    ↓                                                     │
+│  FDL (工廠佈局) ← 本白皮書的焦點                         │
+│    ↓                                                     │
+│  NDH (執行部署)                                          │
+│    ↓                                                     │
+│  Omniverse (視覺化)                                      │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### FDL 與 IADL 的關係
+
+| 維度 | IADL | FDL |
+|------|------|-----|
+| **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
+| **重用性** | 跨專案重用 | 跨工廠複製 |
+| **生命週期** | 設計階段 | 設計到部署 |
+
+---
+
+## 3. FDL 語法規範
+
+### 基本結構
+
+FDL 採用 YAML 格式,具有清晰的階層結構:
+
+```yaml
+# FDL 基本結構
+factory_design:
+  metadata:
+    name: <工廠名稱>
+    version: <版本號>
+    author: <作者>
+    date: <日期>
+    description: <描述>
+  
+  buildings:
+    - building_id: <建築物 ID>
+      name: <建築物名稱>
+      location: <地理位置>
+      floors: <樓層列表>
+  
+  layout:
+    - area: <區域名稱>
+      building: <所屬建築物>
+      floor: <所屬樓層>
+      zone_type: <區域類型>
+      instances: <Asset Instance 列表>
+      relationships: <關係列表>
+  
+  utilities:
+    - type: <公用系統類型>
+      specifications: <規格>
+      distribution: <分配方式>
+  
+  parameters:
+    <全域參數定義>
+```
+
+### 元數據 (Metadata)
+
+定義工廠的基本資訊:
+
+```yaml
+metadata:
+  name: "Harvatek LED Packaging Factory"
+  version: "1.0.0"
+  author: "C.C. Lin"
+  date: "2025-10-12"
+  description: "LED封裝廠完整佈局設計"
+  tags:
+    - "LED"
+    - "Semiconductor"
+    - "High-Tech"
+  industry: "Electronics Manufacturing"
+  location:
+    country: "Taiwan"
+    city: "Hsinchu"
+    address: "No. 123, Tech Road"
+    coordinates:
+      latitude: 24.8138
+      longitude: 120.9675
+```
+
+### 建築物定義 (Buildings)
+
+定義工廠的建築結構:
+
+```yaml
+buildings:
+  - building_id: "MainBuilding"
+    name: "主廠房"
+    type: "Production"
+    construction_year: 2020
+    total_area: 50000  # 平方米
+    floors:
+      - floor_id: "B1"
+        level: -1
+        height: 4.5
+        area: 10000
+        purpose: "Utility & Storage"
+      - floor_id: "1F"
+        level: 1
+        height: 5.0
+        area: 10000
+        purpose: "Production & Office"
+      - floor_id: "2F"
+        level: 2
+        height: 4.0
+        area: 10000
+        purpose: "Production - Standard LED"
+      - floor_id: "3F"
+        level: 3
+        height: 4.0
+        area: 10000
+        purpose: "Production - High Power LED"
+      - floor_id: "4F"
+        level: 4
+        height: 4.0
+        area: 5000
+        purpose: "R&D & Quality Lab"
+      - floor_id: "5F"
+        level: 5
+        height: 3.5
+        area: 5000
+        purpose: "Office & Meeting"
+```
+
+### 佈局定義 (Layout)
+
+這是 FDL 的核心部分,定義 Asset Instance 的佈局:
+
+```yaml
+layout:
+  - area: "Production_Zone_A"
+    building: "MainBuilding"
+    floor: "2F"
+    zone_type: "CleanRoom"
+    cleanliness_class: "ISO_Class_7"
+    temperature: 23  # 攝氏度
+    humidity: 45     # 相對濕度 %
+    
+    instances:
+      # 晶片分選機
+      - type: "DieSorter_v1.0"  # 引用 IADL 資產類型
+        count: 10
+        naming_prefix: "DS_2F_A_"
+        naming_pattern: "{prefix}{index:03d}"  # DS_2F_A_001
+        layout_pattern: "grid"
+        grid_config:
+          rows: 2
+          columns: 5
+          spacing_x: 3.0  # 米
+          spacing_y: 4.0  # 米
+        origin:
+          x: 10.0
+          y: 20.0
+          z: 0.0
+        orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
+        instance_params:
+          sorting_speed: 12000  # UPH
+          bin_count: 8
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Sorting"
+        lifecycle_event_configs:
+          - event_name: "PowerOn"
+            initial_state: "Ready"
+          - event_name: "StartProduction"
+            initial_state: "Running"
+      
+      # 固晶機
+      - type: "DieBonder_v1.0"
+        count: 8
+        naming_prefix: "DB_2F_A_"
+        layout_pattern: "linear"
+        linear_config:
+          direction: "horizontal"
+          spacing: 3.5
+        origin:
+          x: 10.0
+          y: 30.0
+          z: 0.0
+        instance_params:
+          bonding_speed: 8000  # UPH
+          accuracy: 0.001  # mm
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Bonding"
+      
+      # 打線機
+      - type: "WireBonder_v1.0"
+        count: 12
+        naming_prefix: "WB_2F_A_"
+        layout_pattern: "grid"
+        grid_config:
+          rows: 3
+          columns: 4
+          spacing_x: 2.5
+          spacing_y: 3.0
+        origin:
+          x: 10.0
+          y: 40.0
+          z: 0.0
+        instance_params:
+          wire_diameter: 0.025  # mm
+          bonding_speed: 10000  # UPH
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/WireBonding"
+    
+    relationships:
+      # 物料流關係
+      - type: "material_flow"
+        from: "DS_2F_A_001"
+        to: "DB_2F_A_001"
+        properties:
+          transport_method: "AGV"
+          cycle_time: 120  # 秒
+          batch_size: 100
+      
+      - type: "material_flow"
+        from: "DB_2F_A_001"
+        to: "WB_2F_A_001"
+        properties:
+          transport_method: "Conveyor"
+          speed: 0.5  # m/s
+      
+      # 數據連接關係
+      - type: "data_connection"
+        from: "DS_2F_A_*"  # 萬用字元,匹配所有 Die Sorter
+        to: "MES_Server"
+        properties:
+          protocol: "SECS/GEM"
+          update_interval: 1  # 秒
+      
+      # 電力供應關係
+      - type: "power_supply"
+        from: "Transformer_2F_A"
+        to: "DS_2F_A_*"
+        properties:
+          voltage: 220  # V
+          phase: 3
+          capacity: 15  # kW per machine
+```
+
+### 公用系統 (Utilities)
+
+定義工廠的公用系統配置:
+
+```yaml
+utilities:
+  # 電力系統
+  - type: "electrical"
+    specifications:
+      total_capacity: 5000  # kW
+      voltage_levels:
+        - 22000  # V (高壓輸入)
+        - 380   # V (三相)
+        - 220   # V (單相)
+      transformers:
+        - id: "Transformer_Main"
+          capacity: 2000  # kVA
+          location: "B1_Electrical_Room"
+        - id: "Transformer_2F"
+          capacity: 1500  # kVA
+          location: "2F_Electrical_Room"
+    distribution:
+      - floor: "2F"
+        zones: ["Production_Zone_A", "Production_Zone_B"]
+        capacity: 1500  # kW
+      - floor: "3F"
+        zones: ["Production_Zone_C", "Production_Zone_D"]
+        capacity: 1500  # kW
+  
+  # HVAC 系統
+  - type: "hvac"
+    specifications:
+      total_cooling_capacity: 2000  # RT
+      air_handling_units:
+        - id: "AHU_2F_A"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_A"]
+        - id: "AHU_2F_B"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_B"]
+      chillers:
+        - id: "Chiller_01"
+          capacity: 1000  # RT
+          location: "B1_Mechanical_Room"
+          type: "Water-Cooled"
+    distribution:
+      - floor: "2F"
+        temperature_setpoint: 23  # °C
+        humidity_setpoint: 45     # %RH
+        air_changes_per_hour: 20
+  
+  # 純水系統
+  - type: "di_water"
+    specifications:
+      production_capacity: 100  # m³/day
+      resistivity: 18.2  # MΩ·cm
+      storage_tanks:
+        - id: "DI_Tank_01"
+          capacity: 50  # m³
+          location: "B1_Utility_Room"
+    distribution:
+      - floor: "2F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+      - floor: "3F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+  
+  # 氮氣系統
+  - type: "nitrogen"
+    specifications:
+      purity: 99.999  # %
+      production_method: "PSA"
+      capacity: 500  # Nm³/hr
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+  
+  # 壓縮空氣系統
+  - type: "compressed_air"
+    specifications:
+      pressure: 7.0  # bar
+      capacity: 1000  # Nm³/hr
+      dew_point: -40  # °C
+      compressors:
+        - id: "Compressor_01"
+          capacity: 500  # Nm³/hr
+          type: "Screw"
+          location: "B1_Compressor_Room"
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+```
+
+### 參數定義 (Parameters)
+
+定義全域參數和可配置項:
+
+```yaml
+parameters:
+  # 全域設定
+  global:
+    timezone: "Asia/Taipei"
+    working_hours: "24/7"
+    shifts: 3
+    language: "zh-TW"
+  
+  # 生產參數
+  production:
+    target_oee: 85  # %
+    cycle_time_target: 120  # 秒
+    batch_size_standard: 1000
+    quality_target: 99.5  # %
+  
+  # 環境參數
+  environment:
+    cleanroom:
+      temperature_range: [22, 24]  # °C
+      humidity_range: [40, 50]     # %RH
+      pressure_differential: 15    # Pa
+    office:
+      temperature_range: [23, 26]  # °C
+      humidity_range: [40, 60]     # %RH
+  
+  # 安全參數
+  safety:
+    emergency_exits: 8
+    fire_extinguishers: 50
+    smoke_detectors: 200
+    evacuation_time_target: 300  # 秒
+  
+  # 能源參數
+  energy:
+    peak_demand_limit: 4500  # kW
+    power_factor_target: 0.95
+    energy_efficiency_target: 0.85
+```
+
+---
+
+## 廠房類型與設計模式
+
+### 1. 半導體廠房 (Semiconductor Fab)
+
+#### 特徵
+
+- **高度潔淨**: ISO Class 1-5 無塵室
+- **精密環控**: 溫度 ±0.1°C, 濕度 ±1%
+- **複雜 MEP**: 超純水、特殊氣體、化學品供應
+- **高能耗**: 單位面積能耗極高
+- **嚴格 ESD**: 靜電防護要求
+
+#### FDL 設計模式
+
+```yaml
+# 台積電 12 吋晶圓廠範例
+factory_design:
+  metadata:
+    name: "TSMC 12-inch Wafer Fab"
+    facility_type: "Semiconductor"
+    technology_node: "5nm"
+  
+  buildings:
+    - building_id: "Fab_Building"
+      type: "Cleanroom_Facility"
+      total_area: 100000  # m²
+      floors:
+        - floor_id: "B2"
+          purpose: "Utility_Basement"
+        - floor_id: "B1"
+          purpose: "Sub_Fab"  # 設備下層,管線空間
+        - floor_id: "1F"
+          purpose: "Fab_Floor"  # 主要製程區
+        - floor_id: "2F"
+          purpose: "Fan_Filter_Unit"  # FFU 層
+  
+  layout:
+    - area: "Lithography_Bay"
+      building: "Fab_Building"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_2"
+      temperature: 23.0
+      temperature_tolerance: 0.1
+      humidity: 45
+      
+      # FDL 層級可配置 Asset Instance 的次要階層路徑
+      secondary_hierarchy_paths:
+        - type: "ProcessArea"
+          path: "/Fab/Lithography"
+
+      # FDL 層級可配置 Asset Instance 的生命週期事件行為
+      lifecycle_event_configs:
+        - event_name: "StartShift"
+          initial_state: "ReadyForProduction"
+        - event_name: "EndShift"
+          initial_state: "Idle"
+
+---
+
+## 2. FDL 概述
+
+### 設計理念
+
+FDL 的設計基於以下核心理念:
+
+1. **聲明式語法**: 描述「是什麼」而非「怎麼做」
+2. **階層結構**: 支援建築物、樓層、區域的階層組織
+3. **Asset Instance 引用**: 引用 IADL 定義的資產藍圖，並實例化為 Asset Instance。
+4. **關係定義**: 明確定義 Asset Instance 之間的連接和依賴。
+5. **參數化**: 支援參數化配置,提高重用性
+
+### FDL 在 IDTF 生態系統中的角色
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    IDTF V3.2 生態系統                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  IADL (資產藍圖)                                         │
+│    ↓                                                     │
+│  FDL (工廠佈局) ← 本白皮書的焦點                         │
+│    ↓                                                     │
+│  NDH (執行部署)                                          │
+│    ↓                                                     │
+│  Omniverse (視覺化)                                      │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### FDL 與 IADL 的關係
+
+| 維度 | IADL | FDL |
+|------|------|-----|
+| **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
+| **重用性** | 跨專案重用 | 跨工廠複製 |
+| **生命週期** | 設計階段 | 設計到部署 |
+
+---
+
+## 3. FDL 語法規範
+
+### 基本結構
+
+FDL 採用 YAML 格式,具有清晰的階層結構:
+
+```yaml
+# FDL 基本結構
+factory_design:
+  metadata:
+    name: <工廠名稱>
+    version: <版本號>
+    author: <作者>
+    date: <日期>
+    description: <描述>
+  
+  buildings:
+    - building_id: <建築物 ID>
+      name: <建築物名稱>
+      location: <地理位置>
+      floors: <樓層列表>
+  
+  layout:
+    - area: <區域名稱>
+      building: <所屬建築物>
+      floor: <所屬樓層>
+      zone_type: <區域類型>
+      instances: <Asset Instance 列表>
+      relationships: <關係列表>
+  
+  utilities:
+    - type: <公用系統類型>
+      specifications: <規格>
+      distribution: <分配方式>
+  
+  parameters:
+    <全域參數定義>
+```
+
+### 元數據 (Metadata)
+
+定義工廠的基本資訊:
+
+```yaml
+metadata:
+  name: "Harvatek LED Packaging Factory"
+  version: "1.0.0"
+  author: "C.C. Lin"
+  date: "2025-10-12"
+  description: "LED封裝廠完整佈局設計"
+  tags:
+    - "LED"
+    - "Semiconductor"
+    - "High-Tech"
+  industry: "Electronics Manufacturing"
+  location:
+    country: "Taiwan"
+    city: "Hsinchu"
+    address: "No. 123, Tech Road"
+    coordinates:
+      latitude: 24.8138
+      longitude: 120.9675
+```
+
+### 建築物定義 (Buildings)
+
+定義工廠的建築結構:
+
+```yaml
+buildings:
+  - building_id: "MainBuilding"
+    name: "主廠房"
+    type: "Production"
+    construction_year: 2020
+    total_area: 50000  # 平方米
+    floors:
+      - floor_id: "B1"
+        level: -1
+        height: 4.5
+        area: 10000
+        purpose: "Utility & Storage"
+      - floor_id: "1F"
+        level: 1
+        height: 5.0
+        area: 10000
+        purpose: "Production & Office"
+      - floor_id: "2F"
+        level: 2
+        height: 4.0
+        area: 10000
+        purpose: "Production - Standard LED"
+      - floor_id: "3F"
+        level: 3
+        height: 4.0
+        area: 10000
+        purpose: "Production - High Power LED"
+      - floor_id: "4F"
+        level: 4
+        height: 4.0
+        area: 5000
+        purpose: "R&D & Quality Lab"
+      - floor_id: "5F"
+        level: 5
+        height: 3.5
+        area: 5000
+        purpose: "Office & Meeting"
+```
+
+### 佈局定義 (Layout)
+
+這是 FDL 的核心部分,定義 Asset Instance 的佈局:
+
+```yaml
+layout:
+  - area: "Production_Zone_A"
+    building: "MainBuilding"
+    floor: "2F"
+    zone_type: "CleanRoom"
+    cleanliness_class: "ISO_Class_7"
+    temperature: 23  # 攝氏度
+    humidity: 45     # 相對濕度 %
+    
+    instances:
+      # 晶片分選機
+      - type: "DieSorter_v1.0"  # 引用 IADL 資產類型
+        count: 10
+        naming_prefix: "DS_2F_A_"
+        naming_pattern: "{prefix}{index:03d}"  # DS_2F_A_001
+        layout_pattern: "grid"
+        grid_config:
+          rows: 2
+          columns: 5
+          spacing_x: 3.0  # 米
+          spacing_y: 4.0  # 米
+        origin:
+          x: 10.0
+          y: 20.0
+          z: 0.0
+        orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
+        instance_params:
+          sorting_speed: 12000  # UPH
+          bin_count: 8
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Sorting"
+        lifecycle_event_configs:
+          - event_name: "PowerOn"
+            initial_state: "Ready"
+          - event_name: "StartProduction"
+            initial_state: "Running"
+      
+      # 固晶機
+      - type: "DieBonder_v1.0"
+        count: 8
+        naming_prefix: "DB_2F_A_"
+        layout_pattern: "linear"
+        linear_config:
+          direction: "horizontal"
+          spacing: 3.5
+        origin:
+          x: 10.0
+          y: 30.0
+          z: 0.0
+        instance_params:
+          bonding_speed: 8000  # UPH
+          accuracy: 0.001  # mm
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Bonding"
+      
+      # 打線機
+      - type: "WireBonder_v1.0"
+        count: 12
+        naming_prefix: "WB_2F_A_"
+        layout_pattern: "grid"
+        grid_config:
+          rows: 3
+          columns: 4
+          spacing_x: 2.5
+          spacing_y: 3.0
+        origin:
+          x: 10.0
+          y: 40.0
+          z: 0.0
+        instance_params:
+          wire_diameter: 0.025  # mm
+          bonding_speed: 10000  # UPH
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/WireBonding"
+    
+    relationships:
+      # 物料流關係
+      - type: "material_flow"
+        from: "DS_2F_A_001"
+        to: "DB_2F_A_001"
+        properties:
+          transport_method: "AGV"
+          cycle_time: 120  # 秒
+          batch_size: 100
+      
+      - type: "material_flow"
+        from: "DB_2F_A_001"
+        to: "WB_2F_A_001"
+        properties:
+          transport_method: "Conveyor"
+          speed: 0.5  # m/s
+      
+      # 數據連接關係
+      - type: "data_connection"
+        from: "DS_2F_A_*"  # 萬用字元,匹配所有 Die Sorter
+        to: "MES_Server"
+        properties:
+          protocol: "SECS/GEM"
+          update_interval: 1  # 秒
+      
+      # 電力供應關係
+      - type: "power_supply"
+        from: "Transformer_2F_A"
+        to: "DS_2F_A_*"
+        properties:
+          voltage: 220  # V
+          phase: 3
+          capacity: 15  # kW per machine
+```
+
+### 公用系統 (Utilities)
+
+定義工廠的公用系統配置:
+
+```yaml
+utilities:
+  # 電力系統
+  - type: "electrical"
+    specifications:
+      total_capacity: 5000  # kW
+      voltage_levels:
+        - 22000  # V (高壓輸入)
+        - 380   # V (三相)
+        - 220   # V (單相)
+      transformers:
+        - id: "Transformer_Main"
+          capacity: 2000  # kVA
+          location: "B1_Electrical_Room"
+        - id: "Transformer_2F"
+          capacity: 1500  # kVA
+          location: "2F_Electrical_Room"
+    distribution:
+      - floor: "2F"
+        zones: ["Production_Zone_A", "Production_Zone_B"]
+        capacity: 1500  # kW
+      - floor: "3F"
+        zones: ["Production_Zone_C", "Production_Zone_D"]
+        capacity: 1500  # kW
+  
+  # HVAC 系統
+  - type: "hvac"
+    specifications:
+      total_cooling_capacity: 2000  # RT
+      air_handling_units:
+        - id: "AHU_2F_A"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_A"]
+        - id: "AHU_2F_B"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_B"]
+      chillers:
+        - id: "Chiller_01"
+          capacity: 1000  # RT
+          location: "B1_Mechanical_Room"
+          type: "Water-Cooled"
+    distribution:
+      - floor: "2F"
+        temperature_setpoint: 23  # °C
+        humidity_setpoint: 45     # %RH
+        air_changes_per_hour: 20
+  
+  # 純水系統
+  - type: "di_water"
+    specifications:
+      production_capacity: 100  # m³/day
+      resistivity: 18.2  # MΩ·cm
+      storage_tanks:
+        - id: "DI_Tank_01"
+          capacity: 50  # m³
+          location: "B1_Utility_Room"
+    distribution:
+      - floor: "2F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+      - floor: "3F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+  
+  # 氮氣系統
+  - type: "nitrogen"
+    specifications:
+      purity: 99.999  # %
+      production_method: "PSA"
+      capacity: 500  # Nm³/hr
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+  
+  # 壓縮空氣系統
+  - type: "compressed_air"
+    specifications:
+      pressure: 7.0  # bar
+      capacity: 1000  # Nm³/hr
+      dew_point: -40  # °C
+      compressors:
+        - id: "Compressor_01"
+          capacity: 500  # Nm³/hr
+          type: "Screw"
+          location: "B1_Compressor_Room"
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+```
+
+### 參數定義 (Parameters)
+
+定義全域參數和可配置項:
+
+```yaml
+parameters:
+  # 全域設定
+  global:
+    timezone: "Asia/Taipei"
+    working_hours: "24/7"
+    shifts: 3
+    language: "zh-TW"
+  
+  # 生產參數
+  production:
+    target_oee: 85  # %
+    cycle_time_target: 120  # 秒
+    batch_size_standard: 1000
+    quality_target: 99.5  # %
+  
+  # 環境參數
+  environment:
+    cleanroom:
+      temperature_range: [22, 24]  # °C
+      humidity_range: [40, 50]     # %RH
+      pressure_differential: 15    # Pa
+    office:
+      temperature_range: [23, 26]  # °C
+      humidity_range: [40, 60]     # %RH
+  
+  # 安全參數
+  safety:
+    emergency_exits: 8
+    fire_extinguishers: 50
+    smoke_detectors: 200
+    evacuation_time_target: 300  # 秒
+  
+  # 能源參數
+  energy:
+    peak_demand_limit: 4500  # kW
+    power_factor_target: 0.95
+    energy_efficiency_target: 0.85
+```
+
+---
+
+## 廠房類型與設計模式
+
+### 1. 半導體廠房 (Semiconductor Fab)
+
+#### 特徵
+
+- **高度潔淨**: ISO Class 1-5 無塵室
+- **精密環控**: 溫度 ±0.1°C, 濕度 ±1%
+- **複雜 MEP**: 超純水、特殊氣體、化學品供應
+- **高能耗**: 單位面積能耗極高
+- **嚴格 ESD**: 靜電防護要求
+
+#### FDL 設計模式
+
+```yaml
+# 台積電 12 吋晶圓廠範例
+factory_design:
+  metadata:
+    name: "TSMC 12-inch Wafer Fab"
+    facility_type: "Semiconductor"
+    technology_node: "5nm"
+  
+  buildings:
+    - building_id: "Fab_Building"
+      type: "Cleanroom_Facility"
+      total_area: 100000  # m²
+      floors:
+        - floor_id: "B2"
+          purpose: "Utility_Basement"
+        - floor_id: "B1"
+          purpose: "Sub_Fab"  # 設備下層,管線空間
+        - floor_id: "1F"
+          purpose: "Fab_Floor"  # 主要製程區
+        - floor_id: "2F"
+          purpose: "Fan_Filter_Unit"  # FFU 層
+  
+  layout:
+    - area: "Lithography_Bay"
+      building: "Fab_Building"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_2"
+      temperature: 23.0
+      temperature_tolerance: 0.1
+      humidity: 45
+      
+      # FDL 層級可配置 Asset Instance 的次要階層路徑
+      secondary_hierarchy_paths:
+        - type: "ProcessArea"
+          path: "/Fab/Lithography"
+
+      # FDL 層級可配置 Asset Instance 的生命週期事件行為
+      lifecycle_event_configs:
+        - event_name: "StartShift"
+          initial_state: "ReadyForProduction"
+        - event_name: "EndShift"
+          initial_state: "Idle"
+
+---
+
+## 2. FDL 概述
+
+### 設計理念
+
+FDL 的設計基於以下核心理念:
+
+1. **聲明式語法**: 描述「是什麼」而非「怎麼做」
+2. **階層結構**: 支援建築物、樓層、區域的階層組織
+3. **Asset Instance 引用**: 引用 IADL 定義的資產藍圖，並實例化為 Asset Instance。
+4. **關係定義**: 明確定義 Asset Instance 之間的連接和依賴。
+5. **參數化**: 支援參數化配置,提高重用性
+
+### FDL 在 IDTF 生態系統中的角色
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    IDTF V3.2 生態系統                    │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│  IADL (資產藍圖)                                         │
+│    ↓                                                     │
+│  FDL (工廠佈局) ← 本白皮書的焦點                         │
+│    ↓                                                     │
+│  NDH (執行部署)                                          │
+│    ↓                                                     │
+│  Omniverse (視覺化)                                      │
+│                                                          │
+└─────────────────────────────────────────────────────────┘
+```
+
+### FDL 與 IADL 的關係
+
+| 維度 | IADL | FDL |
+|------|------|-----|
+| **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
+| **重用性** | 跨專案重用 | 跨工廠複製 |
+| **生命週期** | 設計階段 | 設計到部署 |
+
+---
+
+## 3. FDL 語法規範
+
+### 基本結構
+
+FDL 採用 YAML 格式,具有清晰的階層結構:
+
+```yaml
+# FDL 基本結構
+factory_design:
+  metadata:
+    name: <工廠名稱>
+    version: <版本號>
+    author: <作者>
+    date: <日期>
+    description: <描述>
+  
+  buildings:
+    - building_id: <建築物 ID>
+      name: <建築物名稱>
+      location: <地理位置>
+      floors: <樓層列表>
+  
+  layout:
+    - area: <區域名稱>
+      building: <所屬建築物>
+      floor: <所屬樓層>
+      zone_type: <區域類型>
+      instances: <Asset Instance 列表>
+      relationships: <關係列表>
+  
+  utilities:
+    - type: <公用系統類型>
+      specifications: <規格>
+      distribution: <分配方式>
+  
+  parameters:
+    <全域參數定義>
+```
+
+### 元數據 (Metadata)
+
+定義工廠的基本資訊:
+
+```yaml
+metadata:
+  name: "Harvatek LED Packaging Factory"
+  version: "1.0.0"
+  author: "C.C. Lin"
+  date: "2025-10-12"
+  description: "LED封裝廠完整佈局設計"
+  tags:
+    - "LED"
+    - "Semiconductor"
+    - "High-Tech"
+  industry: "Electronics Manufacturing"
+  location:
+    country: "Taiwan"
+    city: "Hsinchu"
+    address: "No. 123, Tech Road"
+    coordinates:
+      latitude: 24.8138
+      longitude: 120.9675
+```
+
+### 建築物定義 (Buildings)
+
+定義工廠的建築結構:
+
+```yaml
+buildings:
+  - building_id: "MainBuilding"
+    name: "主廠房"
+    type: "Production"
+    construction_year: 2020
+    total_area: 50000  # 平方米
+    floors:
+      - floor_id: "B1"
+        level: -1
+        height: 4.5
+        area: 10000
+        purpose: "Utility & Storage"
+      - floor_id: "1F"
+        level: 1
+        height: 5.0
+        area: 10000
+        purpose: "Production & Office"
+      - floor_id: "2F"
+        level: 2
+        height: 4.0
+        area: 10000
+        purpose: "Production - Standard LED"
+      - floor_id: "3F"
+        level: 3
+        height: 4.0
+        area: 10000
+        purpose: "Production - High Power LED"
+      - floor_id: "4F"
+        level: 4
+        height: 4.0
+        area: 5000
+        purpose: "R&D & Quality Lab"
+      - floor_id: "5F"
+        level: 5
+        height: 3.5
+        area: 5000
+        purpose: "Office & Meeting"
+```
+
+### 佈局定義 (Layout)
+
+這是 FDL 的核心部分,定義 Asset Instance 的佈局:
+
+```yaml
+layout:
+  - area: "Production_Zone_A"
+    building: "MainBuilding"
+    floor: "2F"
+    zone_type: "CleanRoom"
+    cleanliness_class: "ISO_Class_7"
+    temperature: 23  # 攝氏度
+    humidity: 45     # 相對濕度 %
+    
+    instances:
+      # 晶片分選機
+      - type: "DieSorter_v1.0"  # 引用 IADL 資產類型
+        count: 10
+        naming_prefix: "DS_2F_A_"
+        naming_pattern: "{prefix}{index:03d}"  # DS_2F_A_001
+        layout_pattern: "grid"
+        grid_config:
+          rows: 2
+          columns: 5
+          spacing_x: 3.0  # 米
+          spacing_y: 4.0  # 米
+        origin:
+          x: 10.0
+          y: 20.0
+          z: 0.0
+        orientation: 0  # 度 (0=北, 90=東, 180=南, 270=西)
+        instance_params:
+          sorting_speed: 12000  # UPH
+          bin_count: 8
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Sorting"
+        lifecycle_event_configs:
+          - event_name: "PowerOn"
+            initial_state: "Ready"
+          - event_name: "StartProduction"
+            initial_state: "Running"
+      
+      # 固晶機
+      - type: "DieBonder_v1.0"
+        count: 8
+        naming_prefix: "DB_2F_A_"
+        layout_pattern: "linear"
+        linear_config:
+          direction: "horizontal"
+          spacing: 3.5
+        origin:
+          x: 10.0
+          y: 30.0
+          z: 0.0
+        instance_params:
+          bonding_speed: 8000  # UPH
+          accuracy: 0.001  # mm
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/Bonding"
+      
+      # 打線機
+      - type: "WireBonder_v1.0"
+        count: 12
+        naming_prefix: "WB_2F_A_"
+        layout_pattern: "grid"
+        grid_config:
+          rows: 3
+          columns: 4
+          spacing_x: 2.5
+          spacing_y: 3.0
+        origin:
+          x: 10.0
+          y: 40.0
+          z: 0.0
+        instance_params:
+          wire_diameter: 0.025  # mm
+          bonding_speed: 10000  # UPH
+          status: "Idle"
+        secondary_hierarchy_paths:
+          - type: "ProcessStep"
+            path: "/WireBonding"
+    
+    relationships:
+      # 物料流關係
+      - type: "material_flow"
+        from: "DS_2F_A_001"
+        to: "DB_2F_A_001"
+        properties:
+          transport_method: "AGV"
+          cycle_time: 120  # 秒
+          batch_size: 100
+      
+      - type: "material_flow"
+        from: "DB_2F_A_001"
+        to: "WB_2F_A_001"
+        properties:
+          transport_method: "Conveyor"
+          speed: 0.5  # m/s
+      
+      # 數據連接關係
+      - type: "data_connection"
+        from: "DS_2F_A_*"  # 萬用字元,匹配所有 Die Sorter
+        to: "MES_Server"
+        properties:
+          protocol: "SECS/GEM"
+          update_interval: 1  # 秒
+      
+      # 電力供應關係
+      - type: "power_supply"
+        from: "Transformer_2F_A"
+        to: "DS_2F_A_*"
+        properties:
+          voltage: 220  # V
+          phase: 3
+          capacity: 15  # kW per machine
+```
+
+### 公用系統 (Utilities)
+
+定義工廠的公用系統配置:
+
+```yaml
+utilities:
+  # 電力系統
+  - type: "electrical"
+    specifications:
+      total_capacity: 5000  # kW
+      voltage_levels:
+        - 22000  # V (高壓輸入)
+        - 380   # V (三相)
+        - 220   # V (單相)
+      transformers:
+        - id: "Transformer_Main"
+          capacity: 2000  # kVA
+          location: "B1_Electrical_Room"
+        - id: "Transformer_2F"
+          capacity: 1500  # kVA
+          location: "2F_Electrical_Room"
+    distribution:
+      - floor: "2F"
+        zones: ["Production_Zone_A", "Production_Zone_B"]
+        capacity: 1500  # kW
+      - floor: "3F"
+        zones: ["Production_Zone_C", "Production_Zone_D"]
+        capacity: 1500  # kW
+  
+  # HVAC 系統
+  - type: "hvac"
+    specifications:
+      total_cooling_capacity: 2000  # RT
+      air_handling_units:
+        - id: "AHU_2F_A"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_A"]
+        - id: "AHU_2F_B"
+          capacity: 50000  # CMH
+          location: "2F_Ceiling"
+          serving_zones: ["Production_Zone_B"]
+      chillers:
+        - id: "Chiller_01"
+          capacity: 1000  # RT
+          location: "B1_Mechanical_Room"
+          type: "Water-Cooled"
+    distribution:
+      - floor: "2F"
+        temperature_setpoint: 23  # °C
+        humidity_setpoint: 45     # %RH
+        air_changes_per_hour: 20
+  
+  # 純水系統
+  - type: "di_water"
+    specifications:
+      production_capacity: 100  # m³/day
+      resistivity: 18.2  # MΩ·cm
+      storage_tanks:
+        - id: "DI_Tank_01"
+          capacity: 50  # m³
+          location: "B1_Utility_Room"
+    distribution:
+      - floor: "2F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+      - floor: "3F"
+        flow_rate: 20  # L/min
+        pressure: 3.0  # bar
+  
+  # 氮氣系統
+  - type: "nitrogen"
+    specifications:
+      purity: 99.999  # %
+      production_method: "PSA"
+      capacity: 500  # Nm³/hr
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 200  # Nm³/hr
+  
+  # 壓縮空氣系統
+  - type: "compressed_air"
+    specifications:
+      pressure: 7.0  # bar
+      capacity: 1000  # Nm³/hr
+      dew_point: -40  # °C
+      compressors:
+        - id: "Compressor_01"
+          capacity: 500  # Nm³/hr
+          type: "Screw"
+          location: "B1_Compressor_Room"
+    distribution:
+      - floor: "2F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+      - floor: "3F"
+        pressure: 6.0  # bar
+        flow_rate: 400  # Nm³/hr
+```
+
+### 參數定義 (Parameters)
+
+定義全域參數和可配置項:
+
+```yaml
+parameters:
+  # 全域設定
+  global:
+    timezone: "Asia/Taipei"
+    working_hours: "24/7"
+    shifts: 3
+    language: "zh-TW"
+  
+  # 生產參數
+  production:
+    target_oee: 85  # %
+    cycle_time_target: 120  # 秒
+    batch_size_standard: 1000
+    quality_target: 99.5  # %
+  
+  # 環境參數
+  environment:
+    cleanroom:
+      temperature_range: [22, 24]  # °C
+      humidity_range: [40, 50]     # %RH
+      pressure_differential: 15    # Pa
+    office:
+      temperature_range: [23, 26]  # °C
+      humidity_range: [40, 60]     # %RH
+  
+  # 安全參數
+  safety:
+    emergency_exits: 8
+    fire_extinguishers: 50
+    smoke_detectors: 200
+    evacuation_time_target: 300  # 秒
+  
+  # 能源參數
+  energy:
+    peak_demand_limit: 4500  # kW
+    power_factor_target: 0.95
+    energy_efficiency_target: 0.85
+```
+
+---
+
+## 廠房類型與設計模式
+
+### 1. 半導體廠房 (Semiconductor Fab)
+
+#### 特徵
+
+- **高度潔淨**: ISO Class 1-5 無塵室
+- **精密環控**: 溫度 ±0.1°C, 濕度 ±1%
+- **複雜 MEP**: 超純水、特殊氣體、化學品供應
+- **高能耗**: 單位面積能耗極高
+- **嚴格 ESD**: 靜電防護要求
+
+#### FDL 設計模式
+
+```yaml
+# 台積電 12 吋晶圓廠範例
+factory_design:
+  metadata:
+    name: "TSMC 12-inch Wafer Fab"
+    facility_type: "Semiconductor"
+    technology_node: "5nm"
+  
+  buildings:
+    - building_id: "Fab_Building"
+      type: "Cleanroom_Facility"
+      total_area: 100000  # m²
+      floors:
+        - floor_id: "B2"
+          purpose: "Utility_Basement"
+        - floor_id: "B1"
+          purpose: "Sub_Fab"  # 設備下層,管線空間
+        - floor_id: "1F"
+          purpose: "Fab_Floor"  # 主要製程區
+        - floor_id: "2F"
+          purpose: "Fan_Filter_Unit"  # FFU 層
+  
+  layout:
+    - area: "Lithography_Bay"
+      building: "Fab_Building"
+      floor: "1F"
+      zone_type: "CleanRoom"
+      cleanliness_class: "ISO_Class_2"
+      temperature: 23.0
+      temperature_tolerance: 0.1
+      humidity: 45
 
 ---
 
@@ -78,8 +2470,8 @@ FDL 的設計基於以下核心理念:
 | 維度 | IADL | FDL |
 |------|------|-----|
 | **關注點** | 資產是什麼 (What) | 工廠如何佈局 (How) |
-| **粒度** | 單一資產 | 整座工廠 |
-| **內容** | 3D 模型、數據標籤、行為 | 數量、位置、連接關係 |
+| **粒度** | 單一資產類型 | 整座工廠 |
+| **內容** | 3D 模型、數據標籤、行為、預設次要階層與生命週期事件 | 數量、位置、連接關係、Asset Instance 的次要階層與生命週期事件配置 |
 | **重用性** | 跨專案重用 | 跨工廠複製 |
 | **生命週期** | 設計階段 | 設計到部署 |
 
@@ -112,7 +2504,7 @@ factory_design:
       building: <所屬建築物>
       floor: <所屬樓層>
       zone_type: <區域類型>
-      instances: <資產實例列表>
+      instances: <Asset Instance List>
       relationships: <關係列表>
   
   utilities:

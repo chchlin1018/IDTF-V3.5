@@ -45,6 +45,8 @@
 - **內容**: IDTF 框架總覽、核心概念、架構設計、Omniverse 整合，以及 MCP / AI Agent 擴充設計藍圖。
 - **文檔**: 
   - `IDTF_Overview_v1.1.md` 🆕
+  - `IDTF_Introduction.md` 🆕 (20 頁以內介紹文件)
+  - `IDTF_Omniverse_Integration_Documentation.md` 🆕 (IDTF 與 Omniverse 整合文件)
   - `IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md` 🆕
   - `Omniverse_Integration.md`
   - `IADL_FDL_Omniverse_Connector.md`
@@ -55,6 +57,7 @@
 - **內容**: Industrial Asset Definition Language 完整規範與修正建議
 - **文檔**: 
   - `IADL_Specification_V3.1.md`
+  - `IADL_FDL_Documentation.md` 🆕 (IADL, FDL 介紹文件含範例)
   - `IADL_Editor_Usage_Guide.md`
   - `IADL_Integration_with_Plant_Design_Software.md`
   - `IADL_Spec_Revision_Suggestions.md` 🆕 (修正依據)
@@ -85,6 +88,7 @@
 - **內容**: Neutral Data Hub 架構規範，包含 MCP Control Plane 和 Agent Runtimes 層次，以及 Reference Agents 的設計。
 - **文檔**: 
   - `NDH_Architecture.md` 🆕
+  - `NDH_Introduction.md` 🆕 (NDH 介紹功能與架構介紹文件)
   - `MCP_Layer_Design.md` 🆕
   - `EnergyOptimizerAgent_Implementation.md` 🆕
   - `MaintenanceAdvisorAgent_Design.md` 🆕
@@ -99,7 +103,9 @@
 - **內容**: 包含學術研究、技術白皮書、商業分析，以及新增的 **`IDTF_V3.5_Architectural_Analysis_Report.md`** 🆕。
 
 ### 09. Use Cases（應用案例）
-- **內容**: 包含 AI Agent 整合應用、PME 整合應用、以及宏齊、台積電、LNG 電廠、GB300 數據中心等實際應用場景。
+- **內容**: 包含 AI Agent 整合應用、PME 整合應用、以及宏齊、台積電、LNG 電廠、GB300 數據中心等實際應用場景，以及 IDTF 結合 AI 在宏齊科技的應用場景介紹。
+- **文檔**:
+  - `IDTF_AI_Harvatek_Application_Scenarios.md` 🆕 (IDTF 結合 AI 在宏齊科技的應用場景介紹)
 
 ### 10. Harvatek New Factory（宏齊科技新廠房）
 - **內容**: 完整的 IADL/FDL 設計案例。
@@ -216,15 +222,15 @@ IDTF V3.5.2 大幅擴展了 IADL 的數據模型，並引入了詳細的生命�
 #### 🚀 快速開始
 
 ### 1. 了解 IDTF 框架
-從 `01_IDTF_Spec/docs/01_IDTF_Overview.md` 和 `08_White_Papers/IDTF_V3.5_Architectural_Analysis_Report.md` 開始，全面了解框架的設計理念與最新架構。
+從 `01_IDTF_Spec/docs/IDTF_Introduction.md` (20 頁以內介紹文件) 開始，全面了解框架的設計理念與最新架構。您也可以參考 `01_IDTF_Spec/docs/01_IDTF_Overview.md` 和 `08_White_Papers/IDTF_V3.5_Architectural_Analysis_Report.md` 獲取更詳細的資訊。
 ### 2. 學習 IADL 語言
-閱讀 `02_IADL_Spec/docs/IADL_Specification_V3.1.md`，並參考 `02_IADL_Spec/docs/IADL_Spec_Revision_Suggestions.md` 了解最新的設計思想。
+閱讀 `01_IDTF_Spec/docs/IADL_FDL_Documentation.md` (IADL, FDL 介紹文件含範例) 以快速了解 IADL 和 FDL 的核心概念。您也可以參考 `02_IADL_Spec/docs/IADL_Specification_V3.1.md`，並參考 `02_IADL_Spec/docs/IADL_Spec_Revision_Suggestions.md` 了解最新的設計思想。
 ### 3. 學習 FDL 語言
 閱讀 `04_FDL_Spec/docs/FDL_Specification.md`，並參考 `04_FDL_Spec/docs/FDL_Spec_Revision_Suggestions.md`。
 ### 4. 瀏覽核心架構文檔
-深入研究 `01_IDTF_Spec/docs/` 和 `06_NDH_Spec/docs/` 目錄下的最新架構文檔，特別是 `06_NDH_Spec/docs/NDH_Architecture.md`、`06_NDH_Spec/docs/MCP_Layer_Design.md` 和 `01_IDTF_Spec/docs/IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md`，理解各個組件的詳細設計。
+深入研究 `06_NDH_Spec/docs/NDH_Introduction.md` (NDH 介紹功能與架構介紹文件) 以快速了解 NDH 的功能與架構。您也可以深入研究 `01_IDTF_Spec/docs/` 和 `06_NDH_Spec/docs/` 目錄下的最新架構文檔，特別是 `06_NDH_Spec/docs/NDH_Architecture.md`、`06_NDH_Spec/docs/MCP_Layer_Design.md` 和 `01_IDTF_Spec/docs/IDTF_V3.6_MCP_AI_Agent_Extension_Blueprint.md`，理解各個組件的詳細設計。
 ### 5. 體驗 AI Agent
-參考 `06_NDH_Spec/docs/EnergyOptimizerAgent_Implementation.md`、`06_NDH_Spec/docs/MaintenanceAdvisorAgent_Design.md` 和 `06_NDH_Spec/docs/SafetySentinelAgent_Design.md`，了解如何實作和部署 AI Agent。。
+參考 `09_Use_Cases/IDTF_AI_Harvatek_Application_Scenarios.md` (IDTF 結合 AI 在宏齊科技的應用場景介紹文件) 了解實際應用場景。您也可以參考 `06_NDH_Spec/docs/EnergyOptimizerAgent_Implementation.md`、`06_NDH_Spec/docs/MaintenanceAdvisorAgent_Design.md` 和 `06_NDH_Spec/docs/SafetySentinelAgent_Design.md`，了解如何實作和部署 AI Agent。
 
 ---
 

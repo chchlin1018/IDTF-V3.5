@@ -21,24 +21,6 @@ MCP Broker 將部署在 NDH 服務層之上，與 NDH 的 MQTT Broker 緊密整�
 
 ```mermaid
 graph TD
-<<<<<<< HEAD
-    subgraph AI Agent Layer
-        A[AI Agent 1] -->|事件/狀態| MCPB(MCP Broker)
-        B[AI Agent 2] -->|事件/狀態| MCPB
-        C[AI Agent N] -->|事件/狀態| MCPB
-    end
-
-    subgraph MCP Layer
-        MCPB -->|MQTT Topics| NDH_MQTT[NDH MQTT Broker]
-    end
-
-    subgraph NDH Layer
-        NDH_MQTT --> NDH_Core[NDH Core Services]
-        NDH_Core --> IADL_DB[IADL State Memory (Database)]
-    end
-
-    NDH_Core <--> OT_IT[OT/IT Systems]
-=======
     subgraph Apps/Dashboards
         A[Apps / Dashboards] -->|WS/HTTP| SL(Service Layer)
     end
@@ -68,7 +50,6 @@ graph TD
     subgraph Agent Runtimes
         AR -->|py/go/node SDK + policies| NDH
     end
->>>>>>> 199e9f9 (Docs: Add IDTF V3.6 MCP/AI Agent Extension Blueprint and Reference Agent Designs)
 ```
 
 ### 2.2 核心功能
@@ -153,4 +134,3 @@ agent_memory:
 ## 5. 結論
 
 MCP 層的設計，特別是 MCP Broker 的引入，將顯著提升 IDTF 在 AI Agent 協作和智慧應用方面的能力。透過標準化的通訊機制 (NDH MQTT Topics) 和統一的狀態記憶模型 (IADL Schema)，IDTF 將能夠支持構建更智能、更靈活的工業數位分身解決方案，為工業 4.0 的發展奠定堅實基礎。
-

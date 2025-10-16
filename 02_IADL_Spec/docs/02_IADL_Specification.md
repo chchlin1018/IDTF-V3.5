@@ -1,25 +1,38 @@
-# 04_IADL_V3_Specification.md - IADL V3.1 語法規範
+# IADL (Industrial Asset Description Language) 規範 v3.2
+
+**版本**: 3.2
+**發布日期**: 2025-10-16
+**作者**: Manus AI
+**組織**: IDTF Consortium
+
+---
 
 ## 1. 引言
 
-IDTF (Industrial Digital Twin Framework) V3.1 引入了 IADL (Industrial Automation Description Language) V3.1，這是一種專為工業自動化領域設計的描述語言。IADL V3.1 旨在提供一個標準化、可擴展且易於理解的語法，用於描述工業數位孿生系統中的各種實體、行為和關係。本章將詳細闡述 IADL V3.1 的語法規範、核心概念及其在 IDTF 生態系統中的應用。
+IDTF (Industrial Digital Twin Framework) V3.2 引入了 IADL (Industrial Asset Description Language) V3.2，這是一種專為工業自動化領域設計的描述語言。IADL V3.2 旨在提供一個標準化、可擴展且易於理解的語法，用於描述工業數位孿生系統中的各種實體、行為和關係。本文件將詳細闡述 IADL V3.2 的語法規範、核心概念及其在 IDTF 生態系統中的應用。
 
-## 2. IADL V3.1 核心理念與設計原則
+### 1.1. Breaking Changes from v3.1 to v3.2
 
-IADL V3.1 的設計秉承了 IDTF V2 的核心理念，旨在構建一個開放、中立且普惠的工業數位孿生生態系統。其主要設計原則包括：
+*   **引入 `secondary_hierarchy`**: 在 `AssetType` 中新增 `secondary_hierarchy` 字段，支援多維度資產視圖。
+*   **增強 `lifecycle_events`**: 在 `AssetType` 中擴展 `lifecycle_events` 字段，支援更精細的資產生命週期事件定義與狀態轉移。
+*   **術語統一**: 將「Asset 的實體 Instance」統一為「Asset Instance」，「Asset Servant」統一為「Asset Tag Instance」。
 
-*   **開源中立，無供應商鎖定**：IADL V3.1 採用開放標準和開源實現，確保用戶在選擇工具和平台時擁有最大的自由度，避免被特定供應商綁定。
+## 2. IADL V3.2 核心理念與設計原則
+
+IADL V3.2 的設計秉承了 IDTF V2 的核心理念，旨在構建一個開放、中立且普惠的工業數位孿生生態系統。其主要設計原則包括：
+
+*   **開源中立，無供應商鎖定**：IADL V3.2 採用開放標準和開源實現，確保用戶在選擇工具和平台時擁有最大的自由度，避免被特定供應商綁定。
 *   **低成本，中小企業可負擔**：透過簡化的語法、高效的工具鏈和開源的生態系統，降低數位孿生技術的導入成本，使中小企業也能受益於先進的工業自動化解決方案。
-*   **全生命週期覆蓋**：IADL V3.1 支援從設計、建造到運維的整個工業資產生命週期，提供統一的描述方式，促進各階段數據的無縫流動和協同。
-*   **基於 IADL + NDH + Omniverse 三大核心組件**：IADL V3.1 作為描述語言，與 NDH (Neutral Data Hub) 負責數據整合與交換，以及 Omniverse 提供強大的即時協同與渲染能力，共同構成了 IDTF 的三大核心支柱。這些組件共同作用，使得 IDTF 能夠提供一個全面的數位孿生解決方案，而無需依賴單一的外部平台。
+*   **全生命週期覆蓋**：IADL V3.2 支援從設計、建造到運維的整個工業資產生命週期，提供統一的描述方式，促進各階段數據的無縫流動和協同。
+*   **基於 IADL + NDH + Omniverse 三大核心組件**：IADL V3.2 作為描述語言，與 NDH (Neutral Data Hub) 負責數據整合與交換，以及 Omniverse 提供強大的即時協同與渲染能力，共同構成了 IDTF 的三大核心支柱。這些組件共同作用，使得 IDTF 能夠提供一個全面的數位孿生解決方案，而無需依賴單一的外部平台。
 
-## 3. IADL V3.1 語法結構
+## 3. IADL V3.2 語法結構
 
-IADL V3.1 採用基於文本的聲明式語法，易於人類閱讀和機器解析。其基本結構由模組（Module）、實體（Entity）、屬性（Property）、行為（Behavior）和關係（Relation）等關鍵元素組成。這種結構化的描述方式，使得複雜的工業系統能夠被清晰、一致地表達。
+IADL V3.2 採用基於文本的聲明式語法，易於人類閱讀和機器解析。其基本結構由模組（Module）、實體（Entity）、屬性（Property）、行為（Behavior）和關係（Relation）等關鍵元素組成。這種結構化的描述方式，使得複雜的工業系統能夠被清晰、一致地表達。
 
 ### 3.1 模組 (Module)
 
-模組是 IADL V3.1 中組織和管理複雜系統的基本單元。每個模組可以包含多個實體定義、行為定義和關係定義，並可以引用其他模組，實現模組化設計和重用。
+模組是 IADL V3.2 中組織和管理複雜系統的基本單元。每個模組可以包含多個實體定義、行為定義和關係定義，並可以引用其他模組，實現模組化設計和重用。
 
 ```iadl
 module MyFactory {
@@ -51,7 +64,7 @@ entity Sensor {
 
 ### 3.3 屬性 (Property)
 
-屬性用於描述實體的特徵或狀態。IADL V3.1 支援多種基本數據類型（如 `string`, `int`, `double`, `bool`）以及複雜數據類型（如 `Location`, `Vector3` 等自定義類型），確保數據描述的豐富性和精確性。
+屬性用於描述實體的特徵或狀態。IADL V3.2 支援多種基本數據類型（如 `string`, `int`, `double`, `bool`）以及複雜數據類型（如 `Location`, `Vector3` 等自定義類型），確保數據描述的豐富性和精確性。
 
 ```iadl
 struct Location {
@@ -85,33 +98,73 @@ relation Contains(Factory, ProductionLine); // 工廠包含生產線
 relation Monitors(Sensor, Robot);          // 感測器監控機器人
 ```
 
-## 4. IDTF 原生能力與 IADL V3.1 的整合
+## 4. IDTF 原生能力與 IADL V3.2 的整合
 
-IADL V3.1 不僅僅是一種描述語言，它更是 IDTF 實現其強大原生能力的基石。以下是 IADL V3.1 如何支撐 IDTF 關鍵技術設計的闡述，所有這些能力均為 IDTF 的原生功能，不依賴於特定的外部平台：
+IADL V3.2 不僅僅是一種描述語言，它更是 IDTF 實現其強大原生能力的基石。以下是 IADL V3.2 如何支撐 IDTF 關鍵技術設計的闡述，所有這些能力均為 IDTF 的原生功能，不依賴於特定的外部平台：
 
 ### 4.1 MEP 設計與 IADL
 
-IDTF 的 MEP (Mechanical, Electrical, Plumbing) 設計能力透過 IADL V3.1 對於物理實體及其連接關係的精確描述來實現。IADL 允許定義 MEP 相關的實體（如管道、電纜、HVAC 設備）及其屬性（如流量、電壓、溫度）和連接點。這使得 IDTF 能夠基於 IADL 模型進行 MEP 系統的自動化設計、模擬和驗證，確保設計的準確性和效率。
+IDTF 的 MEP (Mechanical, Electrical, Plumbing) 設計能力透過 IADL V3.2 對於物理實體及其連接關係的精確描述來實現。IADL 允許定義 MEP 相關的實體（如管道、電纜、HVAC 設備）及其屬性（如流量、電壓、溫度）和連接點。這使得 IDTF 能夠基於 IADL 模型進行 MEP 系統的自動化設計、模擬和驗證，確保設計的準確性和效率。
 
 ### 4.2 衝突檢測 (Conflict Detection)
 
-透過 IADL V3.1 對於空間位置、尺寸和連接關係的詳細描述，IDTF 能夠在設計階段自動執行衝突檢測。IADL 模型可以精確表示各個實體的三維幾何信息，IDTF 引擎則能基於這些信息識別潛在的物理碰撞或邏輯衝突，顯著提高設計質量並減少返工，從而節省成本和時間。
+透過 IADL V3.2 對於空間位置、尺寸和連接關係的詳細描述，IDTF 能夠在設計階段自動執行衝突檢測。IADL 模型可以精確表示各個實體的三維幾何信息，IDTF 引擎則能基於這些信息識別潛在的物理碰撞或邏輯衝突，顯著提高設計質量並減少返工，從而節省成本和時間。
 
 ### 4.3 ISO 圖面生成 (ISO Drawing Generation)
 
-IADL V3.1 提供了足夠的結構化信息，使得 IDTF 能夠自動生成符合 ISO 標準的工程圖面。從 IADL 模型中提取的實體幾何、尺寸、材料和連接信息，可以直接用於生成平面圖、立面圖、剖面圖以及詳細的部件清單，極大地提高了圖面生成的效率和準確性，減少了人工繪圖的錯誤。
+IADL V3.2 提供了足夠的結構化信息，使得 IDTF 能夠自動生成符合 ISO 標準的工程圖面。從 IADL 模型中提取的實體幾何、尺寸、材料和連接信息，可以直接用於生成平面圖、立面圖、剖面圖以及詳細的部件清單，極大地提高了圖面生成的效率和準確性，減少了人工繪圖的錯誤。
 
 ### 4.4 流程分析 (Flow Analysis)
 
-IADL V3.1 能夠描述工業流程中的實體行為、數據流和事件序列。IDTF 利用這些 IADL 定義來執行複雜的流程分析，例如生產線的吞吐量分析、物流路徑優化或能源消耗模擬。這有助於識別瓶頸、優化操作策略並提升整體系統效率，為決策提供數據支持。
+IADL V3.2 能夠描述工業流程中的實體行為、數據流和事件序列。IDTF 利用這些 IADL 定義來執行複雜的流程分析，例如生產線的吞吐量分析、物流路徑優化或能源消耗模擬。這有助於識別瓶頸、優化操作策略並提升整體系統效率，為決策提供數據支持。
 
 ### 4.5 即時協同 (Real-time Collaboration)
 
-IDTF 透過 IADL V3.1 和 NDH (Neutral Data Hub) 的結合，實現了多用戶、多應用程式之間的即時協同。IADL 模型作為共享的數位孿生數據基礎，任何對模型的修改都能透過 NDH 即時同步給所有協同參與者，並在 IDTF 的可視化模組中即時呈現，確保所有團隊成員始終在最新的數據上工作，提高協同效率。
+IDTF 透過 IADL V3.2 和 NDH (Neutral Data Hub) 的結合，實現了多用戶、多應用程式之間的即時協同。IADL 模型作為共享的數位孿生數據基礎，任何對模型的修改都能透過 NDH 即時同步給所有協同參與者，並在 IDTF 的可視化模組中即時呈現，確保所有團隊成員始終在最新的數據上工作，提高協同效率。
 
-## 5. 程式碼範例
+## 5. IADL V3.2 擴展功能
 
-以下是一個簡化的 IADL V3.1 程式碼範例，展示如何描述一個包含機器人和感測器的生產單元：
+### 5.1. 多維度資產視圖 (Secondary Hierarchy)
+
+IADL V3.2 引入了 `secondary_hierarchy` 字段，允許 Asset Instance 擁有多個非 FDL 定義的邏輯階層關係。這使得 Asset Instance 能夠從不同維度（例如功能、產品、專案、維護區域等）進行組織和查詢，提供更靈活的資產視圖。
+
+```iadl
+entity AssetTypeExample {
+    // ... 其他屬性與行為 ...
+    secondary_hierarchy:
+      - type: "FunctionalArea"
+        path: "/Production/AssemblyLine1"
+      - type: "ProductLine"
+        path: "/ProductA/ModelX"
+}
+```
+
+### 5.2. 資產生命週期事件 (Lifecycle Events)
+
+IADL V3.2 擴展了對資產生命週期事件的定義，允許在 `AssetType` 中聲明資產可能經歷的關鍵事件和狀態轉移。這有助於 NDH 和 MCP 更好地管理資產的生命週期，觸發相應的業務邏輯和自動化流程。
+
+```iadl
+entity AssetTypeExample {
+    // ... 其他屬性與行為 ...
+    lifecycle_events:
+      - event_name: "Installed"
+        description: "資產安裝完成"
+        triggers_state: "Operational"
+      - event_name: "MaintenanceStarted"
+        description: "維護工作開始"
+        triggers_state: "UnderMaintenance"
+      - event_name: "MaintenanceCompleted"
+        description: "維護工作完成"
+        triggers_state: "Operational"
+      - event_name: "Decommissioned"
+        description: "資產退役"
+        triggers_state: "Retired"
+}
+```
+
+## 6. 程式碼範例
+
+以下是一個簡化的 IADL V3.2 程式碼範例，展示如何描述一個包含機器人和感測器的生產單元，並應用了新的擴展功能：
 
 ```iadl
 module ProductionUnit {
@@ -122,6 +175,20 @@ module ProductionUnit {
         property double jointAngle1;
         property double jointAngle2;
         property bool isBusy = false;
+
+        secondary_hierarchy:
+          - type: "MaintenanceZone"
+            path: "Zone_A"
+          - type: "CostCenter"
+            path: "CC_001"
+
+        lifecycle_events:
+          - event_name: "PowerOn"
+            description: "機器人啟動"
+            triggers_state: "Ready"
+          - event_name: "ErrorDetected"
+            description: "檢測到錯誤"
+            triggers_state: "Faulted"
 
         behavior MoveToPosition(Location targetPosition) returns bool;
         behavior PickUpItem(string itemId) returns bool;
@@ -134,6 +201,10 @@ module ProductionUnit {
         property double detectionRange = 0.5; // meters
         property bool objectDetected = false;
 
+        secondary_hierarchy:
+          - type: "SafetyZone"
+            path: "Safe_Area_1"
+
         behavior Calibrate();
     }
 
@@ -142,6 +213,6 @@ module ProductionUnit {
 }
 ```
 
-## 6. 結論
+## 7. 結論
 
-IADL V3.1 作為 IDTF 的核心描述語言，為工業數位孿生系統提供了一個強大、靈活且開放的語法規範。它不僅繼承了 IDTF V2 的開放中立理念，更透過精確的實體、行為和關係描述，全面支撐了 IDTF 在 MEP 設計、衝突檢測、ISO 圖面生成、流程分析和即時協同等方面的原生能力。IADL V3.1 將成為推動工業數位化轉型，實現智慧製造的關鍵驅動力。
+IADL V3.2 作為 IDTF 的核心描述語言，為工業數位孿生系統提供了一個強大、靈活且開放的語法規範。它不僅繼承了 IDTF V2 的開放中立理念，更透過精確的實體、行為和關係描述，全面支撐了 IDTF 在 MEP 設計、衝突檢測、ISO 圖面生成、流程分析和即時協同等方面的原生能力。新增的多維度資產視圖和資產生命週期事件定義，進一步提升了 IADL 在複雜工業場景中的表達能力和實用性。IADL V3.2 將成為推動工業數位化轉型，實現智慧製造的關鍵驅動力。

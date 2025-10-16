@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Machine Verifiable Mapping Rule Schema",
+  "description": "Schema for defining machine-verifiable mapping rules between IDTF components.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "source_path",
+      "target_path",
+      "type_mapping",
+      "required",
+      "description"
+    ],
+    "properties": {
+      "source_path": {
+        "type": "string",
+        "description": "JSONPath or similar expression for the source field."
+      },
+      "target_path": {
+        "type": "string",
+        "description": "JSONPath or similar expression for the target field."
+      },
+      "type_mapping": {
+        "type": "string",
+        "enum": [
+          "string",
+          "number",
+          "boolean",
+          "array",
+          "object"
+        ],
+        "description": "Data type mapping for the field."
+      },
+      "required": {
+        "type": "boolean",
+        "description": "Indicates if the target field is required."
+      },
+      "validation_regex": {
+        "type": "string",
+        "description": "Optional regex for validating string fields."
+      },
+      "enum": {
+        "type": "string",
+        "description": "Optional comma-separated enum values for validation."
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of the mapping rule."
+      }
+    }
+  }
+}
