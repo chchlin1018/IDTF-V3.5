@@ -1,6 +1,6 @@
 # ISA-95 資產層次結構與 IDTF 對映
 
-**版本**: 1.0
+**版本**: 1.1
 **日期**: 2025-10-16
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)
 
@@ -22,7 +22,7 @@ ISA-95 設備階層模型是構建工業資產層次結構的基礎。IDTF 透�
 | **Site** | 企業內的一個地理位置或主要生產設施。 | **FDL Building** | FDL 中的 `buildings` 實例，代表一個物理廠區或設施。 |
 | **Area** | 站點內的一個邏輯或物理分區，例如一個車間或生產線。 | **FDL Layout Area** | FDL 中的 `layout.area` 實例，代表廠區內的特定區域或生產線。 |
 | **Process Cell** | 執行主要生產過程的單元，通常包含多個工作單元。 | **FDL Layout Area** (特定類型) | FDL 中的 `layout.area` 實例，當 `zone_type` 為 `ProcessCell` 時，代表一個完整的生產流程單元。 |
-| **Unit** | 執行特定生產操作的設備集合。 | **FDL Layout Instance Group** | FDL `layout.instances` 中的一組資產實例，代表一個獨立的工作單元或設備組。 |
+| **Unit** | 執行特定生產操作的設備集合。 | **FDL Layout Instance Group** | FDL `layout.instances` 中的一組 Asset Instance，代表一個獨立的工作單元或設備組。 |
 | **Equipment Module** | 執行特定控制功能的設備或設備組件。 | **IADL AssetType** / **FDL AssetInstance** | IADL 定義的資產類型或 FDL 實例化的具體設備。這是 IDTF 中最細粒度的可獨立管理的資產。 |
 | **Control Module** | 執行基本控制功能的設備組件，如感測器、執行器。 | **IADL ComponentType** / **FDL ComponentInstance** | IADL 定義的組件類型或 FDL 實例化的具體組件。通常是 `AssetType` 的組成部分。 |
 
@@ -53,12 +53,12 @@ factory_design:
 
 ## 3. NDH 資產層次結構的建構機制
 
-NDH (Neutral Data Hub) 作為 IDTF 的核心數據中樞，其關鍵職能之一是根據 FDL (Factory Design Language) 和 IADL (Industrial Asset Description Language) 的定義，動態且智慧地建構和維護一個統一的資產層次結構。這個層次結構不僅反映了工廠的物理佈局和邏輯分區，也整合了資產的靜態屬性與實時運行數據，為上層應用、AI Agent 和 Omniverse USD Scene Graph 提供一致且豐富的數據視圖。
+NDH (Neutral Data Hub) 作為 IDTF 的核心數據中樞，其關鍵職能之一是根據 FDL (Factory Design Language) 和 IADL (Industrial Asset Definition Language) 的定義，動態且智慧地建構和維護一個統一的資產層次結構。這個層次結構不僅反映了工廠的物理佈局和邏輯分區，也整合了資產的靜態屬性與實時運行數據，為上層應用、AI Agent 和 Omniverse USD Scene Graph 提供一致且豐富的數據視圖。
 
 ### 3.1. NDH 資產層次結構的核心原則
 
 1.  **ISA-95 對齊**: NDH 內部資產層次結構的設計嚴格遵循 ISA-95 設備階層模型，確保與工業標準的互操作性。
-2.  **FDL 驅動**: FDL 文件是定義工廠佈局和資產實例組織的「藍圖」，NDH 將其解析為可操作的內部結構。
+2.  **FDL 驅動**: FDL 文件是定義工廠佈局和 Asset Instance 組織的「藍圖」，NDH 將其解析為可操作的內部結構。
 3.  **IADL 豐富**: IADL 提供資產的詳細「DNA」，包括其類型、屬性、數據點和 3D 模型引用，這些信息將被整合到層次結構中的每個資產節點。
 4.  **動態與實時**: 層次結構不僅包含靜態定義，還能與實時數據源（透過 Asset Tag Instance）綁定，反映資產的當前狀態和行為。
 5.  **可擴展性**: 支援動態添加、修改和移除資產或其關係，以適應工廠生命週期的變化。
@@ -76,7 +76,7 @@ NDH 內部資產層次結構的建構是一個多階段的過程，涉及 FDL �
     *   NDH 會查詢其內部 IADL 註冊中心，載入對應的 IADL 定義。這些定義包含了資產的詳細藍圖，如 `data_tags` (數據點)、`properties` (靜態屬性)、`geometry` (3D 模型路徑) 和 `components` (子組件)。
     *   IADL 的信息將與 FDL 中資產實例的特定配置（如 `instance_params`、`origin`、`orientation`）進行整合，形成一個完整的資產實例描述。
 
-3.  **資產實例化與唯一識別 (Asset Instantiation & Unique Identification)**:
+3.  **Asset Instance 實例化與唯一識別 (Asset Instance Instantiation & Unique Identification)**:
     *   NDH 根據 FDL `layout.instances` 中的 `count`、`naming_prefix` 和 `naming_pattern` 規則，為每個資產實例生成唯一的識別符 (例如 `DS_2F_A_001`, `DS_2F_A_002` 等)。這些識別符將作為 NDH 內部資產節點的唯一鍵。
     *   對於每個實例，NDH 會創建一個內部資產節點對象，其中包含其唯一的 ID、類型、FDL 中定義的空間位置 (`origin`, `orientation`) 和 IADL 整合後的屬性。
 
@@ -85,14 +85,14 @@ NDH 內部資產層次結構的建構是一個多階段的過程，涉及 FDL �
         *   **Enterprise**: FDL 的 `factory_design` 頂層。
         *   **Site**: FDL 的 `buildings` 映射為 Site 節點。
         *   **Area**: FDL 的 `floors` 和 `layout.area` 映射為 Area 或 Process Cell 節點。
-        *   **Unit/Equipment Module**: FDL 中的資產實例 (例如 `DS_2F_A_001`) 映射為 Unit 或 Equipment Module 節點。
+        *   **Unit/Equipment Module**: FDL 中的 Asset Instance (例如 `DS_2F_A_001`) 映射為 Unit 或 Equipment Module 節點。
         *   **Control Module**: IADL 中定義的 `components` (例如 `Sensor_Pressure_01`) 映射為 Control Module 節點，作為其父資產的子節點。
     *   這個層次結構將儲存在 NDH 的核心數據庫中，並可透過 API 進行查詢和遍歷。
 
 5.  **Asset Tag Instance 綁定與數據集成 (Asset Tag Instance Binding & Data Integration)**:
-    *   對於每個資產實例節點，NDH 會根據其 IADL 定義中的 `data_tags` 部分，自動初始化一個或多個 **Asset Tag Instance** 實例。
+    *   對於每個 Asset Instance 節點，NDH 會根據其 IADL 定義中的 `data_tags` 部分，自動初始化一個或多個 **Asset Tag Instance** 實例。
     *   每個 Asset Tag Instance 負責將資產的抽象 `tag_id` (例如 `discharge_pressure`) 映射到後端時序數據庫 (如 TDengine, PI System) 中的實際數據點。
-    *   NDH 的資產節點將持有對這些 Asset Tag Instance 的引用，從而提供統一的數據訪問接口。當應用層請求資產的實時數據時，NDH 會透過對應的 Asset Tag Instance 進行路由和查詢，隱藏底層數據源的複雜性。
+    *   NDH 的 Asset Instance 節點將持有對這些 Asset Tag Instance 的引用，從而提供統一的數據訪問接口。當應用層請求資產的實時數據時，NDH 會透過對應的 Asset Tag Instance 進行路由和查詢，隱藏底層數據源的複雜性。
 
 **NDH 內部邏輯層次結構示例 (概念性，強調 ISA-95 對應):**
 
@@ -129,6 +129,7 @@ FDL 不僅僅是 NDH 內部使用的語言，它更是一個中立的、標準�
 
 *   **互操作性**：FDL 可以作為不同工廠 Layout 設計軟體（例如 CAD 軟體、MES 系統的佈局工具、甚至 Omniverse Composer 等 3D 設計工具）之間的橋樑。這些軟體可以匯出其佈局資訊為 FDL 格式，或從 FDL 匯入佈局資訊。
 *   **統一的 Layout Mapping**：FDL 提供了一個統一的語義層次來描述工廠的物理和邏輯結構，無論原始設計軟體是什麼，最終都能對映到 FDL 定義的 Asset Instance Hierarchy。
+*   **數位分身的核心基礎**：這種對映能力是構建完整數位分身的核心基礎，它將設計階段的資訊（佈局、資產類型）與運行階段的資訊（實時數據、狀態）無縫連接起來。
 
 ### 3.4. 動態更新與生命週期管理
 
@@ -170,9 +171,9 @@ NDH 中的 **USD Integration Service** 將作為核心組件，負責將 NDH 內
     *   FDL 的 `layout.area` (對應 ISA-95 的 Area 或 Process Cell 層級) 也將映射為 USD 中的 `Xform` Prims，作為邏輯分區。例如 `/World/Factory_Harvatek/MainBuilding/Floor_2F/Production_Zone_A`。
     *   這些邏輯區域 Prim 可以包含額外的元數據 (Metadata)，如 `zone_type` (CleanRoom, ProductionZone 等) 和環境參數 (溫度、濕度等)，這些信息可以來自 FDL 的定義。
 
-4.  **資產實例映射 (Asset Instance Mapping)**:
-    *   FDL 中定義的每個資產實例 (例如 `DS_2F_A_001`，對應 ISA-95 的 Equipment Module) 將映射為一個 USD `Model` Prim 或 `Xform` Prim，具體取決於其複雜度和交互需求。
-    *   **IADL 3D 模型引用**: 每個資產實例的 USD Prim 將透過 USD 的 Reference 或 Payload 機制，引用其 IADL 定義中指定的 `geometry.model_file` (例如 `.usd` 或 `.gltf` 文件)。這使得資產的視覺外觀可以獨立於其邏輯定義進行管理和更新。
+4.  **Asset Instance 映射 (Asset Instance Mapping)**:
+    *   FDL 中定義的每個 Asset Instance (例如 `DS_2F_A_001`，對應 ISA-95 的 Equipment Module) 將映射為一個 USD `Model` Prim 或 `Xform` Prim，具體取決於其複雜度和交互需求。
+    *   **IADL 3D 模型引用**: 每個 Asset Instance 的 USD Prim 將透過 USD 的 Reference 或 Payload 機制，引用其 IADL 定義中指定的 `geometry.model_file` (例如 `.usd` 或 `.gltf` 文件)。這使得資產的視覺外觀可以獨立於其邏輯定義進行管理和更新。
     *   **空間變換**: FDL 中定義的 `origin` (位置) 和 `orientation` (方向) 參數將用於設置 USD Prim 的 `xformOp` 屬性，精確定位資產在 3D 場景中的位置和方向。這確保了數位分身與物理世界的一致性。
 
 5.  **組件映射 (Component Mapping)**:
@@ -183,6 +184,7 @@ NDH 中的 **USD Integration Service** 將作為核心組件，負責將 NDH 內
     *   **靜態屬性**: NDH 中來自 IADL 的靜態資產屬性 (例如製造商、型號、額定功率) 將作為 USD Prim 的自定義屬性 (Custom Attributes) 附加到對應的 USD 節點上。這些屬性可以是 `string`、`float`、`int` 等 USD 支援的數據類型。
     *   **動態數據**: 透過 NDH 的 Asset Tag Instance 機制，資產的實時運行數據 (例如壓力、溫度、狀態、OEE) 將被提取並作為動態更新的自定義屬性綁定到 USD Prim 上。USD Integration Service 將監聽 Asset Tag Instance 提供的數據更新，並實時更新 USD Scene Graph 中的對應屬性。這使得 Omniverse 中的應用可以直接訪問這些數據，實現數據驅動的視覺化、儀表板和實時監控。
         *   例如，`DS_2F_A_001` 的 USD Prim 可能會有 `custom:discharge_pressure` 和 `custom:operational_status` 等屬性，其值由 Asset Tag Instance 提供並實時更新。
+    *   **Asset Tag Instance 與實際 IoT 數據連動**: 每個 Asset Tag Instance 負責將抽象的 `tag_id` 映射到後端時序數據庫中的實際數據點，並處理數據的採集、路由和轉換。這確保了 USD Scene Graph 中的動態數據屬性能夠實時反映物理世界 IoT 設備的狀態。
 
 7.  **關係映射 (Relationship Mapping)**:
     *   FDL 中定義的 `relationships` (例如 `material_flow`, `data_connection`, `power_supply`) 可以映射為 USD 中的關係 (Relationships) 或自定義屬性。USD 的關係機制允許在不同 Prims 之間建立強類型連接，這對於表示資產之間的物理或邏輯互聯至關重要，例如物料流路徑、數據通訊鏈路或能源供應網絡。
@@ -240,3 +242,4 @@ USD 的分層覆蓋 (Layering) 機制對於 IDTF 來說至關重要。它允許�
 *   **行為定義**: 擴展 USD Schema 以包含資產的行為模型，這對於在 Omniverse 中進行更高級的模擬和 AI Agent 訓練非常有用。
 
 透過這些詳細的映射策略，NDH 成功地將複雜的工業資產數據和階層結構轉化為 Omniverse USD Scene Graph 中可視化、可模擬和可交互的數位分身，為工業 4.0 應用提供了強大的基礎。
+

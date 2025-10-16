@@ -1,7 +1,7 @@
 # SCADA HMI 與 IDTF/NDH 整合技術說明
 
 **文件編號**: IDTF-V3.5-06-02
-**版本**: 1.0
+**版本**: 1.1
 **日期**: 2025-10-16
 **作者**: Manus AI
 
@@ -83,8 +83,8 @@ NDH 中的 Asset Instance Hierarchy (資產實例階層) 是透過 FDL (Factory 
 
 *   **上下文感知導航**：SCADA HMI 可以利用 NDH 提供的 Asset Instance Hierarchy，實現基於工廠區域、生產線或設備組的上下文感知導航。操作員可以從高層次的工廠概覽鑽取到特定的設備，並查看其相關數據和控制介面。
 *   **統一的資產視圖**：無論底層數據來自何種設備或系統，NDH 都將其整合到統一的 Asset Instance Hierarchy 中。SCADA HMI 系統只需連接到 NDH，即可獲得一個完整且一致的資產視圖，簡化了 HMI 的開發和維護。
-*   **分散式物件管理**：NDH 採用類似 CORBA 的分散式物件管理架構來管理數百萬個 Asset Instance。這意味著 SCADA HMI 系統可以透過標準化的介面與這些分散式 Asset Instance 互動，而無需關心它們實際運行在哪個伺服器節點上。這種透明性確保了 HMI 系統在高併發和大規模部署下的穩定性和可擴展性。
-*   **FDL 與 Layout Mapping**：FDL 作為中立的工廠佈局描述語言，可以對映不同工廠 Layout 設計軟體所產生的佈局。這使得 SCADA HMI 系統能夠基於 FDL 定義的 Asset Instance Hierarchy，在 HMI 畫面中精確地呈現資產的物理位置和相互關係，實現數位分身在操作層面的視覺化。
+*   **分散式物件管理**：NDH 中的 Asset Instance 採用類似 CORBA (Common Object Request Broker Architecture) 的分散式物件管理架構，在分散式服務器叢集中被管理。這意味著 SCADA HMI 系統可以透過標準化的介面與這些分散式 Asset Instance 互動，而無需關心它們實際運行在哪個伺服器節點上。這種透明性確保了 HMI 系統在高併發和大規模部署下的穩定性和可擴展性。
+*   **FDL 與 Layout Mapping**：FDL 作為中立的工廠佈局描述語言，可以對映不同工廠 Layout 設計軟體所產生的佈局。這使得 SCADA HMI 系統能夠基於 FDL 定義的 Asset Instance Hierarchy，在 HMI 畫面中精確地呈現資產的物理位置和相互關係，實現數位分身在操作層面的視覺化。FDL 的這種對映能力是構建完整數位分身的核心基礎，它將設計階段的資訊（佈局、資產類型）與運行階段的資訊（實時數據、狀態）無縫連接起來。
 
 ## 6. 結論
 
