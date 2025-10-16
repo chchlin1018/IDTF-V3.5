@@ -21,7 +21,7 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 |---|---|---|
 | **IADL** | Industrial Asset Description Language | **資產建模**: 定義資產的數據模型、3D 幾何與行為邏輯 (資產的「藍圖」)。 |
 | **FDL** | Factory Design Language | **工廠設計**: 以聲明式語言描述工廠中資產的佈局、數量、位置和關係 (工廠的「佈局圖」)。 |
-| **NDH** | Neutral Data Hub | **數據中樞**: 負責即時數據採集、處理、存儲，並管理 Asset Servants 的生命週期 (數位分身的「執行時」)。 |
+| **NDH** | Neutral Data Hub | **數據中樞**: 負責即時數據採集、處理、存儲，並管理 Asset Tag Instances 的生命週期 (數位分身的「執行時」)。 |
 | **Omniverse Connector** | - | **可視化與協同**: 將 NDH 中的數位分身狀態即時同步到 NVIDIA Omniverse，實現高保真渲染和多用戶協同。 |
 
 ## 3. 核心規格與白皮書
@@ -31,7 +31,7 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 這些文件提供了對 IDTF V3.5 架構的全面性、高層次的概述。
 
 - **[NDH、Omniverse 與數位分身整合架構白皮書](./08_White_Papers/technical/NDH_Omniverse_Digital_Twins_Architecture_Whitepaper.md)**
-  - **摘要**: 深入探討 NDH、Asset Servants、Omniverse 和 Digital Twins 四大核心組件的整合機制，是理解 IDTF 執行時架構的**必讀文件**。
+  - **摘要**: 深入探討 NDH、Asset Tag Instances、Omniverse 和 Digital Twins 四大核心組件的整合機制，是理解 IDTF 執行時架構的**必讀文件**。
   - **包含內容**: 分散式部署、故障轉移、API 規範、即時同步機制。
 
 - **[IDTF V3.5 綜合技術論文](./08_White_Papers/research/idtf_comprehensive_technical_paper.md)**
@@ -106,7 +106,7 @@ IDTF V3.5 的架構圍繞四大核心組件構建，形成一個完整的從設�
 
 - **[NDH 系統更新機制詳細文件](./06_NDH_Spec/docs/NDH_System_Update_Mechanism.md)**
   - 版本管理策略（語義化版本控制、相容性矩陣）
-  - 滾動更新機制（分批次更新、Asset Servant 遷移）
+  - 滾動更新機制（分批次更新、Asset Tag Instance 遷移）
   - 藍綠部署（完整環境切換、快速回滾）
   - 金絲雀部署（漸進式部署、自動化驗證）
   - 自動化更新流程（CI/CD 整合、更新腳本）

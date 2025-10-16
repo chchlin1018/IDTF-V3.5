@@ -1,4 +1,4 @@
-# Asset Servant 更新 (ERP 整合)
+# Asset Tag Instance 更新 (ERP 整合)
 
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
@@ -8,11 +8,11 @@
 
 ## 1. 簡介
 
-為了支援與 ERP 的整合,Asset Servant 需要進行擴展,使其能夠處理來自 ERP 的事件、計算 KPI,並生成生產確認數據。
+為了支援與 ERP 的整合,Asset Tag Instance 需要進行擴展,使其能夠處理來自 ERP 的事件、計算 KPI,並生成生產確認數據。
 
 ## 2. 架構變更
 
-Asset Servant 將增加以下功能模組:
+Asset Tag Instance 將增加以下功能模組:
 
 1. **ERP 事件訂閱者**: 監聽來自 ERP 的生產工單事件
 2. **KPI 計算引擎**: 計算 OEE、MTBF、MTTR 等 KPI
@@ -282,7 +282,7 @@ class ProductionConfirmationGenerator:
 ## 4. 使用範例
 
 ```python
-# 初始化 Asset Servant
+# 初始化 Asset Tag Instance
 iadl_def = {
     'id': 'EQ-002',
     'type': 'Die Bonder',

@@ -87,7 +87,7 @@ IDTF V3.5 提供了一個**開源、中立、可負擔**的工業數位分身框
 │  │    (Neutral Data Hub)             │                  │
 │  │  - 部署 FDL 定義的工廠佈局          │                  │
 │  │  - 載入 IADL 定義的資產藍圖         │                  │
-│  │  - 批次實例化 Asset Servants       │                  │
+│  │  - 批次實例化 Asset Tag Instances       │                  │
 │  │  - 即時數據採集與同步              │                  │
 │  └──────────────────────────────────┘                  │
 │                                 ↓                       │
@@ -108,7 +108,7 @@ IDTF V3.5 提供了一個**開源、中立、可負擔**的工業數位分身框
 | **IADL Editor** | 視覺化資產建模工具 | 設計階段 | .iadl 文件 |
 | **FDL** | 定義工廠佈局（How） | 設計階段 | .fdl 文件 |
 | **FDL Editor** | 視覺化工廠設計工具 | 設計階段 | .fdl 文件 + MEP 設計 |
-| **NDH** | 執行時數據中樞 | 執行階段 | Asset Servants + 即時數據 |
+| **NDH** | 執行時數據中樞 | 執行階段 | Asset Tag Instances + 即時數據 |
 | **Omniverse** | 3D 視覺化與協同 | 設計+執行 | USD 場景 |
 
 ---
@@ -1887,7 +1887,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 │ ┌────────────────────────────────────────────────────┐  │
 │ │ ☑ Deploy Factory Layout (FDL)                      │  │
 │ │ ☑ Load Asset Definitions (IADL)                    │  │
-│ │ ☑ Instantiate Asset Servants                       │  │
+│ │ ☑ Instantiate Asset Tag Instances                       │  │
 │ │ ☑ Configure Data Tag Subscriptions                 │  │
 │ │ ☑ Register to Naming Service                       │  │
 │ │ ☐ Start Data Collection (manual start later)       │  │
@@ -1908,7 +1908,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 │ ┌────────────────────────────────────────────────────┐  │
 │ │ [████████████████████████████░░░░░░░░] 75%         │  │
 │ │                                                    │  │
-│ │ Current Step: Instantiating Asset Servants...      │  │
+│ │ Current Step: Instantiating Asset Tag Instances...      │  │
 │ │ 94 / 125 assets deployed                           │  │
 │ │                                                    │  │
 │ │ Estimated Time Remaining: 2 minutes                │  │
@@ -1965,7 +1965,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 │  │ Factory Designer 一鍵部署到 NDH:                    │ │
 │  │ • 解析 FDL 文件                                    │ │
 │  │ • 載入 IADL 資產定義                               │ │
-│  │ • 批次實例化 Asset Servants (125 個)               │ │
+│  │ • 批次實例化 Asset Tag Instances (125 個)               │ │
 │  │ • 配置數據標籤訂閱 (OPC UA, Modbus)                │ │
 │  │ • 註冊到命名服務 (Naming Service)                  │ │
 │  │ • 啟動即時數據採集                                 │ │
@@ -1974,7 +1974,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 │  階段 4: 執行時運行 (Runtime Operation)                  │
 │  ┌────────────────────────────────────────────────────┐ │
 │  │ NDH 執行時管理:                                    │ │
-│  │ • Asset Servants 即時數據採集                      │ │
+│  │ • Asset Tag Instances 即時數據採集                      │ │
 │  │ • MES/ERP/SCADA 雙向同步                           │ │
 │  │ • 即時監控與告警                                   │ │
 │  │ • 行為邏輯執行 (Start/Stop/AdjustFlow)             │ │
@@ -2000,7 +2000,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 |------|------|------|------|------|
 | **資產建模** | IADL Editor | 3D 模型 (USD), 規格 | .iadl 文件 | 定義資產「是什麼」 |
 | **工廠設計** | Factory Designer | .iadl 文件 | .fdl 文件 | 定義工廠「如何佈局」 |
-| **部署** | Factory Designer + NDH | .fdl + .iadl | Asset Servants | 自動化部署 |
+| **部署** | Factory Designer + NDH | .fdl + .iadl | Asset Tag Instances | 自動化部署 |
 | **執行** | NDH | 現場數據 (OPC UA, Modbus) | 即時數據流 | 執行時數據管理 |
 | **視覺化** | Omniverse | USD 場景 + 即時數據 | 3D 渲染 | 視覺化與協同 |
 
@@ -2020,7 +2020,7 @@ Factory Designer 可以將 FDL 設計直接部署到 NDH：
 **使用的 IDTF 組件**：
 - IADL Editor：定義 20+ 種資產類型（固晶機、焊線機、封裝機、烤箱、泵浦、冷水主機等）
 - Factory Designer：設計 5 層樓的完整佈局，包含 MEP 系統
-- NDH：部署 500+ Asset Servants，整合 MES/ERP
+- NDH：部署 500+ Asset Tag Instances，整合 MES/ERP
 - Omniverse：3D 視覺化與多用戶協同
 
 **專案成果**：

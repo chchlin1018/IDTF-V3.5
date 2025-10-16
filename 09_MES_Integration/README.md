@@ -56,7 +56,7 @@ IDTF 與 MES 的整合是 ISA-95 模型中 Level 2 (控制層) 與 Level 3 (MOM 
 ┌─────────────────────────────────────────────────────────┐
 │          Level 0-2: IDTF (工業數位分身框架)              │
 │  - NDH (Neutral Data Hub)                                │
-│  - Asset Servant (虛擬分身物件)                          │
+│  - Asset Tag Instance (虛擬分身物件)                          │
 │  - IADL/FDL (資產/工廠定義)                              │
 │  - Omniverse (3D 視覺化)                                 │
 └─────────────────────────────────────────────────────────┘
@@ -173,7 +173,7 @@ Equipment Die_Bonder-01 {
 
 1. **部署 Message Queue**: 建立 RabbitMQ 或 Kafka 服務。
 2. **開發 MES Connector**: 訂閱 `idtf.equipment.status` 主題,並將工單、品質等事件發布到 `mes.*` 主題。
-3. **擴展 Asset Servant**: 讓 Asset Servant 能夠訂閱 `mes.*` 主題,並更新 IADL 中的 `production` 區塊。
+3. **擴展 Asset Tag Instance**: 讓 Asset Tag Instance 能夠訂閱 `mes.*` 主題,並更新 IADL 中的 `production` 區塊。
 4. **目標**: 實現 IDTF 與 MES 之間的雙向、非同步數據交換。
 5. **時間**: 2-3 個月
 

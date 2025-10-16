@@ -176,7 +176,7 @@ NDH 採用**分層式微服務架構**，由以下核心層組成：
 - **gRPC**：高效能的 RPC 框架（內部服務間通訊）
 
 #### 2.2.3 服務層
-- **Asset Servants**：資產執行時模型，管理資產生命週期
+- **Asset Tag Instances**：資產執行時模型，管理資產生命週期
 - **MEP Design Service**：機電管線設計服務
 - **Conflict Detection Service**：衝突檢測服務
 - **Flow Analysis Service**：流體分析服務
@@ -285,7 +285,7 @@ class IADLParser:
 **重要說明**：NDH 專注於**執行時（Runtime）**的數據整合和管理。設計階段（Design Time）的功能，如 MEP 設計、衝突檢測、ISO 圖面生成、流體分析等，屬於 **FDL Editor（工廠設計編輯器）** 的職責，不在 NDH 架構範圍內。
 
 NDH 服務層的核心職責：
-- ✅ Asset Servants（資產執行時模型）
+- ✅ Asset Tag Instances（資產執行時模型）
 - ✅ 數據採集與儲存（從 PLC/SCADA 採集數據）
 - ✅ IT/OT 整合（MES/ERP/PLM 連接器）
 - ✅ 即時監控與告警（異常檢測、事件觸發）
@@ -294,10 +294,10 @@ NDH 服務層的核心職責：
 
 服務層是 NDH 的核心功能實現，提供各種專業的工程分析與協作服務。
 
-#### 3.2.1 Asset Servants（資產執行時模型）
+#### 3.2.1 Asset Tag Instances（資產執行時模型）
 
 **概念**：
-Asset Servants 是資產在執行時的數位化身，負責：
+Asset Tag Instances 是資產在執行時的數位化身，負責：
 - 管理資產的生命週期（創建、更新、刪除）
 - 提供統一的 API 介面
 - 處理資產的數據讀寫
@@ -699,7 +699,7 @@ tsdb:
 │  │  - 統一數據模型 (IADL)                                 │ │
 │  │  - 數據轉換引擎                                        │ │
 │  │  - 時序數據庫                                          │ │
-│  │  - Asset Servants                                     │ │
+│  │  - Asset Tag Instances                                     │ │
 │  └────────────────────────────────────────────────────────┘ │
 │                            ▲  ▼                              │
 │  ┌────────────────────────────────────────────────────────┐ │
@@ -929,23 +929,23 @@ ERP → WMS → MES → NDH → ERP
 
 ## 6. 核心服務模組
 
-### 6.1 Asset Servants 詳細設計
+### 6.1 Asset Tag Instances 詳細設計
 
 #### 6.1.1 概念與架構
 
-Asset Servants 是 NDH 的核心創新，將 IADL 定義的靜態資產描述轉換為動態的執行時模型。
+Asset Tag Instances 是 NDH 的核心創新，將 IADL 定義的靜態資產描述轉換為動態的執行時模型。
 
 **核心概念**：
-- 每個資產在 NDH 中都有一個對應的 Asset Servant
-- Asset Servant 負責管理資產的生命週期和行為
+- 每個資產在 NDH 中都有一個對應的 Asset Tag Instance
+- Asset Tag Instance 負責管理資產的生命週期和行為
 - 提供統一的 API 介面，隱藏底層複雜性
 
 **架構圖**：
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   Asset Servant Manager                      │
-│  - 創建/銷毀 Asset Servants                                  │
+│                   Asset Tag Instance Manager                      │
+│  - 創建/銷毀 Asset Tag Instances                                  │
 │  - 管理 Servant 生命週期                                     │
 │  - 提供 Servant 註冊和發現                                   │
 └────────────────────┬────────────────────────────────────────┘
@@ -964,7 +964,7 @@ Asset Servants 是 NDH 的核心創新，將 IADL 定義的靜態資產描述轉
     └─────────────────────────────────────────────────────────┘
 ```
 
-#### 6.1.2 Asset Servant 類別設計
+#### 6.1.2 Asset Tag Instance 類別設計
 
 ```python
 from enum import Enum
@@ -1121,38 +1121,38 @@ class AssetServant:
         self.event_handlers.clear()
 ```
 
-#### 6.1.3 Asset Servant Manager
+#### 6.1.3 Asset Tag Instance Manager
 
 ```python
 class AssetServantManager:
-    """Asset Servant 管理器"""
+    """Asset Tag Instance 管理器"""
     
     def __init__(self):
         self.servants: Dict[str, AssetServant] = {}
         self.iadl_parser = IADLParser()
     
     async def create_servant(self, iadl_file_path: str) -> AssetServant:
-        """從 IADL 文件創建 Asset Servant"""
+        """從 IADL 文件創建 Asset Tag Instance"""
         # 解析 IADL 文件
         iadl_definition = self.iadl_parser.parse_file(iadl_file_path)
         asset_id = iadl_definition['id']
         
-        # 創建 Asset Servant
+        # 創建 Asset Tag Instance
         servant = AssetServant(asset_id, iadl_definition)
         await servant.initialize()
         
         # 註冊到管理器
         self.servants[asset_id] = servant
         
-        logger.info(f"Created Asset Servant for {asset_id}")
+        logger.info(f"Created Asset Tag Instance for {asset_id}")
         return servant
     
     async def get_servant(self, asset_id: str) -> Optional[AssetServant]:
-        """獲取 Asset Servant"""
+        """獲取 Asset Tag Instance"""
         return self.servants.get(asset_id)
     
     async def destroy_servant(self, asset_id: str) -> bool:
-        """銷毀 Asset Servant"""
+        """銷毀 Asset Tag Instance"""
         if asset_id not in self.servants:
             return False
         
@@ -1160,11 +1160,11 @@ class AssetServantManager:
         await servant.destroy()
         del self.servants[asset_id]
         
-        logger.info(f"Destroyed Asset Servant for {asset_id}")
+        logger.info(f"Destroyed Asset Tag Instance for {asset_id}")
         return True
     
     async def list_servants(self) -> List[str]:
-        """列出所有 Asset Servants"""
+        """列出所有 Asset Tag Instances"""
         return list(self.servants.keys())
     
     async def health_check(self) -> Dict:
@@ -1389,7 +1389,7 @@ NDH 作為執行時數據中樞，必須提供**即時、雙向、可靠**的系
      ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │              NDH 核心數據中樞 (Core Data Hub)                   │
-│  - Asset Servants (執行時模型)                                 │
+│  - Asset Tag Instances (執行時模型)                                 │
 │  - 時序數據庫 (Time-series Database)                           │
 │  - 事件總線 (Event Bus)                                        │
 │  - 狀態管理 (State Management)                                 │
@@ -1456,7 +1456,7 @@ class MESConnector:
         # 3. 觸發下游事件
         await self.ndh.emit_event("order.updated", validated_order)
         
-        # 4. 通知相關 Asset Servants
+        # 4. 通知相關 Asset Tag Instances
         affected_assets = await self.ndh.get_assets_by_order(order['id'])
         for asset in affected_assets:
             await asset.on_order_changed(validated_order)
@@ -1666,7 +1666,7 @@ class SCADAConnector:
                 "timestamp": timestamp
             })
         
-        # 4. 更新 Asset Servant 狀態
+        # 4. 更新 Asset Tag Instance 狀態
         asset = await self.ndh.get_asset_by_tag(tag_id)
         if asset:
             await asset.update_property(tag_id, value)
@@ -2681,15 +2681,15 @@ ws.onmessage = (event) => {
 │  └──────────────────────────────────────────────────────┘  │
 │                          ▼                                   │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │ 6. 批次實例化 Asset Servants                          │  │
-│  │    - 為每個資產創建 Asset Servant                     │  │
+│  │ 6. 批次實例化 Asset Tag Instances                          │  │
+│  │    - 為每個資產創建 Asset Tag Instance                     │  │
 │  │    - 初始化 Servant（連接底層系統）                   │  │
 │  │    - 建立資產間的關係                                 │  │
 │  └──────────────────────────────────────────────────────┘  │
 │                          ▼                                   │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │ 7. 註冊到命名服務                                     │  │
-│  │    - 將所有 Asset Servants 註冊到命名服務             │  │
+│  │    - 將所有 Asset Tag Instances 註冊到命名服務             │  │
 │  │    - 提供服務發現和路由                               │  │
 │  └──────────────────────────────────────────────────────┘  │
 │                                                              │
@@ -2701,7 +2701,7 @@ ws.onmessage = (event) => {
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │ 8. 即時運行與監控                                     │  │
-│  │    - Asset Servants 開始運行                          │  │
+│  │    - Asset Tag Instances 開始運行                          │  │
 │  │    - 收集遙測數據 → 時序數據庫                        │  │
 │  │    - 處理命令和屬性變更                               │  │
 │  │    - 觸發事件和告警                                   │  │
@@ -2804,7 +2804,7 @@ connections:
 #### 8.2.2 部署階段數據流
 
 ```
-factory_layout.fdl → NDH API → FDL Parser → IADL Loader → Asset Servant Manager → Asset Servants
+factory_layout.fdl → NDH API → FDL Parser → IADL Loader → Asset Tag Instance Manager → Asset Tag Instances
 ```
 
 **API 調用**：
@@ -2820,14 +2820,14 @@ auto_start: true
 1. FDL Parser 解析 factory_layout.fdl
 2. 提取所有資產的 IADL 引用
 3. IADL Loader 載入每個 IADL 定義
-4. Asset Servant Manager 批次創建 Asset Servants
-5. 每個 Asset Servant 初始化並連接到底層系統
+4. Asset Tag Instance Manager 批次創建 Asset Tag Instances
+5. 每個 Asset Tag Instance 初始化並連接到底層系統
 6. 註冊到命名服務
 
 #### 8.2.3 執行階段數據流
 
 ```
-物理設備 → OPC UA/Modbus → NDH Connector → Asset Servant → 時序數據庫
+物理設備 → OPC UA/Modbus → NDH Connector → Asset Tag Instance → 時序數據庫
                                                     ↓
                                             MES/ERP/SCADA
 ```
@@ -2837,18 +2837,18 @@ auto_start: true
    - 物理感測器（溫度、壓力、振動）
    - 通過 OPC UA/Modbus 讀取
    - NDH Connector 轉換為標準格式
-   - Asset Servant 接收並處理
+   - Asset Tag Instance 接收並處理
    - 寫入時序數據庫
 
 2. **命令執行**：
-   - 應用程式調用 Asset Servant 的命令
-   - Asset Servant 驗證參數
+   - 應用程式調用 Asset Tag Instance 的命令
+   - Asset Tag Instance 驗證參數
    - 通過 Connector 下發到 PLC
    - PLC 執行命令
    - 回報執行結果
 
 3. **事件觸發**：
-   - Asset Servant 監測異常（如溫度過高）
+   - Asset Tag Instance 監測異常（如溫度過高）
    - 觸發告警事件
    - 通知訂閱者（Dashboard、MES）
    - 記錄到事件日誌
@@ -3112,7 +3112,7 @@ spec:
 
 **批次處理**：
 - 批次寫入時序數據（每 1000 點或 1 秒）
-- 批次創建 Asset Servants（每批 100 個）
+- 批次創建 Asset Tag Instances（每批 100 個）
 
 ---
 
@@ -3303,7 +3303,7 @@ CREATE INDEX idx_asset_location ON assets (location_id);
 
 #### 11.2.3 並行處理
 
-**批次創建 Asset Servants**：
+**批次創建 Asset Tag Instances**：
 ```python
 async def batch_create_servants(iadl_files: List[str]):
     tasks = [create_servant(file) for file in iadl_files]
@@ -3338,7 +3338,7 @@ async def parallel_write(points: List[dict]):
 - API 請求數
 - API 延遲（p50, p95, p99）
 - 錯誤率
-- Asset Servants 數量
+- Asset Tag Instances 數量
 
 **業務指標**：
 - 活躍資產數
@@ -3362,7 +3362,7 @@ scrape_configs:
 - NDH 總覽（CPU、記憶體、請求數）
 - API 效能（延遲、吞吐量、錯誤率）
 - 時序數據庫（寫入速率、查詢延遲）
-- Asset Servants（數量、狀態分佈）
+- Asset Tag Instances（數量、狀態分佈）
 
 #### 11.3.3 告警規則
 
@@ -3397,7 +3397,7 @@ annotations:
 **目標**：完成 NDH 核心功能，支援基本的資產管理和數據整合
 
 **任務**：
-- ✅ 實現 Asset Servants 核心邏輯
+- ✅ 實現 Asset Tag Instances 核心邏輯
 - ✅ 實現時序數據庫抽象層
 - ✅ 開發 InfluxDB 和 TDengine 適配器
 - ✅ 實現 RESTful API（資產管理、時序數據）
@@ -3572,7 +3572,7 @@ NDH (Neutral Data Hub) 是 IDTF V3.5 框架的核心組件，提供了一個**�
 
 ### 技術創新
 
-1. **Asset Servants**：將靜態 IADL 定義轉換為動態執行時模型
+1. **Asset Tag Instances**：將靜態 IADL 定義轉換為動態執行時模型
 2. **可抽換時序數據庫**：支援 InfluxDB、TDengine、TimescaleDB、QuestDB
 3. **統一 API**：RESTful API、GraphQL、WebSocket 全面支援
 4. **智能分析引擎**：MEP 設計、衝突檢測、流體分析等原生能力

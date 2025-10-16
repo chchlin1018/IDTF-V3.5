@@ -20,33 +20,33 @@ NDH 採用分層架構，確保數據流的清晰性、模組化和可擴展性�
 ```mermaid
 graph TD
     subgraph Apps/Dashboards
-        A[Apps / Dashboards] -->|WS/HTTP| SL(Service Layer)
+        A[Apps / Dashboards] --> SL(Service Layer)
     end
 
     subgraph Service Layer
-        SL -->|REST / GraphQL / WS| PL(Processing Layer)
+        SL --> PL(Processing Layer)
     end
 
     subgraph Processing Layer
-        PL -->|Stream / Batch / AI| NDH(NDH Data Hub)
+        PL --> NDH(NDH Data Hub)
     end
 
     subgraph NDH Data Hub
-        NDH -->|Kafka/TSDB/Postgres/Redis + Event Bus| DA(Data Acquisition)
+        NDH --> DA(Data Acquisition)
     end
 
     subgraph Data Acquisition
-        DA -->|OPC UA / MQTT / ...| MCPCP(MCP Control Plane)
-        DA -->|ndh/# telemetry / events / cmds| AR(Agent Runtimes)
+        DA --> MCPCP(MCP Control Plane)
+        DA --> AR(Agent Runtimes)
     end
 
     subgraph MCP Control Plane
         MCPCP <--> AR
-        MCPCP -->|agents/# (MQTT Topics)| AR
+        MCPCP --> AR
     end
 
     subgraph Agent Runtimes
-        AR -->|py/go/node SDK + policies| NDH
+        AR --> NDH
     end
 ```
 

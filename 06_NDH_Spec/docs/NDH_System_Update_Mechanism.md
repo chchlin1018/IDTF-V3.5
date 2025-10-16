@@ -97,7 +97,7 @@ NDH 採用 **Kubernetes 滾動更新 (Rolling Update)** 策略，確保更新過
 階段 2: 更新 Worker 節點 (批次更新)
   ├─ Batch 1: 更新 10% Worker 節點
   │   ├─ 標記節點為 "draining"
-  │   ├─ 遷移 Asset Servants 到其他節點
+  │   ├─ 遷移 Asset Tag Instances 到其他節點
   │   ├─ 更新節點到新版本
   │   ├─ 健康檢查 (Readiness Probe)
   │   └─ 驗證通過後繼續
@@ -216,38 +216,38 @@ ndh-admin update workers \
   --health-check-timeout 5m
 ```
 
-**更新過程中的 Asset Servant 遷移**：
+**更新過程中的 Asset Tag Instance 遷移**：
 
 ```python
-# Asset Servant 遷移邏輯 (偽代碼)
+# Asset Tag Instance 遷移邏輯 (偽代碼)
 def migrate_asset_servants(source_worker, target_workers):
     """
-    將 Asset Servants 從源 Worker 遷移到目標 Workers
+    將 Asset Tag Instances 從源 Worker 遷移到目標 Workers
     """
-    # 1. 獲取源 Worker 上的所有 Asset Servants
+    # 1. 獲取源 Worker 上的所有 Asset Tag Instances
     servants = get_asset_servants(source_worker)
     
     # 2. 將 Worker 標記為 "draining"
     mark_worker_draining(source_worker)
     
-    # 3. 停止接受新的 Asset Servants
+    # 3. 停止接受新的 Asset Tag Instances
     stop_accepting_new_servants(source_worker)
     
-    # 4. 逐一遷移 Asset Servants
+    # 4. 逐一遷移 Asset Tag Instances
     for servant in servants:
         # 選擇負載最低的目標 Worker
         target_worker = select_least_loaded_worker(target_workers)
         
-        # 在目標 Worker 上建立 Asset Servant
+        # 在目標 Worker 上建立 Asset Tag Instance
         create_servant_on_worker(target_worker, servant.config)
         
         # 等待新 Servant 就緒
         wait_for_servant_ready(target_worker, servant.id)
         
-        # 在源 Worker 上停止 Asset Servant
+        # 在源 Worker 上停止 Asset Tag Instance
         stop_servant_on_worker(source_worker, servant.id)
     
-    # 5. 確認所有 Asset Servants 已遷移
+    # 5. 確認所有 Asset Tag Instances 已遷移
     verify_all_servants_migrated(source_worker)
     
     # 6. 標記 Worker 為 "drained"
@@ -1035,7 +1035,7 @@ groups:
 - [ ] 檢查錯誤日誌
 - [ ] 監控關鍵指標 (至少 30 分鐘)
 - [ ] 驗證數據庫遷移成功
-- [ ] 檢查 Asset Servants 狀態
+- [ ] 檢查 Asset Tag Instances 狀態
 - [ ] 確認 Omniverse 同步正常
 
 ### 11.3 更新時間建議

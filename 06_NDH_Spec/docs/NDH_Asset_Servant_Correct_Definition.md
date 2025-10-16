@@ -1,4 +1,4 @@
-# Asset Servant 正確定義
+# Asset Tag Instance 正確定義
 
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
@@ -8,13 +8,13 @@
 
 ## 核心定義
 
-### Asset Servant 是什麼?
+### Asset Tag Instance 是什麼?
 
-**Asset Servant 是連結 3D Model Transformation 與時序資料庫即時 IOT Tag 資訊,並儲存具有 Asset 狀態和 Behavior 的虛擬分身物件。**
+**Asset Tag Instance 是連結 3D Model Transformation 與時序資料庫即時 IOT Tag 資訊,並儲存具有 Asset 狀態和 Behavior 的虛擬分身物件。**
 
 ---
 
-## Asset Servant 的三大核心職責
+## Asset Tag Instance 的三大核心職責
 
 ### 1. 連結層 (Linking Layer)
 
@@ -23,7 +23,7 @@
 ```
 3D Model (USD) in Omniverse
     ↕ (雙向連結)
-Asset Servant (虛擬分身物件)
+Asset Tag Instance (虛擬分身物件)
     ↕ (雙向連結)
 時序資料庫 (即時 IOT Tag 資訊)
 ```
@@ -37,7 +37,7 @@ Asset Servant (虛擬分身物件)
 
 **儲存 Asset 的即時狀態**
 
-Asset Servant 在運行時儲存:
+Asset Tag Instance 在運行時儲存:
 - ✅ 當前運行狀態 (running, stopped, alarm, maintenance)
 - ✅ 即時 IOT Tag 值 (溫度、壓力、流量等)
 - ✅ 計算屬性 (效率、健康度等)
@@ -48,7 +48,7 @@ Asset Servant 在運行時儲存:
 
 **執行 Asset 的行為邏輯**
 
-Asset Servant 可以執行:
+Asset Tag Instance 可以執行:
 - ✅ 狀態機邏輯 (State Machine)
 - ✅ 告警規則 (Alarm Rules)
 - ✅ 自動化腳本 (Automation Scripts)
@@ -70,7 +70,7 @@ Asset Servant 可以執行:
 └───────────────────────┼─────────────────────────────────────┘
                         ↕ (雙向同步)
 ┌───────────────────────┼─────────────────────────────────────┐
-│              Asset Servant (虛擬分身物件) ⭐                 │
+│              Asset Tag Instance (虛擬分身物件) ⭐                 │
 │  ┌────────────────────▼─────────────────────────────────┐   │
 │  │  Asset ID: PUMP-001                                  │   │
 │  │                                                      │   │
@@ -106,7 +106,7 @@ Asset Servant 可以執行:
 
 ---
 
-## Asset Servant 的完整實現
+## Asset Tag Instance 的完整實現
 
 ### 核心類別定義
 
@@ -127,7 +127,7 @@ class AssetState(Enum):
 
 class AssetServant:
     """
-    Asset Servant - 虛擬分身物件
+    Asset Tag Instance - 虛擬分身物件
     
     三大核心職責:
     1. 連結 3D Model Transformation 與即時 IOT Tag 資訊
@@ -179,7 +179,7 @@ class AssetServant:
     
     async def sync_from_iot(self):
         """
-        從時序資料庫同步即時 IOT Tag 資訊到 Asset Servant
+        從時序資料庫同步即時 IOT Tag 資訊到 Asset Tag Instance
         
         流程:
         1. 查詢時序資料庫獲取最新值
@@ -201,7 +201,7 @@ class AssetServant:
     
     async def sync_to_3d_model(self):
         """
-        將 Asset Servant 的狀態同步到 Omniverse 3D Model
+        將 Asset Tag Instance 的狀態同步到 Omniverse 3D Model
         
         流程:
         1. 更新 USD Transformation
@@ -231,11 +231,11 @@ class AssetServant:
         
     async def sync_from_3d_model(self):
         """
-        從 Omniverse 3D Model 同步 Transformation 到 Asset Servant
+        從 Omniverse 3D Model 同步 Transformation 到 Asset Tag Instance
         
         使用場景:
         - 用戶在 Omniverse 中手動移動了 3D 模型
-        - 需要將新位置同步回 Asset Servant
+        - 需要將新位置同步回 Asset Tag Instance
         """
         if not self.usd_stage or not self.usd_prim_path:
             return
@@ -479,7 +479,7 @@ class AssetServant:
     # ========================================
     
     async def start(self):
-        """啟動 Asset Servant"""
+        """啟動 Asset Tag Instance"""
         # 連接到 Omniverse
         await self._connect_to_omniverse()
         
@@ -490,7 +490,7 @@ class AssetServant:
         await self.set_state(AssetState.RUNNING)
     
     async def stop(self):
-        """停止 Asset Servant"""
+        """停止 Asset Tag Instance"""
         await self.set_state(AssetState.STOPPED)
         
         # 停止即時數據同步
@@ -559,7 +559,7 @@ asset:
     rated_flow: 150  # m³/h
     rated_power: 15  # kW
   
-  # Behaviors 定義 (Asset Servant 會執行)
+  # Behaviors 定義 (Asset Tag Instance 會執行)
   behaviors:
     # 告警規則
     - type: alarm_rule
@@ -604,9 +604,9 @@ asset:
 
 ---
 
-## Asset Servant 的儲存內容
+## Asset Tag Instance 的儲存內容
 
-### Asset Servant 儲存 (運行時記憶體 + 可選持久化)
+### Asset Tag Instance 儲存 (運行時記憶體 + 可選持久化)
 
 ```python
 {
@@ -651,7 +651,7 @@ asset:
 }
 ```
 
-### Asset Servant 不儲存
+### Asset Tag Instance 不儲存
 
 - ❌ USD 3D Model 檔案本身 (在 Omniverse Nucleus)
 - ❌ 歷史時序數據 (在 TDengine/PI)
@@ -671,10 +671,10 @@ asset:
 3. 寫入 TDengine
    pump001_pressure = 5.8 bar
    ↓
-4. Asset Servant 定期同步 (每秒)
+4. Asset Tag Instance 定期同步 (每秒)
    await sync_from_iot()
    ↓
-5. Asset Servant 更新內部狀態
+5. Asset Tag Instance 更新內部狀態
    self.telemetry['discharge_pressure'] = 5.8
    ↓
 6. 觸發 Behavior 邏輯
@@ -694,13 +694,13 @@ asset:
 ```
 1. TDengine 中壓力值 = 6.5 bar
    ↓
-2. Asset Servant 同步
+2. Asset Tag Instance 同步
    self.telemetry['discharge_pressure'] = 6.5
    ↓
 3. 觸發告警規則
    condition: "discharge_pressure > 6.0" = True
    ↓
-4. Asset Servant 執行告警 Behavior
+4. Asset Tag Instance 執行告警 Behavior
    - 設置告警狀態
    - 切換到 ALARM 狀態
    ↓
@@ -717,9 +717,9 @@ asset:
 
 ## 總結
 
-### Asset Servant 的正確定位
+### Asset Tag Instance 的正確定位
 
-**Asset Servant 是一個虛擬分身物件,具有三大核心職責**:
+**Asset Tag Instance 是一個虛擬分身物件,具有三大核心職責**:
 
 1. **連結層**:
    - 連結 3D Model Transformation 與即時 IOT Tag 資訊
@@ -741,10 +741,10 @@ asset:
 ```
 IADL 定義 (藍圖)
     ↓ (解析)
-Asset Servant (虛擬分身物件,運行時)
+Asset Tag Instance (虛擬分身物件,運行時)
     ↕ (雙向同步)
 3D Model (視覺化) + 時序資料庫 (即時數據)
 ```
 
-Asset Servant 是 IDTF 數位分身架構的**核心執行時組件**,它將靜態的 IADL 定義轉化為動態的、有狀態的、有行為的虛擬分身物件。
+Asset Tag Instance 是 IDTF 數位分身架構的**核心執行時組件**,它將靜態的 IADL 定義轉化為動態的、有狀態的、有行為的虛擬分身物件。
 

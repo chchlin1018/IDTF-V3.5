@@ -703,7 +703,7 @@ ndh-admin enable-mcp-server \
 #### 步驟 9：驗證部署
 
 ```bash
-# 檢查所有 Asset Servants
+# 檢查所有 Asset Tag Instances
 ndh-admin list-assets --namespace tsmc-fmcs
 
 # 檢查 Omniverse 同步
@@ -716,7 +716,7 @@ ndh-admin check-fmcs-connection --namespace tsmc-fmcs
 ### 驗證清單
 
 - [ ] NDH 叢集運行正常 (3 Master + 8 Worker)
-- [ ] 所有 Asset Servants 已建立
+- [ ] 所有 Asset Tag Instances 已建立
 - [ ] Omniverse 同步正常
 - [ ] FMCS 連接正常
 - [ ] MCP Server 運行正常

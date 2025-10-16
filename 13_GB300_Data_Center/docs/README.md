@@ -530,7 +530,7 @@ ndh-admin enable-mcp-server \
 #### 步驟 9：驗證部署
 
 ```bash
-# 檢查所有 Asset Servants
+# 檢查所有 Asset Tag Instances
 ndh-admin list-assets --namespace gb300-datacenter
 
 # 檢查 Omniverse 同步
@@ -546,7 +546,7 @@ curl http://mcp-server.gb300.local:8080/health
 ### 驗證清單
 
 - [ ] NDH 叢集運行正常 (3 Master + 5 Worker)
-- [ ] 所有 Asset Servants 已建立 (20 GB300 racks + infrastructure)
+- [ ] 所有 Asset Tag Instances 已建立 (20 GB300 racks + infrastructure)
 - [ ] Omniverse 同步正常
 - [ ] DCIM 連接正常
 - [ ] MCP Server 運行正常

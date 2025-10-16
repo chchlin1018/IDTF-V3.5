@@ -1,4 +1,4 @@
-# NDH Asset Servant 概念澄清
+# NDH Asset Tag Instance 概念澄清
 
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
@@ -8,9 +8,9 @@
 
 ## 核心概念澄清
 
-### Asset Servant 的本質
+### Asset Tag Instance 的本質
 
-**Asset Servant 並非資產本身,而是資產的「數位分身映射層」**。
+**Asset Tag Instance 並非資產本身,而是資產的「數位分身映射層」**。
 
 它的核心職責非常明確且簡單:
 
@@ -20,14 +20,14 @@
 
 ## 正確的理解
 
-### 1. Asset Servant 是什麼?
+### 1. Asset Tag Instance 是什麼?
 
-Asset Servant 是一個**輕量級的映射服務實例**,負責:
+Asset Tag Instance 是一個**輕量級的映射服務實例**,負責:
 
 ```
 IADL 中定義的抽象 Tag
         ↓ (映射)
-Asset Servant (映射層)
+Asset Tag Instance (映射層)
         ↓ (查詢/寫入)
 時序資料庫中的實際資料點
 ```
@@ -45,9 +45,9 @@ asset:
       unit: bar
 ```
 
-**Asset Servant 的工作**:
+**Asset Tag Instance 的工作**:
 ```python
-# Asset Servant 負責映射
+# Asset Tag Instance 負責映射
 {
   "PUMP-001.discharge_pressure" -> "TDengine.plant1.pump001_pressure"
 }
@@ -58,7 +58,7 @@ asset:
 }
 ```
 
-### 2. Asset Servant 不是什麼?
+### 2. Asset Tag Instance 不是什麼?
 
 ❌ **不是**資產的完整數位分身  
 ❌ **不是**資產的 3D 模型  
@@ -82,14 +82,14 @@ PLC / SCADA (採集數據)
     ↓ (寫入)
 時序資料庫 (TDengine / PI / InfluxDB)
     ↑ (映射查詢)
-Asset Servant (映射層) ⭐
+Asset Tag Instance (映射層) ⭐
     ↑ (API 調用)
 NDH API 層
     ↑ (HTTP/GraphQL)
 應用層 (Dashboard / AI)
 ```
 
-### Asset Servant 在架構中的位置
+### Asset Tag Instance 在架構中的位置
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -99,9 +99,9 @@ NDH API 層
 │                   NDH API 層                                 │
 │  GET /api/v1/assets/PUMP-001/telemetry/discharge_pressure  │
 ├─────────────────────────────────────────────────────────────┤
-│              Asset Servant 層 (映射層) ⭐                    │
+│              Asset Tag Instance 層 (映射層) ⭐                    │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │ Asset Servant for PUMP-001                          │    │
+│  │ Asset Tag Instance for PUMP-001                          │    │
 │  │                                                     │    │
 │  │ Tag Mapping:                                        │    │
 │  │  discharge_pressure -> TDengine:pump001_pressure   │    │
@@ -121,7 +121,7 @@ NDH API 層
 
 ## 核心功能
 
-### Asset Servant 的唯一職責
+### Asset Tag Instance 的唯一職責
 
 ```python
 class AssetServant:
@@ -171,7 +171,7 @@ class AssetServant:
         """
         獲取指定 Tag 的數據 (透過映射)
         
-        這是 Asset Servant 的核心功能:
+        這是 Asset Tag Instance 的核心功能:
         1. 查找 Tag 映射
         2. 路由到正確的資料庫
         3. 返回數據
@@ -210,11 +210,11 @@ asset:
   asset_type: centrifugal_pump
   description: "主循環泵浦"
   
-  # 3D 模型 (與 Asset Servant 無關)
+  # 3D 模型 (與 Asset Tag Instance 無關)
   geometry:
     model_file: "models/pump_3d.usd"
   
-  # 數據標籤定義 (Asset Servant 的核心)
+  # 數據標籤定義 (Asset Tag Instance 的核心)
   data_tags:
     # Tag 1: 出口壓力 (存在 TDengine)
     - tag_id: discharge_pressure
@@ -256,7 +256,7 @@ asset:
         tag_name: PUMP001.STATUS
         historian_server: ge-historian.company.com
   
-  # 屬性 (靜態數據,與 Asset Servant 無關)
+  # 屬性 (靜態數據,與 Asset Tag Instance 無關)
   properties:
     manufacturer: "Grundfos"
     model: "CR 64-2"
@@ -264,9 +264,9 @@ asset:
     installation_date: "2020-01-15"
 ```
 
-### Asset Servant 只關心 `data_tags.source`
+### Asset Tag Instance 只關心 `data_tags.source`
 
-Asset Servant 在初始化時,會讀取 IADL 的 `data_tags` 部分,建立映射表:
+Asset Tag Instance 在初始化時,會讀取 IADL 的 `data_tags` 部分,建立映射表:
 
 ```python
 {
@@ -293,26 +293,26 @@ Asset Servant 在初始化時,會讀取 IADL 的 `data_tags` 部分,建立映射
 
 ## 與其他組件的關係
 
-### Asset Servant vs. IADL
+### Asset Tag Instance vs. IADL
 
 | 組件 | 職責 |
 |------|------|
 | **IADL** | 定義資產的「藍圖」(數據模型、3D、屬性) |
-| **Asset Servant** | 執行時的「映射代理」(Tag → 實際資料點) |
+| **Asset Tag Instance** | 執行時的「映射代理」(Tag → 實際資料點) |
 
-### Asset Servant vs. 時序資料庫
+### Asset Tag Instance vs. 時序資料庫
 
 | 組件 | 職責 |
 |------|------|
 | **時序資料庫** | 實際存儲時序數據 (TDengine/PI/InfluxDB) |
-| **Asset Servant** | 提供抽象的 Tag 訪問接口,隱藏底層資料庫細節 |
+| **Asset Tag Instance** | 提供抽象的 Tag 訪問接口,隱藏底層資料庫細節 |
 
-### Asset Servant vs. 3D 數位分身
+### Asset Tag Instance vs. 3D 數位分身
 
 | 組件 | 職責 |
 |------|------|
 | **3D 數位分身** | 在 Omniverse 中的視覺化表示 |
-| **Asset Servant** | 為 3D 分身提供即時數據 (透過 Tag 映射) |
+| **Asset Tag Instance** | 為 3D 分身提供即時數據 (透過 Tag 映射) |
 
 ---
 
@@ -328,7 +328,7 @@ from ndh.api import NDHClient
 client = NDHClient()
 
 # 查詢 PUMP-001 的出口壓力
-# Asset Servant 會自動映射到 TDengine 的 pump001_pressure
+# Asset Tag Instance 會自動映射到 TDengine 的 pump001_pressure
 data = await client.get_asset_telemetry(
     asset_id="PUMP-001",
     tag_id="discharge_pressure",
@@ -337,7 +337,7 @@ data = await client.get_asset_telemetry(
 )
 
 # 查詢流量
-# Asset Servant 會自動映射到 PI System 的 PLANT1_PUMP001_FLOW
+# Asset Tag Instance 會自動映射到 PI System 的 PLANT1_PUMP001_FLOW
 flow_data = await client.get_asset_telemetry(
     asset_id="PUMP-001",
     tag_id="flow_rate",
@@ -359,13 +359,13 @@ PUMP-001:
   - vibration           → InfluxDB
 ```
 
-Asset Servant 統一管理這些映射,應用層完全不需要關心。
+Asset Tag Instance 統一管理這些映射,應用層完全不需要關心。
 
 ---
 
 ## 總結
 
-### Asset Servant 的正確定位
+### Asset Tag Instance 的正確定位
 
 ✅ **是**: 輕量級的 Tag 映射和路由層  
 ✅ **是**: IADL 抽象 Tag 與實際資料點的橋樑  
@@ -382,5 +382,5 @@ Asset Servant 統一管理這些映射,應用層完全不需要關心。
 3. **靈活映射**: 可以輕鬆更改底層資料源,無需修改應用代碼
 4. **多源整合**: 同一資產的 Tag 可以分散在不同的時序資料庫中
 
-Asset Servant 就像是一個「智能路由器」,根據 IADL 的定義,將抽象的 Tag 請求路由到正確的實際資料點。
+Asset Tag Instance 就像是一個「智能路由器」,根據 IADL 的定義,將抽象的 Tag 請求路由到正確的實際資料點。
 

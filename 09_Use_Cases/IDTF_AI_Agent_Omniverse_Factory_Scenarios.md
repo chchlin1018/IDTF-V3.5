@@ -78,7 +78,7 @@
 │  └──────────────────────────────────────────────────────┘   │
 └────────┬───────────────────────────────────────┬────────────┘
          │                                       │
-         │ Omniverse Connector                   │ Asset Servants
+         │ Omniverse Connector                   │ Asset Tag Instances
          │                                       │
 ┌────────▼────────────────────┐    ┌────────────▼─────────────┐
 │  NVIDIA Omniverse           │    │  Physical Assets         │
@@ -92,7 +92,7 @@
 1. 使用者 → AI Agent (自然語言指令)
 2. AI Agent → IDTF MCP Server (MCP 工具調用)
 3. IDTF MCP Server → NDH (API 請求)
-4. NDH → Asset Servants (資產操作)
+4. NDH → Asset Tag Instances (資產操作)
 5. NDH → Omniverse (視覺化更新)
 6. Omniverse → 使用者 (視覺化反饋)
 7. NDH → IDTF MCP Server (數據回傳)

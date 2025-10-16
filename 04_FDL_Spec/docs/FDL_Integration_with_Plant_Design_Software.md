@@ -424,7 +424,7 @@ using (var connection = new SmartPlantConnection("Server=...;Database=..."))
                          ↓
 ┌─────────────────────────────────────────────────────────────┐
 │              NDH (Neutral Data Hub)                          │
-│  - Asset Servants                                            │
+│  - Asset Tag Instances                                            │
 │  - Digital Twin Execution                                    │
 └─────────────────────────────────────────────────────────────┘
 ```

@@ -179,7 +179,7 @@
                          ↓
 ┌─────────────────────────────────────────────────────────────┐
 │              Existing NDH Components                         │
-│  - Asset Servants                                            │
+│  - Asset Tag Instances                                            │
 │  - Time-Series Database                                      │
 │  - PostgreSQL                                                │
 │  - Protocol Adapters (OPC UA, MQTT, Modbus)                │

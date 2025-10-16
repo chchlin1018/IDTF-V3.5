@@ -1586,7 +1586,7 @@ _
 
 ### 9.1 Worker 分配提示 (Assignment Hints)
 
-通過在資產的 `instance_params` 中加入特定的 `hints`，可以指導 NDH 的調度器將 Asset Servant 部署到最合適的 Worker 節點上。
+通過在資產的 `instance_params` 中加入特定的 `hints`，可以指導 NDH 的調度器將 Asset Tag Instance 部署到最合適的 Worker 節點上。
 
 **核心提示欄位**：
 

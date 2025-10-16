@@ -21,24 +21,6 @@ MCP Broker 將部署在 NDH 服務層之上，與 NDH 的 MQTT Broker 緊密整�
 
 ```mermaid
 graph TD
-<<<<<<< HEAD
-    subgraph AI Agent Layer
-        A[AI Agent 1] -->|事件/狀態| MCPB(MCP Broker)
-        B[AI Agent 2] -->|事件/狀態| MCPB
-        C[AI Agent N] -->|事件/狀態| MCPB
-    end
-
-    subgraph MCP Layer
-        MCPB -->|MQTT Topics| NDH_MQTT[NDH MQTT Broker]
-    end
-
-    subgraph NDH Layer
-        NDH_MQTT --> NDH_Core[NDH Core Services]
-        NDH_Core --> IADL_DB[IADL State Memory (Database)]
-    end
-
-    NDH_Core <--> OT_IT[OT/IT Systems]
-=======
     subgraph Apps/Dashboards
         A[Apps / Dashboards] -->|WS/HTTP| SL(Service Layer)
     end
@@ -68,7 +50,6 @@ graph TD
     subgraph Agent Runtimes
         AR -->|py/go/node SDK + policies| NDH
     end
->>>>>>> 199e9f9 (Docs: Add IDTF V3.6 MCP/AI Agent Extension Blueprint and Reference Agent Designs)
 ```
 
 ### 2.2 核心功能

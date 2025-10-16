@@ -1,4 +1,4 @@
-# Asset Servant 更新 (MES 整合)
+# Asset Tag Instance 更新 (MES 整合)
 
 **作者**: 林志錚 Michael Lin(Chih Cheng Lin)(Chih Cheng Lin) Michael Lin(Chih Cheng Lin)  
 **日期**: 2025年10月14日  
@@ -8,11 +8,11 @@
 
 ## 1. 簡介
 
-為了支援與 MES 的整合,Asset Servant 需要進行擴展,使其能夠處理來自 MES 的事件並更新自身的狀態。
+為了支援與 MES 的整合,Asset Tag Instance 需要進行擴展,使其能夠處理來自 MES 的事件並更新自身的狀態。
 
 ## 2. 架構變更
 
-Asset Servant 將增加一個 Message Queue 的訂閱者 (Subscriber),用於監聽 MES 相關的事件。
+Asset Tag Instance 將增加一個 Message Queue 的訂閱者 (Subscriber),用於監聽 MES 相關的事件。
 
 ```python
 import pika
@@ -64,9 +64,9 @@ class AssetServant:
 
 ## 3. IADL `production` 區塊的處理
 
-Asset Servant 在初始化時,會讀取 IADL 中的 `production` 區塊,並將其作為初始狀態。
+Asset Tag Instance 在初始化時,會讀取 IADL 中的 `production` 區塊,並將其作為初始狀態。
 
-當收到來自 MES 的事件時,Asset Servant 會更新內部的 `production_data` 字典,並可選擇性地將其寫回 IADL (透過 NDH API),以實現狀態的持久化。
+當收到來自 MES 的事件時,Asset Tag Instance 會更新內部的 `production_data` 字典,並可選擇性地將其寫回 IADL (透過 NDH API),以實現狀態的持久化。
 
 ---
 

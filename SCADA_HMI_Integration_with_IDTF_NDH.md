@@ -51,13 +51,13 @@ Ignition SCADA 以其開放性、跨平台特性和強大的模組化架構而�
 
 ### 5.1. NDH 作為統一數據源
 
-NDH 整合了來自各種 OT/IT 系統的數據，並透過 Asset Servant 機制將抽象的 `tag_id` 映射到後端時序數據庫中的實際數據點。SCADA HMI 設計工具無需直接連接多個底層數據源，只需連接到 NDH 暴露的標準介面。
+NDH 整合了來自各種 OT/IT 系統的數據，並透過 Asset Tag Instance 機制將抽象的 `tag_id` 映射到後端時序數據庫中的實際數據點。SCADA HMI 設計工具無需直接連接多個底層數據源，只需連接到 NDH 暴露的標準介面。
 
 ### 5.2. 標準化數據接口
 
 NDH 可以透過以下標準協議暴露其整合後的資產數據，供 SCADA HMI 工具消費：
 
-*   **OPC UA Server**: NDH 可以將其內部資產模型和所有 Asset Servant 提供的數據，以 OPC UA 節點空間的形式暴露。Aveva 和 Ignition 都對 OPC UA 有強大的原生支援，可以直接瀏覽和訂閱這些 Tag。
+*   **OPC UA Server**: NDH 可以將其內部資產模型和所有 Asset Tag Instance 提供的數據，以 OPC UA 節點空間的形式暴露。Aveva 和 Ignition 都對 OPC UA 有強大的原生支援，可以直接瀏覽和訂閱這些 Tag。
 *   **MQTT Broker**: NDH 內部使用 MQTT 作為事件總線。重要的資產數據更新可以發布到特定的 MQTT Topic，SCADA HMI 工具可以訂閱這些 Topic 獲取實時數據。
 *   **RESTful API / GraphQL**: NDH 可以提供這些接口，用於更靈活的數據查詢或配置，儘管 HMI 工具直接使用較少，但可用於 HMI 後端服務。
 

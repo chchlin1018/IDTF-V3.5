@@ -27,7 +27,7 @@
 │                    NDH Broker (ORB)                          │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │            Asset Servants (物件實例)                   │  │
+│  │            Asset Tag Instances (物件實例)                   │  │
 │  │  ┌────────────┐  ┌────────────┐  ┌────────────┐     │  │
 │  │  │  PUMP_001  │  │ MOTOR_001  │  │ SENSOR_001 │     │  │
 │  │  │            │  │            │  │            │     │  │
@@ -872,7 +872,7 @@ class HistorianConnector(Connector):
         註冊資產和 Historian Tag 映射
         
         Args:
-            servant: Asset Servant 物件
+            servant: Asset Tag Instance 物件
             mappings: 屬性名稱 -> HistorianTagMapping
         """
         asset_id = servant.asset_id
@@ -1095,7 +1095,7 @@ async def main():
     # 載入映射
     historian_connector.mapping_manager.load_from_iadl(iadl_definition)
     
-    # ===== 4. 建立 Asset Servant =====
+    # ===== 4. 建立 Asset Tag Instance =====
     pump = PumpServant("PUMP_001", "FACTORY_A")
     adapter = orb.get_adapter("RootPOA")
     await adapter.activate_object(pump)

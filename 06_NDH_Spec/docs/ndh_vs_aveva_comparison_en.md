@@ -17,7 +17,7 @@ A high-level comparison of the three systems reveals their distinct market posit
 
 | System | Core Positioning | Primary Functions |
 | :--- | :--- | :--- |
-| **NDH** | **Neutral OT/IT Data Hub** | Real-time data integration, Asset Servants for direct asset communication, open and flexible data processing. |
+| **NDH** | **Neutral OT/IT Data Hub** | Real-time data integration, Asset Tag Instances for direct asset communication, open and flexible data processing. |
 | **AVEVA Connect** | **Industrial Intelligence Platform** | Cloud-based integration, a comprehensive ecosystem of applications, and a collaborative environment for enterprise-wide use. |
 | **AVEVA AIM** | **Engineering Information Management** | Aggregation of engineering data, serving as the core of the digital twin, and robust document management. |
 
@@ -45,7 +45,7 @@ The most significant differences are summarized below:
 **Core Features**:
 
 *   **Neutrality**: NDH is vendor-agnostic, supporting a wide range of industrial protocols (OPC UA, SECS/GEM, Modbus, BACnet) and allowing for swappable time-series databases (InfluxDB, TDengine, TimescaleDB, QuestDB).
-*   **Asset Servants**: These are asset service instances running on worker nodes that communicate directly with physical assets, with support for over ten types of Asset Servants.
+*   **Asset Tag Instances**: These are asset service instances running on worker nodes that communicate directly with physical assets, with support for over ten types of Asset Tag Instances.
 *   **Real-time Data Processing**: Built on a Kafka event-driven architecture, NDH can process over 100 million data points daily with millisecond latency.
 *   **Open-Source Architecture**: As part of the IDTF V3.5 framework, NDH is community-driven and free of licensing fees.
 
