@@ -27,6 +27,23 @@
   - **Maintenance-Advisor Agent**: 監控設備狀態，預測潛在故障，提供維護建議。
   - **Safety-Sentinel Agent**: 監控工廠環境和設備安全，預警危險情況，觸發安全響應。
 
+## 最近更新 (2025-10-16 ~ 2025-10-17) 🆕
+
+### 2025-10-17
+
+*   **同步解決方案實作與文件更新**：
+    *   完成了 IDTF V3.5 的 CAD/PLM 與 ERP/MES 同步解決方案的實作，引入了 **Event Sourcing (事件溯源)** 和 **Command Query Responsibility Segregation (CQRS)** 模式，以提升數據一致性、系統可擴展性及響應能力。
+    *   更新了多份關鍵技術文件，包括 `CAD_PLM_Integration_Specification.md`, `ERP_MES_Connector_Specification.md`, `Event_Specification.md`, `ISA-95_IADL_FDL_Mapping_Whitepaper.md`, `IADL_Editor_Complete_Architecture.md`, `Factory_Asset_Library_Implementation.md`, `MCP_API_Draft.md`, `Logical_Groups.md`，以反映新的同步策略和架構變更。
+    *   設計並整合了數據衝突解決策略，涵蓋 Last-Write-Wins、Version Vector 和人工介入等方法，確保多源數據同步環境中的數據完整性。
+    *   將狀態機例外處理和 ISA-95 彈性機制建議整合到相關設計文件中，提高了系統的靈活性和可追溯性。
+
+### 2025-10-16
+
+*   **NDH 測試開發計劃功能建議**：
+    *   提供了 NDH 測試開發計劃的全面功能建議，涵蓋數據攝取與連接器測試、事件處理與 Event Sourcing/CQRS 測試、數據存儲與查詢測試、安全性測試、可擴展性與可靠性測試、ISA-95 階層與生命週期管理測試、監控與告警測試以及文件與 SDK 測試，旨在確保 NDH 的穩定性、可靠性、性能和安全性。
+
+---
+
 ### V3.5.2 主要亮點 (架構精煉) ✨
 
 - ✨ **深度 ISA-95 整合**: 將 ISA-95 設備階層模型深度整合到 IADL/FDL 規範與核心架構中，確保數據的標準化與互操作性。
