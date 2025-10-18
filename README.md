@@ -1,6 +1,6 @@
 # IDTF V3.7 - 工業數位分身框架
 
-**版本**: 3.7.0  
+**版本**: 3.7.1  
 **發布日期**: 2025年10月18日  
 **作者**: 林志錚 Michael Lin (Chih Cheng Lin) & Manus AI  
 **組織**: IDTF Consortium  
@@ -90,7 +90,7 @@ IDTF 採用分層架構設計,從資產定義到企業管理層實現完整的�
 
 ## 📁 專案結構與文檔說明
 
-IDTF V3.7 包含 **507 個檔案**,其中 **246 個 Markdown 文檔**。以下是按類別組織的完整文檔說明:
+IDTF V3.7 包含超過 500 個檔案和 250+ 份 Markdown 文檔。以下是按類別組織的完整文檔說明:
 
 ### 📂 00. 分析報告 (Analysis Report)
 
@@ -248,9 +248,29 @@ IDTF V3.7 包含 **507 個檔案**,其中 **246 個 Markdown 文檔**。以下�
 | `12_TSMC_FMCS/docs/README.md` | 台積電廠房設施管理系統設計案例 |
 | `13_GB300_Data_Center/docs/README.md` | GB300 AI 數據中心設計案例 |
 
+### 📂 其他目錄
+
+| 目錄 | 內容簡要 |
+|---|---|
+| `03_IADL_Spec/` | IADL 規範的重複目錄,內容已整合至 `02_IADL_Spec` |
+| `05_NDH_Connector_Agent/` | NDH 連接器代理的早期開發目錄 |
+| `09_Use_Cases/` | 各行業的應用案例研究 |
+| `10_Examples_Library/` | IADL 和 FDL 的範例庫 |
+| `contracts/` | 智能合約與區塊鏈整合(實驗性) |
+| `diagrams/` | 專案架構圖原始檔 (e.g., Mermaid, PlantUML) |
+| `examples/` | 其他小型程式碼範例 |
+| `presentation/` | 專案簡報檔案 |
+| `scripts/` | 各類自動化腳本 |
+| `specs/` | 其他技術規格文件 |
+
 ---
 
 ## 📋 版本更新說明
+
+### V3.7.1 (2025-10-18) - README 更新
+
+- **修正**: 補全專案結構說明,新增 `03_IADL_Spec`, `05_NDH_Connector_Agent`, `09_Use_Cases`, `10_Examples_Library`, `contracts`, `diagrams`, `examples`, `presentation`, `scripts`, `specs` 等目錄的說明。
+- **優化**: 調整版本號為 3.7.1 以反映 README 的更新。
 
 ### V3.7.0 (2025-10-18) 🆕
 
